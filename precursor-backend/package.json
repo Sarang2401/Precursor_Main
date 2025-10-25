@@ -1,0 +1,32 @@
+{
+  "name": "precursor-backend",
+  "version": "1.0.0",
+  "description": "PRECURSOR Pharmaceutical Supply Chain Tracking Backend",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "iot",
+    "blockchain",
+    "supply-chain",
+    "pharmaceutical",
+    "express",
+    "sqlite"
+  ],
+  "author": "PRECURSOR Team",
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
