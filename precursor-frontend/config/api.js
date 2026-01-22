@@ -1,5 +1,17 @@
+import Constants from 'expo-constants';
 
-export const API_BASE_URL = 'http://192.168.1.4:3000'; 
+// Dynamically get the host IP from Expo's dev server
+const getHostIP = () => {
+  const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest?.debuggerHost;
+  if (debuggerHost) {
+    return debuggerHost.split(':')[0]; // Extract IP from "192.168.1.103:8081"
+  }
+  return 'localhost'; // Fallback for web
+};
+
+const HOST_IP = getHostIP();
+export const API_BASE_URL = `http://${HOST_IP}:3000`;
+export const ML_API_BASE_URL = `http://${HOST_IP}:5000`;
 
 const handleResponse = async (response) => {
   if (!response.ok) {
@@ -86,6 +98,12 @@ export const api = {
   getAllEvents: async () => {
     const response = await fetch(`${API_BASE_URL}/events`);
     return handleResponse(response);
+  },
+
+  // Get ML alerts from ML backend
+  getMLAlerts: async () => {
+    const response = await fetch(`${ML_API_BASE_URL}/api/regulator/alerts`);
+    return handleResponse(response);
   }
 };
 
@@ -124,13 +142,13 @@ export const formatDate = (isoString) => {
 
 // Calculate shipment stats
 export const calculateStats = (shipments) => {
-  const active = shipments.filter(s => 
+  const active = shipments.filter(s =>
     s.status === 'In Transit' || s.status === 'Pending'
   ).length;
-  
+
   const total = shipments.length;
-  
+
   const offRoute = shipments.filter(s => s.status === 'OFF_ROUTE').length;
-  
+
   return { active, total, offRoute };
 };

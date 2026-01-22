@@ -1,91 +1,63 @@
-import { Stack } from 'expo-router';
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 
-export default function RootLayout() {
+export default function TabsLayout() {
   return (
-    <Stack>
-      <Stack.Screen 
-        name="index" 
-        options={{ 
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#2563EB",
+        tabBarInactiveTintColor: "#6B7280",
+        tabBarStyle: {
+          backgroundColor: "#fff",
+          borderTopWidth: 1,
+          borderTopColor: "#E5E7EB",
+          paddingTop: 4,
+          paddingBottom: 8,
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+        },
+        headerStyle: {
+          backgroundColor: "#fff",
+          borderBottomWidth: 1,
+          borderBottomColor: "#E5E7EB",
+        },
+        headerTitleStyle: {
+          fontWeight: "bold",
+          color: "#111827",
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "Home",
           headerShown: false,
-          title: 'PRECURSOR'
-        }} 
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" size={size} color={color} />
+          ),
+        }}
       />
-      <Stack.Screen 
-        name="(tabs)" 
-        options={{ 
-          headerShown: false 
-        }} 
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: "Explore",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="compass" size={size} color={color} />
+          ),
+        }}
       />
-      <Stack.Screen 
-        name="(manufacturer)/dashboard" 
-        options={{ 
-          title: 'Manufacturer Dashboard',
-          headerShown: false
-        }} 
+      <Tabs.Screen
+        name="history"
+        options={{
+          title: "History",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="time" size={size} color={color} />
+          ),
+        }}
       />
-      <Stack.Screen 
-        name="(manufacturer)/create-shipment" 
-        options={{ 
-          title: 'Create Shipment',
-          headerShown: false
-        }} 
-      />
-      <Stack.Screen 
-        name="(manufacturer)/show-qr" 
-        options={{ 
-          title: 'Shipment QR Code'
-        }} 
-      />
-      <Stack.Screen 
-        name="(driver)/dashboard" 
-        options={{ 
-          title: 'Driver Dashboard',
-          headerShown: false
-        }} 
-      />
-      <Stack.Screen 
-        name="(driver)/gps-hops" 
-        options={{ 
-          title: 'GPS Tracker'
-        }} 
-      />
-      <Stack.Screen 
-        name="(driver)/scan-shipment" 
-        options={{ 
-          title: 'Scan Checkpoint'
-        }} 
-      />
-      <Stack.Screen 
-        name="(driver)/shipment-control" 
-        options={{ 
-          title: 'Shipment Control'
-        }} 
-      />
-      <Stack.Screen 
-        name="(driver)/tamper" 
-        options={{ 
-          title: 'Report Issue'
-        }} 
-      />
-      <Stack.Screen 
-        name="(regulator)/dashboard" 
-        options={{ 
-          title: 'Regulator Dashboard',
-          headerShown: false
-        }} 
-      />
-      <Stack.Screen 
-        name="(regulator)/alerts" 
-        options={{ 
-          title: 'Active Alerts'
-        }} 
-      />
-      <Stack.Screen 
-        name="(regulator)/audit-trail" 
-        options={{ 
-          title: 'Audit Trail'
-        }} 
-      />
-    </Stack>
+    </Tabs>
   );
 }

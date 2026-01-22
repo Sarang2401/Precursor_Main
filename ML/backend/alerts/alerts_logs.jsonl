@@ -1,0 +1,12 @@
+{
+  "ts": 1762188893.45,
+  "device": "thingspeak_device",
+  "risk": "HIGH",
+  "alerts": [
+    {
+      "type": "environment_anomaly",
+      "detail": "temp_out_of_range",
+      "value": 36.4
+    }
+  ]
+}
