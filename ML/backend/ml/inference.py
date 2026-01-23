@@ -9,7 +9,7 @@ lstm_model = load_model("ml/lstm_autoencoder.h5", compile=False)
 lstm_scaler = joblib.load("ml/lstm_scaler.joblib")
 
 # ---------------- CONFIG ----------------
-WINDOW_SIZE = 10
+WINDOW_SIZE = 30  # LSTM expects 30 timesteps
 LSTM_THRESHOLD = 0.05
 
 # ---------------- BUFFER (per device) ----------------
@@ -65,7 +65,7 @@ def run_ml(device_id, temp, hum, weight):
 
     X_lstm = np.column_stack((temp_seq, hum_seq))
     X_scaled = lstm_scaler.transform(X_lstm)
-    X_scaled = lstm_scaler.transform(X_lstm)
+    X_scaled = X_scaled.reshape(1, WINDOW_SIZE, 2)  # Add batch dimension: (1, 30, 2)
 
     
     recon = lstm_model.predict(X_scaled, verbose=0)
@@ -88,9 +88,10 @@ def run_ml(device_id, temp, hum, weight):
 
     return {
         "if_score": if_score,
-        "if_anomaly": if_anomaly,
+        "if_anomaly": bool(if_anomaly),  # Convert numpy.bool_ to Python bool
         "lstm_error": lstm_error,
         "risk": risk,
         "alerts": alerts,
         "categories": list(set(categories))
     }
+

@@ -13,6 +13,9 @@ const HOST_IP = getHostIP();
 export const API_BASE_URL = `http://${HOST_IP}:3000`;
 export const ML_API_BASE_URL = `http://${HOST_IP}:5000`;
 
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('ML_API_BASE_URL:', ML_API_BASE_URL);
+
 const handleResponse = async (response) => {
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Network error' }));

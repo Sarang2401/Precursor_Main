@@ -11,7 +11,7 @@ export default function RoleSelectionScreen() {
       <Text style={styles.subtitle}>Select Your Role</Text>
       <TouchableOpacity
         style={[styles.card, { borderColor: '#2563EB' }]}
-        onPress={() => router.push('/(manufacturer)/dashboard')}
+        onPress={() => router.push('/(manufacturer)')}
       >
         <Text style={styles.icon}>👷</Text>
         <Text style={styles.roleTitle}>MANUFACTURER</Text>

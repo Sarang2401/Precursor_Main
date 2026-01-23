@@ -4,15 +4,33 @@ from ml.inference import reset_buffer, run_ml
 from alert_writer import write_alert
 from thingspeak_client import fetch_thingspeak
 from config import ALERT_FILE
+from blockchain import blockchain
+from blockchain_api import blockchain_bp
 import json, os
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for Expo app
 
+# Register blockchain API Blueprint
+app.register_blueprint(blockchain_bp)
+
+def record_to_blockchain(device_id: str, sensor_data: dict, ml_result: dict):
+    """Record sensor event to blockchain for immutable audit trail."""
+    try:
+        blockchain.add_block({
+            "type": "sensor_reading",
+            "device_id": device_id,
+            "sensor_data": sensor_data,
+            "ml_result": ml_result
+        })
+    except Exception as e:
+        print(f"⚠️ Blockchain recording failed: {e}")
+
 @app.route("/api/sensor/manual", methods=["POST"])
 def manual_sensor():
     payload = request.json
     device_id = payload.get("device_id", "manual_device")
+    skip_blockchain = payload.get("skip_blockchain", False)
     data = {
         "temp": payload["temp"],
         "hum": payload["hum"],
@@ -21,6 +39,10 @@ def manual_sensor():
 
     ml = run_ml(device_id, **data)
     write_alert(device_id, data, ml)
+    
+    # Record to blockchain (skip for simulations to avoid slow mining)
+    if not skip_blockchain:
+        record_to_blockchain(device_id, data, ml)
 
     return jsonify({"status": "ok", "result": ml})
 
@@ -35,6 +57,9 @@ def thingspeak_sensor():
 
     ml = run_ml(device_id, **data)
     write_alert(device_id, data, ml)
+    
+    # Record to blockchain
+    record_to_blockchain(device_id, data, ml)
 
     return jsonify({"status": "ok", "result": ml})
 
@@ -52,4 +77,5 @@ def health():
     return jsonify({"status": "running"})
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
+

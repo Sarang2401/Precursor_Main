@@ -1,11 +1,14 @@
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertBanner from '../../components/AlertBanner';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
 import { api, formatDate, formatStatus } from '../../config/api';
 
 export default function RegulatorDashboard() {
+  const router = useRouter();
   const [shipments, setShipments] = useState([]);
   const [events, setEvents] = useState([]);
   const [stats, setStats] = useState({
@@ -19,7 +22,7 @@ export default function RegulatorDashboard() {
   // Load data on mount
   useEffect(() => {
     loadData();
-    
+
     // Auto-refresh every 10 seconds
     const interval = setInterval(loadData, 10000);
     return () => clearInterval(interval);
@@ -88,12 +91,12 @@ export default function RegulatorDashboard() {
   const getActiveAlerts = () => {
     // Get off-route events
     const offRouteEvents = events.filter(e => e.offRoute === 1 && e.type === 'GPS_UPDATE');
-    
+
     // Group by shipment and get latest
     const alertMap = {};
     offRouteEvents.forEach(event => {
-      if (!alertMap[event.shipmentId] || 
-          new Date(event.timestamp) > new Date(alertMap[event.shipmentId].timestamp)) {
+      if (!alertMap[event.shipmentId] ||
+        new Date(event.timestamp) > new Date(alertMap[event.shipmentId].timestamp)) {
         alertMap[event.shipmentId] = event;
       }
     });
@@ -102,7 +105,7 @@ export default function RegulatorDashboard() {
     const alerts = Object.values(alertMap).map(event => {
       const shipment = shipments.find(s => s.id === event.shipmentId);
       const timeAgo = getTimeAgo(event.timestamp);
-      
+
       return {
         id: event.id,
         urn: shipment?.urn || event.shipmentId,
@@ -114,7 +117,7 @@ export default function RegulatorDashboard() {
     });
 
     // Sort by most recent
-    return alerts.sort((a, b) => 
+    return alerts.sort((a, b) =>
       new Date(b.timestamp) - new Date(a.timestamp)
     ).slice(0, 10); // Show top 10
   };
@@ -125,13 +128,13 @@ export default function RegulatorDashboard() {
     const past = new Date(timestamp);
     const diffMs = now - past;
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins} min ago`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours} hr ago`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   };
@@ -159,6 +162,16 @@ export default function RegulatorDashboard() {
         <StatsCard title="Active Alerts" stat={stats.activeAlerts} />
         <StatsCard title="Total Events" stat={stats.blockchainRecords} />
       </View>
+
+      {/* Navigation to ML Alerts */}
+      <TouchableOpacity
+        style={styles.mlAlertButton}
+        onPress={() => router.push('/(regulator)/alerts')}
+      >
+        <Text style={styles.mlAlertText}>⚠️ View ML Anomalies</Text>
+        <Ionicons name="chevron-forward" size={20} color="#DC2626" />
+      </TouchableOpacity>
+
 
       {/* Active Alerts Section */}
       <Text style={styles.section}>Active Alerts {alerts.length > 0 && `(${alerts.length})`}</Text>
@@ -198,10 +211,10 @@ export default function RegulatorDashboard() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    padding: 16, 
-    backgroundColor: '#fff' 
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff'
   },
   centerContainer: {
     flex: 1,
@@ -214,27 +227,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6B7280'
   },
-  header: { 
-    fontSize: 24, 
-    fontWeight: 'bold', 
-    marginBottom: 14, 
-    color: '#D97706' 
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 14,
+    color: '#D97706'
   },
-  stats: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-evenly', 
+  stats: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     marginBottom: 16,
     flexWrap: 'wrap'
   },
-  section: { 
-    fontSize: 16, 
-    fontWeight: '600', 
+  section: {
+    fontSize: 16,
+    fontWeight: '600',
     marginVertical: 10,
     color: '#111827'
   },
   alertsList: {
     maxHeight: 200,
     marginBottom: 10
+  },
+  mlAlertButton: {
+    backgroundColor: '#FEF2F2',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#FCA5A5'
+  },
+  mlAlertText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#DC2626'
   },
   emptyContainer: {
     alignItems: 'center',

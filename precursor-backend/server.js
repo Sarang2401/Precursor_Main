@@ -102,12 +102,12 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  
-  const a = 
+
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -118,7 +118,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 
 function simulateGPSStep() {
   const sim = db.prepare('SELECT * FROM simulation WHERE id = 1').get();
-  
+
   if (!sim.activeShipmentId) {
     // No active shipment, don't simulate
     return;
@@ -131,7 +131,7 @@ function simulateGPSStep() {
   // Add random jitter (±0.001 degrees ≈ ±100m)
   const jitterLat = (Math.random() - 0.5) * 0.002;
   const jitterLon = (Math.random() - 0.5) * 0.002;
-  
+
   const newLat = targetPoint.lat + jitterLat;
   const newLon = targetPoint.lon + jitterLon;
 
@@ -157,7 +157,7 @@ function simulateGPSStep() {
   // Log GPS event
   const eventId = randomUUID();
   const timestamp = new Date().toISOString();
-  
+
   // Simulate environmental data
   const temperature = 20 + Math.random() * 10; // 20-30°C
   const humidity = 40 + Math.random() * 20; // 40-60%
@@ -204,8 +204,8 @@ app.post('/shipments', (req, res) => {
     const { productId, origin, destination, initialWeight } = req.body;
 
     if (!productId || !origin || !destination || initialWeight === undefined) {
-      return res.status(400).json({ 
-        error: 'Missing required fields: productId, origin, destination, initialWeight' 
+      return res.status(400).json({
+        error: 'Missing required fields: productId, origin, destination, initialWeight'
       });
     }
 
@@ -228,11 +228,11 @@ app.post('/shipments', (req, res) => {
     if (!sim.activeShipmentId) {
       db.prepare('UPDATE simulation SET activeShipmentId = ?, indexPos = 0 WHERE id = 1')
         .run(shipmentId);
-      
+
       // Set shipment to In Transit
       db.prepare('UPDATE shipments SET status = ? WHERE id = ?')
         .run('In Transit', shipmentId);
-      
+
       console.log(`🚛 Active shipment set: ${shipmentId}`);
     }
 
@@ -267,14 +267,14 @@ app.get('/shipments', (req, res) => {
 app.get('/shipments/:id', (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
     if (!shipment) {
       return res.status(404).json({ error: 'Shipment not found' });
     }
 
     const events = db.prepare('SELECT * FROM events WHERE shipmentId = ? ORDER BY timestamp DESC').all(id);
-    
+
     res.json({ shipment, events });
   } catch (error) {
     console.error('Error fetching shipment:', error);
@@ -388,22 +388,42 @@ app.get('/health', (req, res) => {
 // Server Initialization
 // ============================================================================
 
-function startServer() {
-  initializeDatabase();
-  
-  // Start GPS simulation interval
-  setInterval(simulateGPSStep, SIMULATION_INTERVAL);
-  console.log(`🛰️  GPS simulation started (${SIMULATION_INTERVAL}ms interval)`);
+const MAX_RETRIES = 5;
 
-  app.listen(PORT, '0.0.0.0', () => {
+function startServer(retryCount = 0) {
+  if (retryCount === 0) {
+    initializeDatabase();
+
+    // Start GPS simulation interval only once
+    setInterval(simulateGPSStep, SIMULATION_INTERVAL);
+    console.log(`🛰️  GPS simulation started (${SIMULATION_INTERVAL}ms interval)`);
+  }
+
+  const currentPort = PORT + retryCount;
+
+  const server = app.listen(currentPort, '0.0.0.0', () => {
     console.log('');
     console.log('🚀 ========================================');
     console.log('   PRECURSOR Backend Running');
     console.log('========================================');
-    console.log(`   Local:    http://localhost:${PORT}`);
-    console.log(`   Network:  http://0.0.0.0:${PORT}`);
+    console.log(`   Local:    http://localhost:${currentPort}`);
+    console.log(`   Network:  http://0.0.0.0:${currentPort}`);
     console.log('========================================');
     console.log('');
+  });
+
+  server.on('error', (e) => {
+    if (e.code === 'EADDRINUSE') {
+      console.log(`⚠️  Port ${currentPort} is busy, trying ${currentPort + 1}...`);
+      if (retryCount < MAX_RETRIES) {
+        setTimeout(() => startServer(retryCount + 1), 1000);
+      } else {
+        console.error('❌ Could not find an open port after multiple attempts.');
+        process.exit(1);
+      }
+    } else {
+      console.error('❌ Server error:', e);
+    }
   });
 }
 

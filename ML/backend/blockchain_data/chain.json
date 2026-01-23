@@ -1,0 +1,2624 @@
+[
+  {
+    "index": 0,
+    "timestamp": "2026-01-22T19:04:27.585362",
+    "data": {
+      "type": "genesis",
+      "message": "Precursor Supply Chain Blockchain Initialized",
+      "version": "1.0.0"
+    },
+    "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "nonce": 241,
+    "hash": "00a4b9dcacd082ac8f93b3fa5cd4aa54f5d559924a095a74e98a1f5f49641377"
+  },
+  {
+    "index": 1,
+    "timestamp": "2026-01-22T19:04:55.443373+00:00",
+    "data": {
+      "type": "test",
+      "message": "Hello Blockchain"
+    },
+    "previous_hash": "00a4b9dcacd082ac8f93b3fa5cd4aa54f5d559924a095a74e98a1f5f49641377",
+    "nonce": 898,
+    "hash": "00ada4fc52567979810e71864ccd296e1242e9c7c35773654f3dde249213af89"
+  },
+  {
+    "index": 2,
+    "timestamp": "2026-01-22T19:22:19.686554+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_002",
+      "sensor_data": {
+        "temp": 27.007644164399057,
+        "hum": 45.187486428018765,
+        "weight": 91.37903386314
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00ada4fc52567979810e71864ccd296e1242e9c7c35773654f3dde249213af89",
+    "nonce": 214,
+    "hash": "00c4f11ec96163cba185da3ee932c9b4458766346fd4e74493cc4950e4e39058"
+  },
+  {
+    "index": 3,
+    "timestamp": "2026-01-22T19:22:22.076223+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 21.77121068634074,
+        "hum": 51.579843400319895,
+        "weight": 97.85544945082368
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00c4f11ec96163cba185da3ee932c9b4458766346fd4e74493cc4950e4e39058",
+    "nonce": 407,
+    "hash": "00309be753745efea4805d70954c31f8c71c89a53b5658fe866a2991106fc644"
+  },
+  {
+    "index": 4,
+    "timestamp": "2026-01-22T19:22:24.468239+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 22.306205135215023,
+        "hum": 52.1362526184727,
+        "weight": 93.00040676888321
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00309be753745efea4805d70954c31f8c71c89a53b5658fe866a2991106fc644",
+    "nonce": 98,
+    "hash": "006bfcba77c1ce5ce77108fe03a35c2676271afde779d1495c22b3ddce2a2023"
+  },
+  {
+    "index": 5,
+    "timestamp": "2026-01-22T19:22:26.816643+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 23.10862877597591,
+        "hum": 50.918885196291036,
+        "weight": 92.56759970059326
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "006bfcba77c1ce5ce77108fe03a35c2676271afde779d1495c22b3ddce2a2023",
+    "nonce": 76,
+    "hash": "0010c6a83d426b8b7b4d6650946923eb668398474db58a7deb5d95456a7287b7"
+  },
+  {
+    "index": 6,
+    "timestamp": "2026-01-22T19:22:29.216300+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_002",
+      "sensor_data": {
+        "temp": 20.574846519202588,
+        "hum": 53.00899587851988,
+        "weight": 90.87056037412005
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0010c6a83d426b8b7b4d6650946923eb668398474db58a7deb5d95456a7287b7",
+    "nonce": 164,
+    "hash": "009349a5b626c0df6df0001fd533e710219e0888df88277edf7e8944e6da5e0d"
+  },
+  {
+    "index": 7,
+    "timestamp": "2026-01-22T19:22:31.608480+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 22.15513888620564,
+        "hum": 54.66479709036944,
+        "weight": 91.15622921221333
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "009349a5b626c0df6df0001fd533e710219e0888df88277edf7e8944e6da5e0d",
+    "nonce": 35,
+    "hash": "00d094c9e336e446b730fc62250914aa149de0b2ee9fc678a6839245f44021d2"
+  },
+  {
+    "index": 8,
+    "timestamp": "2026-01-22T19:22:34.014431+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_003",
+      "sensor_data": {
+        "temp": 24.13865617646337,
+        "hum": 47.20042416528484,
+        "weight": 94.55189018249749
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d094c9e336e446b730fc62250914aa149de0b2ee9fc678a6839245f44021d2",
+    "nonce": 35,
+    "hash": "007d40de86800ca0f987a257e552b307b7449f95ce624041eace2afdff494c7d"
+  },
+  {
+    "index": 9,
+    "timestamp": "2026-01-22T19:22:36.403505+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_003",
+      "sensor_data": {
+        "temp": 23.45293096827749,
+        "hum": 51.62782936064684,
+        "weight": 99.83477895791964
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "007d40de86800ca0f987a257e552b307b7449f95ce624041eace2afdff494c7d",
+    "nonce": 117,
+    "hash": "00f5039e3f22344e1bd7d96de35ea6d4e9614aaa0f72c9aca08f272ef3150cef"
+  },
+  {
+    "index": 10,
+    "timestamp": "2026-01-22T19:22:38.779559+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_003",
+      "sensor_data": {
+        "temp": 22.57184699807272,
+        "hum": 45.504792832247546,
+        "weight": 95.09498987778169
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00f5039e3f22344e1bd7d96de35ea6d4e9614aaa0f72c9aca08f272ef3150cef",
+    "nonce": 1480,
+    "hash": "000656a715c83044fefa29ec592b4251c0a8526188a481ccb91a8ba3099427a6"
+  },
+  {
+    "index": 11,
+    "timestamp": "2026-01-22T19:22:41.278148+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 24.063514218530152,
+        "hum": 50.28795367732832,
+        "weight": 93.73579588114434
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000656a715c83044fefa29ec592b4251c0a8526188a481ccb91a8ba3099427a6",
+    "nonce": 58,
+    "hash": "00425d0fb24222f73e7e1b542953f627ca603a86b7a1a34d7258a2cc016bfaec"
+  },
+  {
+    "index": 12,
+    "timestamp": "2026-01-22T19:22:43.665468+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_003",
+      "sensor_data": {
+        "temp": 41.002320183619865,
+        "hum": 49.42648702378703,
+        "weight": 93.08225310631067
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00425d0fb24222f73e7e1b542953f627ca603a86b7a1a34d7258a2cc016bfaec",
+    "nonce": 1044,
+    "hash": "00eae92a1532a63774bc7dbd629ccfc4a51c1bc39c89f08803795447c606b40a"
+  },
+  {
+    "index": 13,
+    "timestamp": "2026-01-22T19:22:46.306373+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_004",
+      "sensor_data": {
+        "temp": 25.200726850402955,
+        "hum": 48.5650382147868,
+        "weight": 0
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00eae92a1532a63774bc7dbd629ccfc4a51c1bc39c89f08803795447c606b40a",
+    "nonce": 4,
+    "hash": "00dab0d3b19591538fd5a823f0a79cf43337c191fb88f513bf5e394bc1e7f881"
+  },
+  {
+    "index": 14,
+    "timestamp": "2026-01-22T19:22:48.907584+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_001",
+      "sensor_data": {
+        "temp": 42.10716992962858,
+        "hum": 46.41701846457945,
+        "weight": 91.43849454123172
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00dab0d3b19591538fd5a823f0a79cf43337c191fb88f513bf5e394bc1e7f881",
+    "nonce": 255,
+    "hash": "0034888f525e439b44289b996bd7bacab9b3e3aa37d5e2a30fde95851090211d"
+  },
+  {
+    "index": 15,
+    "timestamp": "2026-01-22T19:22:51.514312+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_001",
+      "sensor_data": {
+        "temp": 40.941093475336245,
+        "hum": 82.73842025245379,
+        "weight": 8.956795959312343
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0034888f525e439b44289b996bd7bacab9b3e3aa37d5e2a30fde95851090211d",
+    "nonce": 265,
+    "hash": "001b6a836d7fb4007ffb24706ade34ea6631088571c9add9d8fca46d792d8512"
+  },
+  {
+    "index": 16,
+    "timestamp": "2026-01-22T19:22:54.120407+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SENSOR_005",
+      "sensor_data": {
+        "temp": 40.981392686963275,
+        "hum": 47.35331086537527,
+        "weight": 98.34702913422424
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001b6a836d7fb4007ffb24706ade34ea6631088571c9add9d8fca46d792d8512",
+    "nonce": 931,
+    "hash": "007843430fe8b7ba4e842edda02b102f5730d540c80ed730e520ec5bde21b027"
+  },
+  {
+    "index": 17,
+    "timestamp": "2026-01-22T19:24:48.049330+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.496908441312723,
+        "hum": 47.69443315665073,
+        "weight": 91.34716975415746
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "007843430fe8b7ba4e842edda02b102f5730d540c80ed730e520ec5bde21b027",
+    "nonce": 73,
+    "hash": "00a845e63b1042b0e6aedceb59013ae3f19c76fb9b4e3631e125c3850661a61d"
+  },
+  {
+    "index": 18,
+    "timestamp": "2026-01-22T19:24:50.345242+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.279191141876094,
+        "hum": 45.13567913522743,
+        "weight": 95.27392149353574
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a845e63b1042b0e6aedceb59013ae3f19c76fb9b4e3631e125c3850661a61d",
+    "nonce": 568,
+    "hash": "0066771f45f63e94b90bc16057a4462459e4940835eaa00d5eca03f5976dfd14"
+  },
+  {
+    "index": 19,
+    "timestamp": "2026-01-22T19:24:52.645179+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.46133451857557,
+        "hum": 51.98912634872379,
+        "weight": 91.36863829809822
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0066771f45f63e94b90bc16057a4462459e4940835eaa00d5eca03f5976dfd14",
+    "nonce": 239,
+    "hash": "00b57afa450d1eb45534ffade713361d4c50ea5cf38e8bc0876438aaab5f55b8"
+  },
+  {
+    "index": 20,
+    "timestamp": "2026-01-22T19:24:54.928435+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.007850382748664,
+        "hum": 54.991746275882456,
+        "weight": 93.8575159115677
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00b57afa450d1eb45534ffade713361d4c50ea5cf38e8bc0876438aaab5f55b8",
+    "nonce": 64,
+    "hash": "00666631486bd93998f454767289bb41153e1ff833c8218a02a7ea39c4285900"
+  },
+  {
+    "index": 21,
+    "timestamp": "2026-01-22T19:24:57.204975+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.059365201401715,
+        "hum": 52.784672255842075,
+        "weight": 90.24465528659489
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00666631486bd93998f454767289bb41153e1ff833c8218a02a7ea39c4285900",
+    "nonce": 213,
+    "hash": "005570306eb58252bd6619090b59eba7f4f1b4dab327b8e50ca660b5b537b21c"
+  },
+  {
+    "index": 22,
+    "timestamp": "2026-01-22T19:24:59.505716+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.447069402778254,
+        "hum": 46.42615358949067,
+        "weight": 93.80688170428856
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "005570306eb58252bd6619090b59eba7f4f1b4dab327b8e50ca660b5b537b21c",
+    "nonce": 41,
+    "hash": "0097f0b9020f762ac6a8a319b7129ebcaf303b3a7897501d3ddca720e0d0afad"
+  },
+  {
+    "index": 23,
+    "timestamp": "2026-01-22T19:25:01.788731+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.421353563093607,
+        "hum": 49.67831378190854,
+        "weight": 95.46231260025843
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0097f0b9020f762ac6a8a319b7129ebcaf303b3a7897501d3ddca720e0d0afad",
+    "nonce": 605,
+    "hash": "0088cca9d061a720a4d378a926e15c2c3090d71bb32da87d4fbd84acc926e2ac"
+  },
+  {
+    "index": 24,
+    "timestamp": "2026-01-22T19:25:04.060756+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.245941168947613,
+        "hum": 53.80040030644522,
+        "weight": 96.45204529781714
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0088cca9d061a720a4d378a926e15c2c3090d71bb32da87d4fbd84acc926e2ac",
+    "nonce": 192,
+    "hash": "00ec4be5ce6ba8c999617fe82d6718441e598b43a1e29a7885ae371b85b244a5"
+  },
+  {
+    "index": 25,
+    "timestamp": "2026-01-22T19:25:06.366600+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.213231267641046,
+        "hum": 51.86778912531732,
+        "weight": 95.13240895405806
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00ec4be5ce6ba8c999617fe82d6718441e598b43a1e29a7885ae371b85b244a5",
+    "nonce": 141,
+    "hash": "001e908437ed36272c5da7d918d6054ff8e244b3970f6eb112c766b48d88eb25"
+  },
+  {
+    "index": 26,
+    "timestamp": "2026-01-22T19:27:35.278785+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.96756164026441,
+        "hum": 46.410410782916706,
+        "weight": 92.95347145709498
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001e908437ed36272c5da7d918d6054ff8e244b3970f6eb112c766b48d88eb25",
+    "nonce": 695,
+    "hash": "00aa35ad9be16fae0f665f43bca7eecfdffb7769ae3b213871db12e6e85af88d"
+  },
+  {
+    "index": 27,
+    "timestamp": "2026-01-22T19:27:37.496112+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.55255292478864,
+        "hum": 47.63258481267235,
+        "weight": 98.93617097271361
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00aa35ad9be16fae0f665f43bca7eecfdffb7769ae3b213871db12e6e85af88d",
+    "nonce": 198,
+    "hash": "00533d5deea8d4ae401610b8b95bea5981f1c929051509ee4fcffd25253cbde0"
+  },
+  {
+    "index": 28,
+    "timestamp": "2026-01-22T19:27:39.680177+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.142975955781996,
+        "hum": 45.16809027241206,
+        "weight": 99.41233611049884
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00533d5deea8d4ae401610b8b95bea5981f1c929051509ee4fcffd25253cbde0",
+    "nonce": 58,
+    "hash": "001ea9c0994867a076ab101e708d68ca1c26a69f1ea9a342a49bc44aed6d36ac"
+  },
+  {
+    "index": 29,
+    "timestamp": "2026-01-22T19:27:41.846511+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.396100154482863,
+        "hum": 50.83229872152695,
+        "weight": 91.01017676186893
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001ea9c0994867a076ab101e708d68ca1c26a69f1ea9a342a49bc44aed6d36ac",
+    "nonce": 385,
+    "hash": "0057eb544e1fbe63c23d7a855d869abcb0ac47340995407661952a471ef62b04"
+  },
+  {
+    "index": 30,
+    "timestamp": "2026-01-22T19:27:44.054039+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.791764109581273,
+        "hum": 54.66393725562217,
+        "weight": 90.40598388121307
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0057eb544e1fbe63c23d7a855d869abcb0ac47340995407661952a471ef62b04",
+    "nonce": 65,
+    "hash": "00335d130bf0b05c843992914d9ae6e9f12c42a57915b0272bf7098729630fa5"
+  },
+  {
+    "index": 31,
+    "timestamp": "2026-01-22T19:27:46.255690+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.111144916735434,
+        "hum": 50.22555599038875,
+        "weight": 99.35519507925277
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00335d130bf0b05c843992914d9ae6e9f12c42a57915b0272bf7098729630fa5",
+    "nonce": 756,
+    "hash": "00ff2369c28e6c00e847946582f412df812171988bffe22954bcdc8d5d44b4d6"
+  },
+  {
+    "index": 32,
+    "timestamp": "2026-01-22T19:27:48.503171+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.791842831517247,
+        "hum": 45.92425158399443,
+        "weight": 94.38677942945614
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00ff2369c28e6c00e847946582f412df812171988bffe22954bcdc8d5d44b4d6",
+    "nonce": 250,
+    "hash": "000a24132ca705f560b0c33f806f8b95c9ab4eb961b82c50e7bf44a8c10ccd72"
+  },
+  {
+    "index": 33,
+    "timestamp": "2026-01-22T19:27:50.718600+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.421748367318727,
+        "hum": 45.86653877630174,
+        "weight": 94.45815493761005
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000a24132ca705f560b0c33f806f8b95c9ab4eb961b82c50e7bf44a8c10ccd72",
+    "nonce": 104,
+    "hash": "00a3ee02353e78a84b0961b0345f0e9ed75eb439a006dd756943a1897259c255"
+  },
+  {
+    "index": 34,
+    "timestamp": "2026-01-22T19:27:52.903997+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.045881487383788,
+        "hum": 48.41107869353189,
+        "weight": 98.67969668764641
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a3ee02353e78a84b0961b0345f0e9ed75eb439a006dd756943a1897259c255",
+    "nonce": 344,
+    "hash": "00fa6d4f73fae9bafec38d01a82af3362be8e5b84b9ca8dbeab1f72b418c5fd3"
+  },
+  {
+    "index": 35,
+    "timestamp": "2026-01-22T19:27:55.168242+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.387986994174366,
+        "hum": 50.23695037737035,
+        "weight": 91.74707772378191
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00fa6d4f73fae9bafec38d01a82af3362be8e5b84b9ca8dbeab1f72b418c5fd3",
+    "nonce": 229,
+    "hash": "00b8fffab4f1b411b3ad5d1971062ba9158bb7b1b3d176c492e42cf33f62fb2e"
+  },
+  {
+    "index": 36,
+    "timestamp": "2026-01-22T19:27:57.379753+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.801912899022604,
+        "hum": 49.84904515523393,
+        "weight": 93.54332762377877
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00b8fffab4f1b411b3ad5d1971062ba9158bb7b1b3d176c492e42cf33f62fb2e",
+    "nonce": 752,
+    "hash": "002641447407e537c07ff0266c8046b75d1b23927307e70199bd0dffa387bdf9"
+  },
+  {
+    "index": 37,
+    "timestamp": "2026-01-22T19:27:59.622185+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.69177482222078,
+        "hum": 52.89341291899195,
+        "weight": 90.71011695895493
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "002641447407e537c07ff0266c8046b75d1b23927307e70199bd0dffa387bdf9",
+    "nonce": 529,
+    "hash": "0084afbd6c6e6a8906db1979c789a51ca869b94068c2e965755c929e0fceca1d"
+  },
+  {
+    "index": 38,
+    "timestamp": "2026-01-22T19:28:01.856739+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.904645452904784,
+        "hum": 45.025606946754735,
+        "weight": 92.08993861940375
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0084afbd6c6e6a8906db1979c789a51ca869b94068c2e965755c929e0fceca1d",
+    "nonce": 534,
+    "hash": "006a0850927465462ab055b463de1ee98d91d13790210765ef64814976891ac7"
+  },
+  {
+    "index": 39,
+    "timestamp": "2026-01-22T19:28:04.073429+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.732509770054598,
+        "hum": 51.39145241444084,
+        "weight": 95.25817457627043
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "006a0850927465462ab055b463de1ee98d91d13790210765ef64814976891ac7",
+    "nonce": 16,
+    "hash": "00c823817c9be17e295f8a4c73b3ce4cbb2ebb4f9416966f21403c569b081a16"
+  },
+  {
+    "index": 40,
+    "timestamp": "2026-01-22T19:28:06.260120+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.13745189582056,
+        "hum": 51.98304729022731,
+        "weight": 93.68845377084514
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00c823817c9be17e295f8a4c73b3ce4cbb2ebb4f9416966f21403c569b081a16",
+    "nonce": 479,
+    "hash": "00d9872a81b5c23d344c9e58c5e03a191e374457a8edb40723b0e6a7e26aceba"
+  },
+  {
+    "index": 41,
+    "timestamp": "2026-01-22T19:28:08.461712+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.96550596812265,
+        "hum": 47.22164202904264,
+        "weight": 95.36765589391464
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d9872a81b5c23d344c9e58c5e03a191e374457a8edb40723b0e6a7e26aceba",
+    "nonce": 184,
+    "hash": "0080d2a7a001d6e31ff6f06100f778669401c47c6969aa1651d0eab30510ec99"
+  },
+  {
+    "index": 42,
+    "timestamp": "2026-01-22T19:28:10.676100+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.05396376040382,
+        "hum": 54.39724271387238,
+        "weight": 98.70419141920307
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0080d2a7a001d6e31ff6f06100f778669401c47c6969aa1651d0eab30510ec99",
+    "nonce": 88,
+    "hash": "009d16310ab1773eb33eba469688bc70dcf0c09444803df7a429b9022e0cbc31"
+  },
+  {
+    "index": 43,
+    "timestamp": "2026-01-22T19:28:12.896997+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.516583134570833,
+        "hum": 54.03452196577618,
+        "weight": 99.53631351623777
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "009d16310ab1773eb33eba469688bc70dcf0c09444803df7a429b9022e0cbc31",
+    "nonce": 26,
+    "hash": "004266033b739a2c38b014926d2003fae80c8d5b8f8532fb42086c6c91b172ed"
+  },
+  {
+    "index": 44,
+    "timestamp": "2026-01-22T19:28:15.100423+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.65043230281787,
+        "hum": 49.720072867116926,
+        "weight": 97.11005128012214
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "004266033b739a2c38b014926d2003fae80c8d5b8f8532fb42086c6c91b172ed",
+    "nonce": 405,
+    "hash": "00078f4e548f45551cb2a57172bafb1f30c783f1a2270ed90979094c52f6caf8"
+  },
+  {
+    "index": 45,
+    "timestamp": "2026-01-22T19:28:17.336557+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.469186466034735,
+        "hum": 48.37709628131799,
+        "weight": 98.31677322527986
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00078f4e548f45551cb2a57172bafb1f30c783f1a2270ed90979094c52f6caf8",
+    "nonce": 204,
+    "hash": "00e0b1dc1878743840914e459342e9f1c9da2df4a79b723001dd3ecb4b84160f"
+  },
+  {
+    "index": 46,
+    "timestamp": "2026-01-22T19:28:19.557701+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.73687523362252,
+        "hum": 49.74843879210891,
+        "weight": 97.60961506556208
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00e0b1dc1878743840914e459342e9f1c9da2df4a79b723001dd3ecb4b84160f",
+    "nonce": 535,
+    "hash": "0045eeb24e2398d30f9d24627b31dbf6c91d0d9c3df913fdccf7d6830317ee44"
+  },
+  {
+    "index": 47,
+    "timestamp": "2026-01-22T19:28:21.807447+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.362856958006788,
+        "hum": 54.6173161820018,
+        "weight": 90.953679468793
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0045eeb24e2398d30f9d24627b31dbf6c91d0d9c3df913fdccf7d6830317ee44",
+    "nonce": 629,
+    "hash": "00df1ad05acd4701db188c4a20346fa75484b646218765a967aae34b5f22fc43"
+  },
+  {
+    "index": 48,
+    "timestamp": "2026-01-22T19:28:24.030912+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.659240847776058,
+        "hum": 52.42979821891648,
+        "weight": 94.75138992262396
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00df1ad05acd4701db188c4a20346fa75484b646218765a967aae34b5f22fc43",
+    "nonce": 236,
+    "hash": "003dd2ed3a579866344dcdcc2f73d3b9a859e5622cecf57c52bdbd9b3790e571"
+  },
+  {
+    "index": 49,
+    "timestamp": "2026-01-22T19:28:26.240386+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.97821166868187,
+        "hum": 54.06776716141074,
+        "weight": 97.3883633733358
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "003dd2ed3a579866344dcdcc2f73d3b9a859e5622cecf57c52bdbd9b3790e571",
+    "nonce": 9,
+    "hash": "0055cda99b8447a8dbd8e62dedd21016614e64528241ea48dd55ae549e0c8025"
+  },
+  {
+    "index": 50,
+    "timestamp": "2026-01-22T19:28:28.428763+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.371777805873627,
+        "hum": 49.083282651032235,
+        "weight": 92.29756674663226
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0055cda99b8447a8dbd8e62dedd21016614e64528241ea48dd55ae549e0c8025",
+    "nonce": 602,
+    "hash": "001ee28de8ef82c6a9fa83dead0f8d6ddf12ad425cccadfce7b4891ea2af9055"
+  },
+  {
+    "index": 51,
+    "timestamp": "2026-01-22T19:28:30.663709+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.654300222037918,
+        "hum": 54.65611495248204,
+        "weight": 91.78765312567994
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001ee28de8ef82c6a9fa83dead0f8d6ddf12ad425cccadfce7b4891ea2af9055",
+    "nonce": 175,
+    "hash": "0093d957d27b077ca7c109d46b778848cbf222e2328f1d359e443c94c9920f49"
+  },
+  {
+    "index": 52,
+    "timestamp": "2026-01-22T19:28:32.853441+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.227753766255343,
+        "hum": 45.66576615563619,
+        "weight": 92.29917674981084
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0093d957d27b077ca7c109d46b778848cbf222e2328f1d359e443c94c9920f49",
+    "nonce": 66,
+    "hash": "00a3687bea4b6e5eee479d4e8d49c6b08d7e57b39e9cabcdc5f87de9903f0ba3"
+  },
+  {
+    "index": 53,
+    "timestamp": "2026-01-22T19:28:35.064977+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.78841445269638,
+        "hum": 51.90289530042173,
+        "weight": 95.09497206042474
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a3687bea4b6e5eee479d4e8d49c6b08d7e57b39e9cabcdc5f87de9903f0ba3",
+    "nonce": 130,
+    "hash": "00f79dc90dd7d510301369262623b9668999c61e0ccf4526f9a2303870cbf349"
+  },
+  {
+    "index": 54,
+    "timestamp": "2026-01-22T19:28:37.282231+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.314985153934966,
+        "hum": 45.4539200315234,
+        "weight": 96.45854816351573
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00f79dc90dd7d510301369262623b9668999c61e0ccf4526f9a2303870cbf349",
+    "nonce": 4,
+    "hash": "00bfbaf01241d49d4aa3099beadab4c53f3bc139d8e6d8317f17113a4a3f13fe"
+  },
+  {
+    "index": 55,
+    "timestamp": "2026-01-23T05:17:42.569826+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.695720433042283,
+        "hum": 45.45947960002843,
+        "weight": 94.8187148043789
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00bfbaf01241d49d4aa3099beadab4c53f3bc139d8e6d8317f17113a4a3f13fe",
+    "nonce": 16,
+    "hash": "0080358925d78585c9b2cb4263d50f5a7566cad9ba0e76e93b108a9fcfaff5c7"
+  },
+  {
+    "index": 56,
+    "timestamp": "2026-01-23T05:17:44.729011+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.94473990400831,
+        "hum": 54.879186639054936,
+        "weight": 98.54572577506887
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0080358925d78585c9b2cb4263d50f5a7566cad9ba0e76e93b108a9fcfaff5c7",
+    "nonce": 1111,
+    "hash": "00dc4bd338cb2db5b6882a46c70fd2408ed177c834bc01196a9b99120b9686ae"
+  },
+  {
+    "index": 57,
+    "timestamp": "2026-01-23T05:17:46.938309+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.113198015594826,
+        "hum": 50.0557071858836,
+        "weight": 94.79538109498839
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00dc4bd338cb2db5b6882a46c70fd2408ed177c834bc01196a9b99120b9686ae",
+    "nonce": 86,
+    "hash": "006ca42f720005b60c061731a69741fc9eca1141452518d96e9dd6e3cca50b47"
+  },
+  {
+    "index": 58,
+    "timestamp": "2026-01-23T05:17:49.121818+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.844971476679753,
+        "hum": 54.56886644839902,
+        "weight": 90.4066449375812
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "006ca42f720005b60c061731a69741fc9eca1141452518d96e9dd6e3cca50b47",
+    "nonce": 447,
+    "hash": "0002a20203554218b0332a161898621e83db134eb5031683a904516a2a459dfc"
+  },
+  {
+    "index": 59,
+    "timestamp": "2026-01-23T05:17:51.317248+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.578316860304472,
+        "hum": 48.76066972908669,
+        "weight": 90.0415529363091
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0002a20203554218b0332a161898621e83db134eb5031683a904516a2a459dfc",
+    "nonce": 77,
+    "hash": "00175a716670a56f06cc3132db318c2afb02ef5b9274881e4923b4d9d509d82a"
+  },
+  {
+    "index": 60,
+    "timestamp": "2026-01-23T05:17:53.464276+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.115042416761447,
+        "hum": 47.247531094999175,
+        "weight": 95.71527411266194
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00175a716670a56f06cc3132db318c2afb02ef5b9274881e4923b4d9d509d82a",
+    "nonce": 112,
+    "hash": "0060cbf01b6d07b2270f49151f8a187761b579bc782de9a4c1b6aba0407dd206"
+  },
+  {
+    "index": 61,
+    "timestamp": "2026-01-23T05:17:55.608600+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.896190725280885,
+        "hum": 46.64684160020077,
+        "weight": 93.47419588538399
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0060cbf01b6d07b2270f49151f8a187761b579bc782de9a4c1b6aba0407dd206",
+    "nonce": 164,
+    "hash": "00451a711414b190ad0887695b694e0cc64241810cd7daa76e4c4a146d0c3ffe"
+  },
+  {
+    "index": 62,
+    "timestamp": "2026-01-23T05:17:57.776834+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.358728178370725,
+        "hum": 52.44611291424742,
+        "weight": 91.5617343933603
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00451a711414b190ad0887695b694e0cc64241810cd7daa76e4c4a146d0c3ffe",
+    "nonce": 100,
+    "hash": "00620420ca83ba90bbc4b13e117790e112d479eb44f1d99064cd2ebbb34b7686"
+  },
+  {
+    "index": 63,
+    "timestamp": "2026-01-23T05:17:59.945817+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.74885292369844,
+        "hum": 45.44455179569586,
+        "weight": 98.65772656772539
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00620420ca83ba90bbc4b13e117790e112d479eb44f1d99064cd2ebbb34b7686",
+    "nonce": 222,
+    "hash": "00adaf57a0c98dd9fec1f1992a8c09b795fe26554a41f67b74a92dd01506e353"
+  },
+  {
+    "index": 64,
+    "timestamp": "2026-01-23T05:18:02.103719+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.270689400843857,
+        "hum": 50.62285343217719,
+        "weight": 99.90815459732363
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00adaf57a0c98dd9fec1f1992a8c09b795fe26554a41f67b74a92dd01506e353",
+    "nonce": 1154,
+    "hash": "00866dda07832d89005972bf6c621b53e63844c80cb8b604f08839986829b5c8"
+  },
+  {
+    "index": 65,
+    "timestamp": "2026-01-23T05:18:04.284282+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.115575679327375,
+        "hum": 50.13050948247939,
+        "weight": 91.4390769910943
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00866dda07832d89005972bf6c621b53e63844c80cb8b604f08839986829b5c8",
+    "nonce": 170,
+    "hash": "00dc45e3881f0f0288af104c27599b9af3c80bf4a4b2c1aa8016ccb7c8e98ba3"
+  },
+  {
+    "index": 66,
+    "timestamp": "2026-01-23T05:18:06.453386+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 21.6545985116545,
+        "hum": 48.64127050169294,
+        "weight": 93.70301192990856
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00dc45e3881f0f0288af104c27599b9af3c80bf4a4b2c1aa8016ccb7c8e98ba3",
+    "nonce": 35,
+    "hash": "00a07b648b96c7ac0d78be2385cf966dda1cf170a023f03c12e1f6caa072133d"
+  },
+  {
+    "index": 67,
+    "timestamp": "2026-01-23T05:18:08.623332+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.064489535455788,
+        "hum": 45.02164880489349,
+        "weight": 94.29264818019712
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a07b648b96c7ac0d78be2385cf966dda1cf170a023f03c12e1f6caa072133d",
+    "nonce": 103,
+    "hash": "0018ab84cd1822e39c64d1eec8c6e4f27146af8c272c2840742192b86e7d33c8"
+  },
+  {
+    "index": 68,
+    "timestamp": "2026-01-23T05:18:10.815301+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.002936243109684,
+        "hum": 47.659933064588394,
+        "weight": 99.53253766278411
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0018ab84cd1822e39c64d1eec8c6e4f27146af8c272c2840742192b86e7d33c8",
+    "nonce": 66,
+    "hash": "00e006a4abe9a406c9da6227f547082dccbd1c3296215370c5f0ec81f3aa3638"
+  },
+  {
+    "index": 69,
+    "timestamp": "2026-01-23T05:18:12.979740+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.888608173465485,
+        "hum": 50.26494670272391,
+        "weight": 94.61384642069737
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00e006a4abe9a406c9da6227f547082dccbd1c3296215370c5f0ec81f3aa3638",
+    "nonce": 790,
+    "hash": "0061ac67220c2b0005add08113914de9c9367b0f39a4862933ba9770382f2e51"
+  },
+  {
+    "index": 70,
+    "timestamp": "2026-01-23T05:18:15.164501+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.060571124684397,
+        "hum": 54.71115950334852,
+        "weight": 98.58550299879415
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0061ac67220c2b0005add08113914de9c9367b0f39a4862933ba9770382f2e51",
+    "nonce": 489,
+    "hash": "0023b0b2fb3a5e9ac943f8b6a17d24a73d76e50d4076d60e04a4bfd9c6c06caa"
+  },
+  {
+    "index": 71,
+    "timestamp": "2026-01-23T05:18:17.330838+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.43293588414374,
+        "hum": 48.92295785391219,
+        "weight": 94.8492199749444
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0023b0b2fb3a5e9ac943f8b6a17d24a73d76e50d4076d60e04a4bfd9c6c06caa",
+    "nonce": 36,
+    "hash": "0047b4f11401f14645fc7851a61f50b8ada98d2fd90ad0d1d4e3bca6f5966e61"
+  },
+  {
+    "index": 72,
+    "timestamp": "2026-01-23T05:18:19.500223+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.26053972393388,
+        "hum": 53.26677009343726,
+        "weight": 92.54302107035065
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0047b4f11401f14645fc7851a61f50b8ada98d2fd90ad0d1d4e3bca6f5966e61",
+    "nonce": 475,
+    "hash": "001481a10f8a87b62245841e664e92ecfb9f779c5f714d4d52e353e878aa41bd"
+  },
+  {
+    "index": 73,
+    "timestamp": "2026-01-23T05:18:21.662768+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.837915166694224,
+        "hum": 52.979012646364936,
+        "weight": 92.31079218970073
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001481a10f8a87b62245841e664e92ecfb9f779c5f714d4d52e353e878aa41bd",
+    "nonce": 300,
+    "hash": "00134e5fb0e2058702c78851604b113a48b9e2a56bccc7b513fa1889892d9a92"
+  },
+  {
+    "index": 74,
+    "timestamp": "2026-01-23T05:18:23.824090+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.257007187988457,
+        "hum": 52.45219155927287,
+        "weight": 93.9135923330588
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00134e5fb0e2058702c78851604b113a48b9e2a56bccc7b513fa1889892d9a92",
+    "nonce": 87,
+    "hash": "0064ab9d2700ecef5bafd1a7a57c145600a45e53746f319a01c2055681d34977"
+  },
+  {
+    "index": 75,
+    "timestamp": "2026-01-23T05:18:25.977310+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.51004883147505,
+        "hum": 53.99343885855902,
+        "weight": 90.43256664926746
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0064ab9d2700ecef5bafd1a7a57c145600a45e53746f319a01c2055681d34977",
+    "nonce": 89,
+    "hash": "0025c0668b426fc92cf9c0b8b1c10a2f1f8e93365e2fb31bbaac1844e775acc4"
+  },
+  {
+    "index": 76,
+    "timestamp": "2026-01-23T05:18:28.140471+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.203362991713785,
+        "hum": 53.227798993789555,
+        "weight": 98.24923840650987
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0025c0668b426fc92cf9c0b8b1c10a2f1f8e93365e2fb31bbaac1844e775acc4",
+    "nonce": 411,
+    "hash": "0009cd6586c43df9c08ed40cceeeca2af4f8161fd2919987b04345979e28d1d8"
+  },
+  {
+    "index": 77,
+    "timestamp": "2026-01-23T05:18:30.311579+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.723450356849813,
+        "hum": 51.042011842332144,
+        "weight": 90.34944336996853
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0009cd6586c43df9c08ed40cceeeca2af4f8161fd2919987b04345979e28d1d8",
+    "nonce": 411,
+    "hash": "0023b6de42c9954ac1c41b7c598f633fe7d305fec21737a0a95e8c1a4e129185"
+  },
+  {
+    "index": 78,
+    "timestamp": "2026-01-23T05:18:32.472507+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.297197244332505,
+        "hum": 45.14013537040357,
+        "weight": 95.85892709040075
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0023b6de42c9954ac1c41b7c598f633fe7d305fec21737a0a95e8c1a4e129185",
+    "nonce": 150,
+    "hash": "00ba119934a5ab204633e8f46216d80c3fefbacb6fbcc308e0a3a9a55b73412d"
+  },
+  {
+    "index": 79,
+    "timestamp": "2026-01-23T05:18:34.640718+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.5220763915845,
+        "hum": 51.66761149843278,
+        "weight": 97.56630821214382
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00ba119934a5ab204633e8f46216d80c3fefbacb6fbcc308e0a3a9a55b73412d",
+    "nonce": 56,
+    "hash": "008ddbbc8cda567122b36498c00c49b4fa8cf0e82bd2701f203c3d226fcd31de"
+  },
+  {
+    "index": 80,
+    "timestamp": "2026-01-23T05:18:36.779914+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.92805743644829,
+        "hum": 49.549098570694674,
+        "weight": 95.8515775854716
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "008ddbbc8cda567122b36498c00c49b4fa8cf0e82bd2701f203c3d226fcd31de",
+    "nonce": 28,
+    "hash": "005bf27d905b4aa9225e7150e92f14cbac501b5c47bcbea432f607d1d44dd11d"
+  },
+  {
+    "index": 81,
+    "timestamp": "2026-01-23T05:18:38.947444+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.384367354172284,
+        "hum": 53.50628346278154,
+        "weight": 90.84164728440479
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "005bf27d905b4aa9225e7150e92f14cbac501b5c47bcbea432f607d1d44dd11d",
+    "nonce": 334,
+    "hash": "0037e650fbfb5ac214de7e2bacfc2ee2c4ff6812d4ac5a069706e6ee3f423e1f"
+  },
+  {
+    "index": 82,
+    "timestamp": "2026-01-23T05:18:41.145235+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.105670651422344,
+        "hum": 49.352843102839074,
+        "weight": 90.55263130840156
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0037e650fbfb5ac214de7e2bacfc2ee2c4ff6812d4ac5a069706e6ee3f423e1f",
+    "nonce": 72,
+    "hash": "00f7369eecb417edd0b990f512bb45c55a39f3321bbfb73ed1c5e05ff6729313"
+  },
+  {
+    "index": 83,
+    "timestamp": "2026-01-23T05:18:43.311857+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 20.712215755968217,
+        "hum": 53.04736789646226,
+        "weight": 90.10537961345744
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00f7369eecb417edd0b990f512bb45c55a39f3321bbfb73ed1c5e05ff6729313",
+    "nonce": 144,
+    "hash": "0003bc4dc5f96e2170a619d5012591fee802e9f8b573f1a3fa25c0e70408edd1"
+  },
+  {
+    "index": 84,
+    "timestamp": "2026-01-23T05:21:46.782772+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "test",
+      "sensor_data": {
+        "temp": 25,
+        "hum": 50,
+        "weight": 100
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0003bc4dc5f96e2170a619d5012591fee802e9f8b573f1a3fa25c0e70408edd1",
+    "nonce": 208,
+    "hash": "00598fa4a7dc2ee35d87cb362d357a18aee5ad729d408fbd9acde92cf5e82241"
+  },
+  {
+    "index": 85,
+    "timestamp": "2026-01-23T05:36:05.715396+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 40.198181039856,
+        "hum": 48.621546665834366,
+        "weight": 94.54457766567138
+      },
+      "ml_result": {
+        "if_score": -0.14455870863890619,
+        "if_anomaly": true,
+        "lstm_error": 0.20258350670337677,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 40.198181039856
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "00598fa4a7dc2ee35d87cb362d357a18aee5ad729d408fbd9acde92cf5e82241",
+    "nonce": 29,
+    "hash": "00f8d8bf529d4a2540935dbb9514b73badc072950c63a9e0dc153d9de978e6dd"
+  },
+  {
+    "index": 86,
+    "timestamp": "2026-01-23T05:36:08.226231+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.034292358358936,
+        "hum": 54.805671620523626,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.09321265344804852,
+        "if_anomaly": true,
+        "lstm_error": 0.19630779325962067,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00f8d8bf529d4a2540935dbb9514b73badc072950c63a9e0dc153d9de978e6dd",
+    "nonce": 90,
+    "hash": "0032ef425e4660bc672c96cb2bfe60fc731ae21046f8616d4b9eced33b26d0c3"
+  },
+  {
+    "index": 87,
+    "timestamp": "2026-01-23T05:36:10.729326+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 40.41072415752659,
+        "hum": 82.11738141632146,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.14791507148463334,
+        "if_anomaly": true,
+        "lstm_error": 0.2569107413291931,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 40.41072415752659
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure",
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0032ef425e4660bc672c96cb2bfe60fc731ae21046f8616d4b9eced33b26d0c3",
+    "nonce": 305,
+    "hash": "003049df5799502b836dca23fb595666e1d8934e7f43002e0b1845ef7962c6a4"
+  },
+  {
+    "index": 88,
+    "timestamp": "2026-01-23T05:36:13.273360+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 35.578995713986615,
+        "hum": 48.710730182206376,
+        "weight": 93.38170846362173
+      },
+      "ml_result": {
+        "if_score": -0.11961530225106887,
+        "if_anomaly": true,
+        "lstm_error": 0.2873792052268982,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 35.578995713986615
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "003049df5799502b836dca23fb595666e1d8934e7f43002e0b1845ef7962c6a4",
+    "nonce": 545,
+    "hash": "006e8b091beffe793d6dcc564654b6a0ed448e945d29477f0433866b3426a8a6"
+  },
+  {
+    "index": 89,
+    "timestamp": "2026-01-23T05:36:15.803472+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 27.91329664674631,
+        "hum": 53.8448143710629,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.14097896240586139,
+        "if_anomaly": true,
+        "lstm_error": 0.28473031520843506,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "006e8b091beffe793d6dcc564654b6a0ed448e945d29477f0433866b3426a8a6",
+    "nonce": 178,
+    "hash": "0089284fe1a51ab18893076e4a30042a68e9550482a02b5871e7495438c6d04e"
+  },
+  {
+    "index": 90,
+    "timestamp": "2026-01-23T06:10:14.526825+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 37.534938293330356,
+        "hum": 46.14524913937276,
+        "weight": 90.34798888420936
+      },
+      "ml_result": {
+        "if_score": -0.12847809108171093,
+        "if_anomaly": true,
+        "lstm_error": 0.19364161789417267,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 37.534938293330356
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0089284fe1a51ab18893076e4a30042a68e9550482a02b5871e7495438c6d04e",
+    "nonce": 308,
+    "hash": "008736b9ceadc452e6c3a1dbc851a9388c6fd2a41771303123b547e48f2dc6ea"
+  },
+  {
+    "index": 91,
+    "timestamp": "2026-01-23T06:10:17.013844+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.51954219322959,
+        "hum": 54.87661379392664,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.08545140287635888,
+        "if_anomaly": true,
+        "lstm_error": 0.19428731501102448,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "008736b9ceadc452e6c3a1dbc851a9388c6fd2a41771303123b547e48f2dc6ea",
+    "nonce": 158,
+    "hash": "001d0e1a75eefdadbb6cbf5b3a69ec2cf4ab569dbaabcc844daa8d421db7c4ec"
+  },
+  {
+    "index": 92,
+    "timestamp": "2026-01-23T06:10:19.499668+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 39.34830239493387,
+        "hum": 77.78753744798907,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.12910049178003868,
+        "if_anomaly": true,
+        "lstm_error": 0.2531380355358124,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 39.34830239493387
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure",
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "001d0e1a75eefdadbb6cbf5b3a69ec2cf4ab569dbaabcc844daa8d421db7c4ec",
+    "nonce": 131,
+    "hash": "00f466216cd34befe1bb9396ef7462ddf3722c8a62ceeac2560a3c47b5706c6f"
+  },
+  {
+    "index": 93,
+    "timestamp": "2026-01-23T06:10:22.016446+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 43.99626247080455,
+        "hum": 51.441889270361905,
+        "weight": 98.3587205333437
+      },
+      "ml_result": {
+        "if_score": -0.14506515834763423,
+        "if_anomaly": true,
+        "lstm_error": 0.30813318490982056,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 43.99626247080455
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "00f466216cd34befe1bb9396ef7462ddf3722c8a62ceeac2560a3c47b5706c6f",
+    "nonce": 55,
+    "hash": "00a8e81e67b4582383eb8a6d21e7632d187407b8701818eaa7e44651a672fe3b"
+  },
+  {
+    "index": 94,
+    "timestamp": "2026-01-23T06:10:24.482877+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 26.038918816317135,
+        "hum": 45.419642511441104,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.13977954248793167,
+        "if_anomaly": true,
+        "lstm_error": 0.31159380078315735,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00a8e81e67b4582383eb8a6d21e7632d187407b8701818eaa7e44651a672fe3b",
+    "nonce": 83,
+    "hash": "005f5fcd0771dbe85ef80a90b588fb923715df9d3fdd676f4d82f4273632f8f8"
+  },
+  {
+    "index": 95,
+    "timestamp": "2026-01-23T06:13:20.525550+00:00",
+    "data": {
+      "type": "demo_block",
+      "message": "This block was added during the reviewer demonstration",
+      "timestamp": "2026-01-23T11:43:18.480887",
+      "demo": true
+    },
+    "previous_hash": "005f5fcd0771dbe85ef80a90b588fb923715df9d3fdd676f4d82f4273632f8f8",
+    "nonce": 79,
+    "hash": "009c8059a5a8d9d6bb8455e8d5825f9fdcc3dbaa1391f5b46337644b4f0f4c36"
+  },
+  {
+    "index": 96,
+    "timestamp": "2026-01-23T06:36:33.695141+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 41.844542999409995,
+        "hum": 47.91100800370489,
+        "weight": 90.71912213774297
+      },
+      "ml_result": {
+        "if_score": -0.15914961135979988,
+        "if_anomaly": true,
+        "lstm_error": 0.2160353809595108,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 41.844542999409995
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "009c8059a5a8d9d6bb8455e8d5825f9fdcc3dbaa1391f5b46337644b4f0f4c36",
+    "nonce": 57,
+    "hash": "001cf246e0f50ef85a7643234fe600669edafc9adc075355769df7fc6d43a673"
+  },
+  {
+    "index": 97,
+    "timestamp": "2026-01-23T06:36:36.214739+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.895719861808967,
+        "hum": 52.73233611178892,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.13377287668706328,
+        "if_anomaly": true,
+        "lstm_error": 0.21938644349575043,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "001cf246e0f50ef85a7643234fe600669edafc9adc075355769df7fc6d43a673",
+    "nonce": 37,
+    "hash": "00f45944d51ad4cc62a3c3423a39f3d4c7e68d7ed354c83555f6b1902b143ebf"
+  },
+  {
+    "index": 98,
+    "timestamp": "2026-01-23T06:36:38.720964+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 39.00257746097682,
+        "hum": 87.68604323728432,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.15119554074947006,
+        "if_anomaly": true,
+        "lstm_error": 0.2730347514152527,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 39.00257746097682
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure",
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "00f45944d51ad4cc62a3c3423a39f3d4c7e68d7ed354c83555f6b1902b143ebf",
+    "nonce": 140,
+    "hash": "0054c1327e775296793659fb7e8a887cd1f5610f9489e15e66c8817d19561c32"
+  },
+  {
+    "index": 99,
+    "timestamp": "2026-01-23T06:36:41.226446+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 35.557121115735605,
+        "hum": 54.42667399395455,
+        "weight": 90.00500054951483
+      },
+      "ml_result": {
+        "if_score": -0.15119554074947006,
+        "if_anomaly": true,
+        "lstm_error": 0.295743465423584,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 35.557121115735605
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0054c1327e775296793659fb7e8a887cd1f5610f9489e15e66c8817d19561c32",
+    "nonce": 118,
+    "hash": "0034220c89c88ed47c65fc8b83ccb3238f1a598b398f2bf851b586e0c2db53ce"
+  },
+  {
+    "index": 100,
+    "timestamp": "2026-01-23T06:36:43.779528+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 24.6915138933847,
+        "hum": 49.30852304942959,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.09964638489096844,
+        "if_anomaly": true,
+        "lstm_error": 0.29439181089401245,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "0034220c89c88ed47c65fc8b83ccb3238f1a598b398f2bf851b586e0c2db53ce",
+    "nonce": 732,
+    "hash": "002477e871b56a114ed491340df59544033a4c42f1138b2e8e7b757b3b9705c7"
+  },
+  {
+    "index": 101,
+    "timestamp": "2026-01-23T09:02:54.247554+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 41.527281196752476,
+        "hum": 51.55226040104907,
+        "weight": 92.80812162117557
+      },
+      "ml_result": {
+        "if_score": -0.13297753763172293,
+        "if_anomaly": true,
+        "lstm_error": 0.19536572694778442,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 41.527281196752476
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "002477e871b56a114ed491340df59544033a4c42f1138b2e8e7b757b3b9705c7",
+    "nonce": 144,
+    "hash": "00afdf8f8a245afd4d43e580a69d917025cf1b16eb2f93d14257a4b368011f6e"
+  },
+  {
+    "index": 102,
+    "timestamp": "2026-01-23T09:02:56.928135+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 22.902285673576884,
+        "hum": 51.66348094373002,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.11479857959853124,
+        "if_anomaly": true,
+        "lstm_error": 0.19484417140483856,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00afdf8f8a245afd4d43e580a69d917025cf1b16eb2f93d14257a4b368011f6e",
+    "nonce": 80,
+    "hash": "0084f19c6a67a127cdc78d0a401bac7edd2c361cb8e5b3e2270ad5477a66aa6b"
+  },
+  {
+    "index": 103,
+    "timestamp": "2026-01-23T09:02:59.630098+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 38.98307418072088,
+        "hum": 79.12467132654,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.14868467105946737,
+        "if_anomaly": true,
+        "lstm_error": 0.25126972794532776,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 38.98307418072088
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure",
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0084f19c6a67a127cdc78d0a401bac7edd2c361cb8e5b3e2270ad5477a66aa6b",
+    "nonce": 257,
+    "hash": "0054efd5178281a58e6a8a62c8fd67819c000642a9e10884841bfb267cd8039b"
+  },
+  {
+    "index": 104,
+    "timestamp": "2026-01-23T09:03:02.424434+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 43.87869554584179,
+        "hum": 52.894425721542845,
+        "weight": 94.94399357522899
+      },
+      "ml_result": {
+        "if_score": -0.14090847570952614,
+        "if_anomaly": true,
+        "lstm_error": 0.31004470586776733,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 43.87869554584179
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0054efd5178281a58e6a8a62c8fd67819c000642a9e10884841bfb267cd8039b",
+    "nonce": 0,
+    "hash": "00110d415cd1c00a40db57a6feb0fc80d7a824a5bb62e0bb755dc9b6937e588d"
+  },
+  {
+    "index": 105,
+    "timestamp": "2026-01-23T09:03:05.163560+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.03072292116032,
+        "hum": 48.21280587583168,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.08725183761160626,
+        "if_anomaly": true,
+        "lstm_error": 0.31732383370399475,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00110d415cd1c00a40db57a6feb0fc80d7a824a5bb62e0bb755dc9b6937e588d",
+    "nonce": 14,
+    "hash": "009565fc2c589d33ef9562abafac1ee8b948e8ee774db2d689ccc7a8899d3285"
+  },
+  {
+    "index": 106,
+    "timestamp": "2026-01-23T09:09:10.561032+00:00",
+    "data": {
+      "type": "demo_block",
+      "message": "This block was added during the reviewer demonstration",
+      "timestamp": "2026-01-23T14:39:08.517377",
+      "demo": true
+    },
+    "previous_hash": "009565fc2c589d33ef9562abafac1ee8b948e8ee774db2d689ccc7a8899d3285",
+    "nonce": 265,
+    "hash": "0017429791e96a8ba58cf8c08e9d6c943a095d9f5971704b7231a2dc51d298b3"
+  },
+  {
+    "index": 107,
+    "timestamp": "2026-01-23T09:32:25.715492+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 44.515369294206025,
+        "hum": 50.303320030884684,
+        "weight": 97.62387562316677
+      },
+      "ml_result": {
+        "if_score": -0.12271032245621771,
+        "if_anomaly": true,
+        "lstm_error": 0.24029351770877838,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 44.515369294206025
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "0017429791e96a8ba58cf8c08e9d6c943a095d9f5971704b7231a2dc51d298b3",
+    "nonce": 11,
+    "hash": "00a764ebf29a9c6a136762e46994c7adeffdc6430d8725c9e53719d08c039909"
+  },
+  {
+    "index": 108,
+    "timestamp": "2026-01-23T09:32:28.396525+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 23.03536538739893,
+        "hum": 46.356838911630255,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.12333467783405627,
+        "if_anomaly": true,
+        "lstm_error": 0.23780909180641174,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00a764ebf29a9c6a136762e46994c7adeffdc6430d8725c9e53719d08c039909",
+    "nonce": 47,
+    "hash": "006d7334c4ad88ede2e3e8249ba2ebc6bb96bb6d36edc8c9cb6db081920a6146"
+  },
+  {
+    "index": 109,
+    "timestamp": "2026-01-23T09:32:31.102642+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 41.67489396899114,
+        "hum": 85.49960257903945,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.14962714993740212,
+        "if_anomaly": true,
+        "lstm_error": 0.3017154335975647,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 41.67489396899114
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "environment_anomaly",
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "006d7334c4ad88ede2e3e8249ba2ebc6bb96bb6d36edc8c9cb6db081920a6146",
+    "nonce": 101,
+    "hash": "003f4465c658c47335fb25cd23e8466cc952f22dc77dbd81a340669d0b6262e7"
+  },
+  {
+    "index": 110,
+    "timestamp": "2026-01-23T09:32:33.883658+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 44.65236299157069,
+        "hum": 52.30773338943826,
+        "weight": 96.52899313532265
+      },
+      "ml_result": {
+        "if_score": -0.13208993344855624,
+        "if_anomaly": true,
+        "lstm_error": 0.35373055934906006,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 44.65236299157069
+          }
+        ],
+        "categories": [
+          "environment_anomaly"
+        ]
+      }
+    },
+    "previous_hash": "003f4465c658c47335fb25cd23e8466cc952f22dc77dbd81a340669d0b6262e7",
+    "nonce": 133,
+    "hash": "00d5c2a05506e005921001cba0d5eba64df4225bdce1c0ce8e05a79be3a55ebd"
+  },
+  {
+    "index": 111,
+    "timestamp": "2026-01-23T09:32:36.572818+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "SIM_DEVICE_001",
+      "sensor_data": {
+        "temp": 25.688599986847784,
+        "hum": 48.95806433675367,
+        "weight": 0
+      },
+      "ml_result": {
+        "if_score": -0.13304973092387884,
+        "if_anomaly": true,
+        "lstm_error": 0.3561525046825409,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0
+          }
+        ],
+        "categories": [
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00d5c2a05506e005921001cba0d5eba64df4225bdce1c0ce8e05a79be3a55ebd",
+    "nonce": 740,
+    "hash": "0090543bdd945dbbcbf1a577ae234ab579ef475d780ec7d021121cd1012c59d1"
+  }
+]

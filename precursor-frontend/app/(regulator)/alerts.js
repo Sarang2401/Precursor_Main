@@ -18,7 +18,9 @@ export default function RegulatorAlertsScreen() {
     try {
       if (showRefreshing) setRefreshing(true);
 
+      console.log('Fetching ML alerts...');
       const data = await api.getMLAlerts();
+      console.log('Fetched alerts data:', data.length, 'records');
 
       // Transform ML alerts to display format
       const transformedAlerts = data.map((alert, index) => ({
