@@ -8,6 +8,13 @@ export default function RegulatorAlertsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  // Convert timestamp to IST (UTC +5:30)
+  const convertToIST = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    return new Date(date.getTime() + istOffset);
+  };
+
   useEffect(() => {
     loadAlerts();
     const interval = setInterval(loadAlerts, 10000);
@@ -29,7 +36,14 @@ export default function RegulatorAlertsScreen() {
         type: alert.alerts?.[0]?.detail?.replace(/_/g, ' ') || alert.risk,
         location: `Risk: ${alert.risk}`,
         time: formatTime(alert.timestamp),
-        risk: alert.risk
+        risk: alert.risk,
+        alertDetails: {
+          temp: alert.temp,
+          hum: alert.hum,
+          weight: alert.weight,
+          alerts: alert.alerts,
+          risk: alert.risk
+        }
       }));
 
       setAlerts(transformedAlerts);
@@ -44,9 +58,9 @@ export default function RegulatorAlertsScreen() {
 
   const formatTime = (timestamp) => {
     if (!timestamp) return 'Unknown';
-    const date = new Date(timestamp * 1000);
+    const istDate = convertToIST(timestamp);
     const now = new Date();
-    const diffMs = now - date;
+    const diffMs = now - istDate;
     const diffMins = Math.floor(diffMs / 60000);
 
     if (diffMins < 1) return 'Just now';

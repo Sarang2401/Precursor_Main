@@ -103,10 +103,27 @@ export const api = {
     return handleResponse(response);
   },
 
-  // Get ML alerts from ML backend
+  // Get ML alerts - Now fetches from Node.js backend (persisted)
   getMLAlerts: async () => {
-    const response = await fetch(`${ML_API_BASE_URL}/api/regulator/alerts`);
-    return handleResponse(response);
+    try {
+      // Try Node.js backend first (persisted alerts, always available)
+      const response = await fetch(`${API_BASE_URL}/api/ml-alerts`);
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      console.warn('Could not fetch from Node.js backend, trying ML backend:', error);
+    }
+
+    // Fallback to ML backend (for backward compatibility)
+    try {
+      const response = await fetch(`${ML_API_BASE_URL}/api/regulator/alerts`);
+      return handleResponse(response);
+    } catch (error) {
+      console.error('Both backends failed for ML alerts:', error);
+      // Return empty array instead of throwing
+      return [];
+    }
   }
 };
 
