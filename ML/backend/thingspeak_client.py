@@ -12,5 +12,7 @@ def fetch_thingspeak():
     return {
         "temp": float(data.get("field1", 0)),
         "hum": float(data.get("field2", 0)),
-        "weight": float(data.get("field3", 0))
+        "weight": float(data.get("field3", 0)),
+        "lat": float(data.get("field4", 0)) if data.get("field4") else None,
+        "lon": float(data.get("field5", 0)) if data.get("field5") else None
     }

@@ -36,8 +36,12 @@ def manual_sensor():
         "hum": payload["hum"],
         "weight": payload["weight"]
     }
+    
+    # Optional GPS coordinates
+    lat = payload.get("lat")
+    lon = payload.get("lon")
 
-    ml = run_ml(device_id, **data)
+    ml = run_ml(device_id, data["temp"], data["hum"], data["weight"], lat=lat, lon=lon)
     write_alert(device_id, data, ml)
     
     # Record to blockchain (skip for simulations to avoid slow mining)
@@ -49,13 +53,16 @@ def manual_sensor():
 @app.route("/api/sensor/thingspeak", methods=["GET"])
 def thingspeak_sensor():
     device_id = "thingspeak_device" 
-    reset_buffer(device_id)  # ✅ FIX
 
     data = fetch_thingspeak()
     if not data:
         return jsonify({"error": "ThingSpeak not configured"}), 500
 
-    ml = run_ml(device_id, **data)
+    # Extract GPS if available
+    lat = data.pop("lat", None)
+    lon = data.pop("lon", None)
+
+    ml = run_ml(device_id, data["temp"], data["hum"], data["weight"], lat=lat, lon=lon)
     write_alert(device_id, data, ml)
     
     # Record to blockchain
