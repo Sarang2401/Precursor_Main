@@ -1,16 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertBanner from '../../components/AlertBanner';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
 import { api, formatDate, formatStatus } from '../../config/api';
+import { useAuth } from '../../config/AuthContext';
 
 export default function RegulatorDashboard() {
   const router = useRouter();
+  const { logout } = useAuth();
   const [shipments, setShipments] = useState([]);
   const [events, setEvents] = useState([]);
+  const [mlAlerts, setMlAlerts] = useState([]);
   const [stats, setStats] = useState({
     monitored: 0,
     activeAlerts: 0,
@@ -18,6 +21,14 @@ export default function RegulatorDashboard() {
   });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Convert timestamp to IST (UTC +5:30)
+  const convertToIST = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    // Add 5 hours 30 minutes for IST
+    const istOffset = 5.5 * 60 * 60 * 1000;
+    return new Date(date.getTime() + istOffset);
+  };
 
   // Load data on mount
   useEffect(() => {
@@ -33,10 +44,11 @@ export default function RegulatorDashboard() {
     try {
       if (showRefreshing) setRefreshing(true);
 
-      // Fetch shipments and events in parallel
-      const [shipmentsData, eventsData] = await Promise.all([
+      // Fetch shipments, events, and ML alerts in parallel
+      const [shipmentsData, eventsData, mlAlertsData] = await Promise.all([
         api.getShipments(),
-        api.getAllEvents()
+        api.getAllEvents(),
+        api.getMLAlerts()
       ]);
 
       // Transform shipments
@@ -54,12 +66,15 @@ export default function RegulatorDashboard() {
 
       setShipments(transformedShipments);
       setEvents(eventsData.events);
+      setMlAlerts(mlAlertsData || []);
 
       // Calculate statistics
       const monitored = shipmentsData.shipments.length;
-      const activeAlerts = shipmentsData.shipments.filter(
+      const offRouteAlerts = shipmentsData.shipments.filter(
         s => s.status === 'OFF_ROUTE'
       ).length;
+      const mlAlertCount = (mlAlertsData || []).length;
+      const activeAlerts = offRouteAlerts + mlAlertCount;
       const blockchainRecords = eventsData.events.length;
 
       setStats({
@@ -89,6 +104,8 @@ export default function RegulatorDashboard() {
 
   // Extract alerts from events
   const getActiveAlerts = () => {
+    const allAlerts = [];
+
     // Get off-route events
     const offRouteEvents = events.filter(e => e.offRoute === 1 && e.type === 'GPS_UPDATE');
 
@@ -101,31 +118,62 @@ export default function RegulatorDashboard() {
       }
     });
 
-    // Transform to alert format
-    const alerts = Object.values(alertMap).map(event => {
+    // Transform shipment off-route events to alert format
+    Object.values(alertMap).forEach(event => {
       const shipment = shipments.find(s => s.id === event.shipmentId);
-      const timeAgo = getTimeAgo(event.timestamp);
+      const timeAgo = getTimeAgo(event.timestamp, false); // Use standard time for off-route
 
-      return {
+      allAlerts.push({
         id: event.id,
         urn: shipment?.urn || event.shipmentId,
         type: 'Off-Route',
         location: `[${event.latitude.toFixed(4)}, ${event.longitude.toFixed(4)}]`,
         time: timeAgo,
-        timestamp: event.timestamp
-      };
+        timestamp: event.timestamp,
+        alertDetails: null // No extra details for off-route
+      });
+    });
+
+    // Add ML alerts
+    mlAlerts.forEach((alert, index) => {
+      const formattedType = alert.alerts?.[0]?.detail?.replace(/_/g, ' ') || 'ML Anomaly';
+      const istTimeAgo = getTimeAgo(alert.timestamp, true); // Use IST for ML alerts
+
+      allAlerts.push({
+        id: alert.alert_id || `ml-alert-${index}`,
+        urn: alert.device || 'Unknown Device',
+        type: formattedType,
+        location: `Risk: ${alert.risk}`,
+        time: istTimeAgo,
+        timestamp: alert.timestamp,
+        alertDetails: {
+          temp: alert.temp,
+          hum: alert.hum,
+          weight: alert.weight,
+          alerts: alert.alerts,
+          risk: alert.risk
+        }
+      });
     });
 
     // Sort by most recent
-    return alerts.sort((a, b) =>
+    return allAlerts.sort((a, b) =>
       new Date(b.timestamp) - new Date(a.timestamp)
-    ).slice(0, 10); // Show top 10
+    ).slice(0, 20); // Show top 20
   };
 
   // Calculate time ago
-  const getTimeAgo = (timestamp) => {
+  const getTimeAgo = (timestamp, useIST = false) => {
     const now = new Date();
-    const past = new Date(timestamp);
+    let past;
+
+    if (useIST && typeof timestamp === 'number') {
+      // Convert Unix timestamp to IST
+      past = convertToIST(timestamp);
+    } else {
+      past = new Date(timestamp);
+    }
+
     const diffMs = now - past;
     const diffMins = Math.floor(diffMs / 60000);
 
@@ -152,7 +200,11 @@ export default function RegulatorDashboard() {
   const alerts = getActiveAlerts();
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       {/* Header */}
       <Text style={styles.header}>Regulator Dashboard</Text>
 
@@ -163,7 +215,7 @@ export default function RegulatorDashboard() {
         <StatsCard title="Total Events" stat={stats.blockchainRecords} />
       </View>
 
-      {/* Navigation to ML Alerts */}
+      {/* ML Alert Button */}
       <TouchableOpacity
         style={styles.mlAlertButton}
         onPress={() => router.push('/(regulator)/alerts')}
@@ -181,40 +233,48 @@ export default function RegulatorDashboard() {
           <Text style={styles.emptySubtext}>All shipments are on authorized routes</Text>
         </View>
       ) : (
-        <FlatList
-          data={alerts}
-          renderItem={({ item }) => <AlertBanner {...item} />}
-          keyExtractor={item => item.id}
-          style={styles.alertsList}
-          nestedScrollEnabled
-        />
+        <View style={styles.alertsList}>
+          {alerts.slice(0, 5).map((item) => (
+            <AlertBanner key={item.id} {...item} />
+          ))}
+          {alerts.length > 5 && (
+            <Text style={styles.moreAlerts}>+{alerts.length - 5} more alerts (see ML Anomalies)</Text>
+          )}
+        </View>
       )}
+
 
       {/* All Shipments Section */}
       <Text style={styles.section}>All Shipments ({shipments.length})</Text>
-      <FlatList
-        data={shipments}
-        renderItem={({ item }) => <ShipmentCard shipment={item} />}
-        keyExtractor={item => item.id}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No shipments to monitor</Text>
-            <Text style={styles.emptySubtext}>Shipments will appear here once created</Text>
-          </View>
-        }
-      />
-    </View>
+      {shipments.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No shipments to monitor</Text>
+          <Text style={styles.emptySubtext}>Shipments will appear here once created</Text>
+        </View>
+      ) : (
+        <View>
+          {shipments.map((item) => (
+            <ShipmentCard key={item.id} shipment={item} />
+          ))}
+        </View>
+      )}
+
+      {/* Logout Button */}
+      <TouchableOpacity style={styles.logoutButton} onPress={async () => { await logout(); router.replace('/login'); }}>
+        <Text style={styles.logoutText}>🚪 Logout</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff'
+  },
+  contentContainer: {
+    padding: 16,
+    paddingBottom: 40
   },
   centerContainer: {
     flex: 1,
@@ -246,8 +306,14 @@ const styles = StyleSheet.create({
     color: '#111827'
   },
   alertsList: {
-    maxHeight: 200,
-    marginBottom: 10
+    marginBottom: 20
+  },
+  moreAlerts: {
+    color: '#DC2626',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+    paddingVertical: 10
   },
   mlAlertButton: {
     backgroundColor: '#FEF2F2',
@@ -280,5 +346,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     textAlign: 'center'
+  },
+  logoutButton: {
+    backgroundColor: '#EF4444',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 20
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600'
   }
 });

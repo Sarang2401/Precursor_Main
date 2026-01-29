@@ -2,17 +2,24 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { api, formatDate, formatStatus } from "../../config/api";
+import { useAuth } from "../../config/AuthContext";
 
 export default function DriverDashboardScreen() {
+  const { logout } = useAuth();
   const [activeShipment, setActiveShipment] = useState(null);
   const [gpsState, setGpsState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [allShipments, setAllShipments] = useState([]);
 
+  const handleLogout = async () => {
+    await logout();
+    router.replace('/login');
+  };
+
   // Load data on mount
   useEffect(() => {
     loadData();
-    
+
     // Auto-refresh every 5 seconds to sync with GPS simulation
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
@@ -72,7 +79,7 @@ export default function DriverDashboardScreen() {
           <Text style={styles.cardText}>From: {activeShipment.origin}</Text>
           <Text style={styles.cardText}>To: {activeShipment.destination}</Text>
           <Text style={[
-            styles.cardText, 
+            styles.cardText,
             styles.statusText,
             { color: activeShipment.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
           ]}>
@@ -91,7 +98,7 @@ export default function DriverDashboardScreen() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>No Active Shipment</Text>
           <Text style={styles.cardText}>
-            {allShipments.length === 0 
+            {allShipments.length === 0
               ? 'No shipments available. Ask manufacturer to create one.'
               : 'All shipments have been delivered or are pending assignment.'}
           </Text>
@@ -175,10 +182,10 @@ export default function DriverDashboardScreen() {
       )}
 
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#C62828" }]}
-        onPress={() => router.replace("/")}
+        style={[styles.button, { backgroundColor: "#EF4444" }]}
+        onPress={handleLogout}
       >
-        <Text style={styles.buttonText}>← Back to Role Selection</Text>
+        <Text style={styles.buttonText}>🚪 Logout</Text>
       </TouchableOpacity>
     </ScrollView>
   );
