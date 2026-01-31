@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertBanner from '../../components/AlertBanner';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
@@ -200,75 +200,110 @@ export default function RegulatorDashboard() {
   const alerts = getActiveAlerts();
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
-      {/* Header */}
-      <Text style={styles.header}>Regulator Dashboard</Text>
-
-      {/* Statistics Cards */}
-      <View style={styles.stats}>
-        <StatsCard title="Shipments Monitored" stat={stats.monitored} />
-        <StatsCard title="Active Alerts" stat={stats.activeAlerts} />
-        <StatsCard title="Total Events" stat={stats.blockchainRecords} />
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header Bar with Logout */}
+      <View style={styles.headerBar}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={async () => { await logout(); router.replace('/login'); }}>
+          <Text style={styles.logoutBtnText}>Logout</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerBarTitle}>REGULATOR</Text>
+        <View style={{ width: 60 }} />
       </View>
 
-      {/* ML Alert Button */}
-      <TouchableOpacity
-        style={styles.mlAlertButton}
-        onPress={() => router.push('/(regulator)/alerts')}
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <Text style={styles.mlAlertText}>⚠️ View ML Anomalies</Text>
-        <Ionicons name="chevron-forward" size={20} color="#DC2626" />
-      </TouchableOpacity>
+        {/* Header */}
+        <Text style={styles.header}>Regulator Dashboard</Text>
 
-
-      {/* Active Alerts Section */}
-      <Text style={styles.section}>Active Alerts {alerts.length > 0 && `(${alerts.length})`}</Text>
-      {alerts.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>✅ No active alerts</Text>
-          <Text style={styles.emptySubtext}>All shipments are on authorized routes</Text>
+        {/* Statistics Cards */}
+        <View style={styles.stats}>
+          <StatsCard title="Shipments Monitored" stat={stats.monitored} />
+          <StatsCard title="Active Alerts" stat={stats.activeAlerts} />
+          <StatsCard title="Total Events" stat={stats.blockchainRecords} />
         </View>
-      ) : (
-        <View style={styles.alertsList}>
-          {alerts.slice(0, 5).map((item) => (
-            <AlertBanner key={item.id} {...item} />
-          ))}
-          {alerts.length > 5 && (
-            <Text style={styles.moreAlerts}>+{alerts.length - 5} more alerts (see ML Anomalies)</Text>
-          )}
-        </View>
-      )}
+
+        {/* ML Alert Button */}
+        <TouchableOpacity
+          style={styles.mlAlertButton}
+          onPress={() => router.push('/(regulator)/alerts')}
+        >
+          <Text style={styles.mlAlertText}>⚠️ View ML Anomalies</Text>
+          <Ionicons name="chevron-forward" size={20} color="#DC2626" />
+        </TouchableOpacity>
 
 
-      {/* All Shipments Section */}
-      <Text style={styles.section}>All Shipments ({shipments.length})</Text>
-      {shipments.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No shipments to monitor</Text>
-          <Text style={styles.emptySubtext}>Shipments will appear here once created</Text>
-        </View>
-      ) : (
-        <View>
-          {shipments.map((item) => (
-            <ShipmentCard key={item.id} shipment={item} />
-          ))}
-        </View>
-      )}
+        {/* Active Alerts Section */}
+        <Text style={styles.section}>Active Alerts {alerts.length > 0 && `(${alerts.length})`}</Text>
+        {alerts.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>✅ No active alerts</Text>
+            <Text style={styles.emptySubtext}>All shipments are on authorized routes</Text>
+          </View>
+        ) : (
+          <View style={styles.alertsList}>
+            {alerts.slice(0, 5).map((item) => (
+              <AlertBanner key={item.id} {...item} />
+            ))}
+            {alerts.length > 5 && (
+              <Text style={styles.moreAlerts}>+{alerts.length - 5} more alerts (see ML Anomalies)</Text>
+            )}
+          </View>
+        )}
 
-      {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={async () => { await logout(); router.replace('/login'); }}>
-        <Text style={styles.logoutText}>🚪 Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+
+        {/* All Shipments Section */}
+        <Text style={styles.section}>All Shipments ({shipments.length})</Text>
+        {shipments.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No shipments to monitor</Text>
+            <Text style={styles.emptySubtext}>Shipments will appear here once created</Text>
+          </View>
+        ) : (
+          <View>
+            {shipments.map((item) => (
+              <ShipmentCard key={item.id} shipment={item} />
+            ))}
+          </View>
+        )}
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#D97706'
+  },
+  headerBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#D97706',
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+  },
+  logoutBtn: {
+    backgroundColor: '#EF4444',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 4,
+  },
+  logoutBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  headerBarTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  scrollContainer: {
     flex: 1,
     backgroundColor: '#fff'
   },
