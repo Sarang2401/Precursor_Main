@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { api, formatDate, formatStatus } from "../../config/api";
+import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { api, formatStatus } from "../../config/api";
 import { useAuth } from "../../config/AuthContext";
 
 export default function DriverDashboardScreen() {
@@ -16,48 +16,34 @@ export default function DriverDashboardScreen() {
     router.replace('/login');
   };
 
-  // Load data on mount
   useEffect(() => {
     loadData();
-
-    // Auto-refresh every 5 seconds to sync with GPS simulation
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch active shipment and GPS state
   const loadData = async () => {
     try {
-      // Get all shipments
       const shipmentsData = await api.getShipments();
       const shipments = shipmentsData?.shipments || [];
       setAllShipments(shipments);
 
-      // Get GPS simulation state
       const gpsData = await api.getGPSState();
       setGpsState(gpsData);
 
-      // Find active shipment
       if (gpsData?.activeShipmentId) {
-        const active = shipments.find(
-          s => s.id === gpsData.activeShipmentId
-        );
+        const active = shipments.find(s => s.id === gpsData.activeShipmentId);
         setActiveShipment(active);
       }
 
       setLoading(false);
     } catch (error) {
       console.error('Failed to load data:', error);
-      Alert.alert(
-        'Connection Error',
-        'Could not connect to backend. Make sure the server is running.',
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Connection Error', 'Could not connect to backend.');
       setLoading(false);
     }
   };
 
-  // Show loading spinner
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -68,133 +54,164 @@ export default function DriverDashboardScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>🚚 Driver Dashboard</Text>
+    <SafeAreaView style={styles.safeArea}>
+      {/* Header Bar with Logout */}
+      <View style={styles.headerBar}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+          <Text style={styles.logoutBtnText}>Logout</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>DRIVER</Text>
+        <View style={{ width: 60 }} />
+      </View>
 
-      {/* Active Shipment Card */}
-      {activeShipment ? (
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Active Shipment</Text>
-          <Text style={styles.cardText}>Product: {activeShipment.productId}</Text>
-          <Text style={styles.cardText}>From: {activeShipment.origin}</Text>
-          <Text style={styles.cardText}>To: {activeShipment.destination}</Text>
-          <Text style={[
-            styles.cardText,
-            styles.statusText,
-            { color: activeShipment.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
-          ]}>
-            Status: {activeShipment.status}
-          </Text>
-          <Text style={styles.cardText}>
-            Weight: {activeShipment.currentWeight.toFixed(2)} kg / {activeShipment.initialWeight} kg
-          </Text>
-          {gpsState && (
-            <Text style={styles.cardText}>
-              📍 Location: {gpsState.lat.toFixed(4)}, {gpsState.lon.toFixed(4)}
+      <ScrollView contentContainerStyle={styles.container}>
+        <Text style={styles.title}>🚚 Driver Dashboard</Text>
+
+        {/* Active Shipment Card */}
+        {activeShipment ? (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Active Shipment</Text>
+            <Text style={styles.cardText}>Product: {activeShipment.productId}</Text>
+            <Text style={styles.cardText}>From: {activeShipment.origin}</Text>
+            <Text style={styles.cardText}>To: {activeShipment.destination}</Text>
+            <Text style={[
+              styles.cardText,
+              styles.statusText,
+              { color: activeShipment.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
+            ]}>
+              Status: {activeShipment.status}
             </Text>
-          )}
-        </View>
-      ) : (
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>No Active Shipment</Text>
-          <Text style={styles.cardText}>
-            {allShipments.length === 0
-              ? 'No shipments available. Ask manufacturer to create one.'
-              : 'All shipments have been delivered or are pending assignment.'}
-          </Text>
-        </View>
-      )}
-
-      {/* GPS Status Indicator */}
-      {gpsState && activeShipment && (
-        <View style={[
-          styles.gpsIndicator,
-          { backgroundColor: gpsState.offRoute ? '#FEE2E2' : '#D1FAE5' }
-        ]}>
-          <Text style={[
-            styles.gpsText,
-            { color: gpsState.offRoute ? '#EF4444' : '#10B981' }
-          ]}>
-            {gpsState.offRoute ? '⚠️ OFF ROUTE DETECTED!' : '✅ On Authorized Route'}
-          </Text>
-        </View>
-      )}
-
-      {/* Action Buttons - FIXED ROUTES */}
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#43A047" }]}
-        onPress={() => {
-          if (activeShipment) {
-            router.push(`/(driver)/scan-shipment?shipmentId=${activeShipment.id}`);
-          } else {
-            Alert.alert('No Active Shipment', 'No shipment to scan checkpoint for.');
-          }
-        }}
-        disabled={!activeShipment}
-      >
-        <Text style={styles.buttonText}>📷 Scan QR at Checkpoint</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#1976D2" }]}
-        onPress={() => {
-          if (activeShipment) {
-            router.push(`/(driver)/gps-hops?shipmentId=${activeShipment.id}`);
-          } else {
-            Alert.alert('No Active Shipment', 'No shipment to track.');
-          }
-        }}
-        disabled={!activeShipment}
-      >
-        <Text style={styles.buttonText}>📍 View Live GPS Tracker</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#F57C00" }]}
-        onPress={() => {
-          if (activeShipment) {
-            router.push(`/(driver)/shipment-control?shipmentId=${activeShipment.id}`);
-          } else {
-            Alert.alert('No Active Shipment', 'No shipment to control.');
-          }
-        }}
-        disabled={!activeShipment}
-      >
-        <Text style={styles.buttonText}>⚙️ Shipment Controls</Text>
-      </TouchableOpacity>
-
-      {/* All Shipments Section */}
-      {allShipments.length > 0 && (
-        <View style={styles.shipmentsSection}>
-          <Text style={styles.sectionTitle}>All Shipments ({allShipments.length})</Text>
-          {allShipments.map((ship) => (
-            <View key={ship.id} style={styles.shipmentItem}>
-              <Text style={styles.shipmentText}>{ship.productId}</Text>
-              <Text style={[
-                styles.shipmentStatus,
-                { color: ship.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
-              ]}>
-                {formatStatus(ship.status)}
+            <Text style={styles.cardText}>
+              Weight: {activeShipment.currentWeight?.toFixed(2) || 0} kg / {activeShipment.initialWeight} kg
+            </Text>
+            {gpsState && (
+              <Text style={styles.cardText}>
+                📍 Location: {gpsState.lat?.toFixed(4)}, {gpsState.lon?.toFixed(4)}
               </Text>
-            </View>
-          ))}
-        </View>
-      )}
+            )}
+          </View>
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>No Active Shipment</Text>
+            <Text style={styles.cardText}>
+              {allShipments.length === 0
+                ? 'No shipments available. Ask manufacturer to create one.'
+                : 'All shipments have been delivered or are pending assignment.'}
+            </Text>
+          </View>
+        )}
 
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#EF4444" }]}
-        onPress={handleLogout}
-      >
-        <Text style={styles.buttonText}>🚪 Logout</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* GPS Status Indicator */}
+        {gpsState && activeShipment && (
+          <View style={[
+            styles.gpsIndicator,
+            { backgroundColor: gpsState.offRoute ? '#FEE2E2' : '#D1FAE5' }
+          ]}>
+            <Text style={[
+              styles.gpsText,
+              { color: gpsState.offRoute ? '#EF4444' : '#10B981' }
+            ]}>
+              {gpsState.offRoute ? '⚠️ OFF ROUTE!' : '✅ On Authorized Route'}
+            </Text>
+          </View>
+        )}
+
+        {/* Action Buttons */}
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#43A047" }]}
+          onPress={() => {
+            if (activeShipment) {
+              router.push(`/(driver)/scan-shipment?shipmentId=${activeShipment.id}`);
+            } else {
+              Alert.alert('No Active Shipment', 'No shipment to scan.');
+            }
+          }}
+          disabled={!activeShipment}
+        >
+          <Text style={styles.buttonText}>📷 Scan QR at Checkpoint</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#1976D2" }]}
+          onPress={() => {
+            if (activeShipment) {
+              router.push(`/(driver)/gps-hops?shipmentId=${activeShipment.id}`);
+            } else {
+              Alert.alert('No Active Shipment', 'No shipment to track.');
+            }
+          }}
+          disabled={!activeShipment}
+        >
+          <Text style={styles.buttonText}>📍 View Live GPS Tracker</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "#F57C00" }]}
+          onPress={() => {
+            if (activeShipment) {
+              router.push(`/(driver)/shipment-control?shipmentId=${activeShipment.id}`);
+            } else {
+              Alert.alert('No Active Shipment', 'No shipment to control.');
+            }
+          }}
+          disabled={!activeShipment}
+        >
+          <Text style={styles.buttonText}>⚙️ Shipment Controls</Text>
+        </TouchableOpacity>
+
+        {/* All Shipments Section */}
+        {allShipments.length > 0 && (
+          <View style={styles.shipmentsSection}>
+            <Text style={styles.sectionTitle}>All Shipments ({allShipments.length})</Text>
+            {allShipments.map((ship) => (
+              <View key={ship.id} style={styles.shipmentItem}>
+                <Text style={styles.shipmentText}>{ship.productId}</Text>
+                <Text style={[
+                  styles.shipmentStatus,
+                  { color: ship.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
+                ]}>
+                  {formatStatus(ship.status)}
+                </Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1976D2'
+  },
+  headerBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#1976D2',
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+  },
+  logoutBtn: {
+    backgroundColor: '#EF4444',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 4,
+  },
+  logoutBtnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
   container: {
     flexGrow: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 20,
     backgroundColor: "#F9FAFB",
@@ -217,7 +234,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   card: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "#E3F2FD",
     borderRadius: 10,
     padding: 20,
@@ -245,7 +262,7 @@ const styles = StyleSheet.create({
     marginTop: 4
   },
   gpsIndicator: {
-    width: '90%',
+    width: '100%',
     padding: 15,
     borderRadius: 8,
     marginBottom: 20,
@@ -258,7 +275,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   button: {
-    width: "90%",
+    width: "100%",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
@@ -270,7 +287,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   shipmentsSection: {
-    width: '90%',
+    width: '100%',
     marginVertical: 20,
     padding: 15,
     backgroundColor: '#fff',
