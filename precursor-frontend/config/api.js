@@ -39,11 +39,15 @@ export const api = {
   // MANUFACTURER ENDPOINTS
   // ========================================================================
 
-  // Create new shipment
-  createShipment: async (shipmentData) => {
+  // Create new shipment (requires auth token)
+  createShipment: async (shipmentData, token) => {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
     const response = await fetch(`${API_BASE_URL}/shipments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(shipmentData)
     });
     return handleResponse(response);

@@ -45,6 +45,7 @@
     "react-native-svg": "15.12.1",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
+    "react-qr-code": "^2.0.18",
     "victory-native": "^41.20.1"
   },
   "devDependencies": {

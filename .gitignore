@@ -1,0 +1,35 @@
+# Environment variables / secrets
+.env
+*.env
+
+# Python cache & compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Python bytecode (specific versions)
+*.cpython-*
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node (if frontend exists)
+node_modules/
+
+# IDEs
+.vscode/
+.idea/
+
+# Build / dist
+build/
+dist/

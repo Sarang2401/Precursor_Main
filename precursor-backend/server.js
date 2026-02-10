@@ -5,10 +5,11 @@
 
 import Database from 'better-sqlite3';
 import cors from 'cors';
-import { randomUUID } from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { generateShipmentReport, generateDailySummaryReport } from './reportGenerator.js';
 
 // ============================================================================
 // Configuration
@@ -31,6 +32,92 @@ const AUTHORIZED_ROUTE = [
 ];
 
 // ============================================================================
+// Shipment Lifecycle State Machine
+// ============================================================================
+
+const SHIPMENT_STATES = {
+  CREATED: 'CREATED',
+  DISPATCHED: 'DISPATCHED',
+  IN_TRANSIT: 'IN_TRANSIT',
+  DELIVERED: 'DELIVERED',
+  CONSUMED: 'CONSUMED',
+  OFF_ROUTE: 'OFF_ROUTE',
+  SEIZED: 'SEIZED'
+};
+
+// Valid transitions: { fromState: { toState: [allowedRoles] } }
+const VALID_TRANSITIONS = {
+  [SHIPMENT_STATES.CREATED]: {
+    [SHIPMENT_STATES.DISPATCHED]: ['manufacturer'],
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.DISPATCHED]: {
+    [SHIPMENT_STATES.IN_TRANSIT]: ['driver'],
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.IN_TRANSIT]: {
+    [SHIPMENT_STATES.DELIVERED]: ['driver'],
+    [SHIPMENT_STATES.OFF_ROUTE]: ['driver', 'system'],
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.OFF_ROUTE]: {
+    [SHIPMENT_STATES.IN_TRANSIT]: ['driver'],
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.DELIVERED]: {
+    [SHIPMENT_STATES.CONSUMED]: ['manufacturer'],
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.CONSUMED]: {
+    [SHIPMENT_STATES.SEIZED]: ['regulator']
+  },
+  [SHIPMENT_STATES.SEIZED]: {} // Terminal state, no transitions out
+};
+
+// Weight deviation thresholds for theft detection
+const WEIGHT_DEVIATION_THRESHOLDS = {
+  WARNING: 0.05,   // 5% loss
+  CRITICAL: 0.10,  // 10% loss
+  THEFT: 0.15      // 15% loss
+};
+
+// Validate state transition
+function validateTransition(currentState, newState, userRole) {
+  const validNextStates = VALID_TRANSITIONS[currentState];
+  if (!validNextStates) {
+    return { valid: false, reason: `Unknown current state: ${currentState}` };
+  }
+
+  const allowedRoles = validNextStates[newState];
+  if (!allowedRoles) {
+    return { valid: false, reason: `Invalid transition: ${currentState} → ${newState}` };
+  }
+
+  if (!allowedRoles.includes(userRole) && !allowedRoles.includes('system')) {
+    return { valid: false, reason: `Role '${userRole}' cannot perform transition: ${currentState} → ${newState}` };
+  }
+
+  return { valid: true };
+}
+
+// Check weight deviation and return alert level
+function checkWeightDeviation(initialWeight, currentWeight) {
+  if (initialWeight <= 0) return null;
+
+  const deviation = (initialWeight - currentWeight) / initialWeight;
+
+  if (deviation >= WEIGHT_DEVIATION_THRESHOLDS.THEFT) {
+    return { level: 'THEFT', deviation: (deviation * 100).toFixed(1), message: 'Critical weight loss detected - possible theft' };
+  } else if (deviation >= WEIGHT_DEVIATION_THRESHOLDS.CRITICAL) {
+    return { level: 'CRITICAL', deviation: (deviation * 100).toFixed(1), message: 'Significant weight loss detected' };
+  } else if (deviation >= WEIGHT_DEVIATION_THRESHOLDS.WARNING) {
+    return { level: 'WARNING', deviation: (deviation * 100).toFixed(1), message: 'Minor weight loss detected' };
+  }
+
+  return null;
+}
+
+// ============================================================================
 // Database Setup
 // ============================================================================
 
@@ -41,22 +128,75 @@ db.pragma('journal_mode = WAL'); // Better concurrency
 function initializeDatabase() {
   console.log('📦 Initializing database...');
 
-  // Shipments table
+  // ============================================================================
+  // Organizations table - For PKI and organization identity
+  // ============================================================================
   db.exec(`
-    CREATE TABLE IF NOT EXISTS shipments (
+    CREATE TABLE IF NOT EXISTS organizations (
       id TEXT PRIMARY KEY,
-      productId TEXT NOT NULL,
-      origin TEXT NOT NULL,
-      destination TEXT NOT NULL,
-      initialWeight REAL NOT NULL,
-      currentWeight REAL NOT NULL,
-      sensorDeviceId TEXT,
-      status TEXT DEFAULT 'Pending',
+      urn TEXT UNIQUE NOT NULL,
+      name TEXT NOT NULL,
+      type TEXT NOT NULL CHECK(type IN ('manufacturer', 'distributor', 'transporter', 'regulator')),
+      publicKey TEXT,
+      privateKeyEncrypted TEXT,
+      address TEXT,
+      licenseNumber TEXT,
       createdAt TEXT NOT NULL
     )
   `);
 
-  // Events table
+  // ============================================================================
+  // Shipments table - Enhanced with Chemical Identity Model
+  // ============================================================================
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS shipments (
+      id TEXT PRIMARY KEY,
+      productId TEXT NOT NULL,
+      chemicalURN TEXT,
+      batchId TEXT,
+      manufacturerURN TEXT,
+      regulatoryClass TEXT DEFAULT 'non-controlled' CHECK(regulatoryClass IN ('controlled', 'non-controlled', 'precursor')),
+      origin TEXT NOT NULL,
+      destination TEXT NOT NULL,
+      initialWeight REAL NOT NULL,
+      currentWeight REAL NOT NULL,
+      unit TEXT DEFAULT 'kg',
+      sensorDeviceId TEXT,
+      status TEXT DEFAULT 'CREATED',
+      createdAt TEXT NOT NULL
+    )
+  `);
+
+  // Migration: Add new columns if they don't exist
+  const shipmentCols = db.prepare("PRAGMA table_info(shipments)").all().map(c => c.name);
+  if (!shipmentCols.includes('chemicalURN')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN chemicalURN TEXT`);
+    console.log('  ➕ Added chemicalURN to shipments');
+  }
+  if (!shipmentCols.includes('batchId')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN batchId TEXT`);
+    console.log('  ➕ Added batchId to shipments');
+  }
+  if (!shipmentCols.includes('manufacturerURN')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN manufacturerURN TEXT`);
+    console.log('  ➕ Added manufacturerURN to shipments');
+  }
+  if (!shipmentCols.includes('regulatoryClass')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN regulatoryClass TEXT DEFAULT 'non-controlled'`);
+    console.log('  ➕ Added regulatoryClass to shipments');
+  }
+  if (!shipmentCols.includes('unit')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN unit TEXT DEFAULT 'kg'`);
+    console.log('  ➕ Added unit to shipments');
+  }
+  if (!shipmentCols.includes('updatedAt')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN updatedAt TEXT`);
+    console.log('  ➕ Added updatedAt to shipments');
+  }
+
+  // ============================================================================
+  // Events table - Enhanced with actor binding and signatures
+  // ============================================================================
   db.exec(`
     CREATE TABLE IF NOT EXISTS events (
       id TEXT PRIMARY KEY,
@@ -68,12 +208,37 @@ function initializeDatabase() {
       humidity REAL,
       weight REAL,
       offRoute INTEGER DEFAULT 0,
+      actorId TEXT,
+      actorRole TEXT,
+      signature TEXT,
+      blockHash TEXT,
       timestamp TEXT NOT NULL,
       FOREIGN KEY (shipmentId) REFERENCES shipments(id)
     )
   `);
 
+  // Migration: Add new columns to events if they don't exist
+  const eventCols = db.prepare("PRAGMA table_info(events)").all().map(c => c.name);
+  if (!eventCols.includes('actorId')) {
+    db.exec(`ALTER TABLE events ADD COLUMN actorId TEXT`);
+    console.log('  ➕ Added actorId to events');
+  }
+  if (!eventCols.includes('actorRole')) {
+    db.exec(`ALTER TABLE events ADD COLUMN actorRole TEXT`);
+    console.log('  ➕ Added actorRole to events');
+  }
+  if (!eventCols.includes('signature')) {
+    db.exec(`ALTER TABLE events ADD COLUMN signature TEXT`);
+    console.log('  ➕ Added signature to events');
+  }
+  if (!eventCols.includes('blockHash')) {
+    db.exec(`ALTER TABLE events ADD COLUMN blockHash TEXT`);
+    console.log('  ➕ Added blockHash to events');
+  }
+
+  // ============================================================================
   // Simulation table
+  // ============================================================================
   db.exec(`
     CREATE TABLE IF NOT EXISTS simulation (
       id INTEGER PRIMARY KEY CHECK (id = 1),
@@ -95,38 +260,84 @@ function initializeDatabase() {
     console.log('✅ Simulation table initialized');
   }
 
-  // Users table for authentication
+  // ============================================================================
+  // Users table - Enhanced with PKI and organization link
+  // ============================================================================
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       username TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
-      role TEXT NOT NULL CHECK(role IN ('manufacturer', 'driver', 'regulator')),
+      role TEXT NOT NULL CHECK(role IN ('manufacturer', 'driver', 'regulator', 'auditor')),
+      organizationURN TEXT,
+      publicKey TEXT,
+      privateKeyEncrypted TEXT,
       createdAt TEXT NOT NULL
     )
   `);
+
+  // Migration: Add PKI columns to users if they don't exist
+  const userCols = db.prepare("PRAGMA table_info(users)").all().map(c => c.name);
+  if (!userCols.includes('organizationURN')) {
+    db.exec(`ALTER TABLE users ADD COLUMN organizationURN TEXT`);
+    console.log('  ➕ Added organizationURN to users');
+  }
+  if (!userCols.includes('publicKey')) {
+    db.exec(`ALTER TABLE users ADD COLUMN publicKey TEXT`);
+    console.log('  ➕ Added publicKey to users');
+  }
+  if (!userCols.includes('privateKeyEncrypted')) {
+    db.exec(`ALTER TABLE users ADD COLUMN privateKeyEncrypted TEXT`);
+    console.log('  ➕ Added privateKeyEncrypted to users');
+  }
 
   // Create default users if they don't exist
   const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
   if (userCount.count === 0) {
     const defaultUsers = [
-      { username: 'manufacturer', password: 'manu123', role: 'manufacturer' },
-      { username: 'driver', password: 'driver123', role: 'driver' },
-      { username: 'regulator', password: 'reg123', role: 'regulator' }
+      { username: 'manufacturer', password: 'manu123', role: 'manufacturer', orgURN: 'URN:NCB:ORG:PHARMA001' },
+      { username: 'driver', password: 'driver123', role: 'driver', orgURN: 'URN:NCB:ORG:TRANS001' },
+      { username: 'regulator', password: 'reg123', role: 'regulator', orgURN: 'URN:NCB:ORG:NCB001' }
     ];
 
     for (const user of defaultUsers) {
       const userId = randomUUID();
       const passwordHash = bcrypt.hashSync(user.password, 10);
+
+      // Generate key pair for PKI
+      const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: 'spki', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+      });
+
       db.prepare(`
-        INSERT INTO users (id, username, password_hash, role, createdAt)
-        VALUES (?, ?, ?, ?, ?)
-      `).run(userId, user.username, passwordHash, user.role, new Date().toISOString());
+        INSERT INTO users (id, username, password_hash, role, organizationURN, publicKey, privateKeyEncrypted, createdAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(userId, user.username, passwordHash, user.role, user.orgURN, publicKey, privateKey, new Date().toISOString());
     }
-    console.log('✅ Default users created (manufacturer, driver, regulator)');
+    console.log('✅ Default users created with PKI key pairs');
   }
 
-  // ML Alerts table - Persist ML alerts for offline access
+  // Migrate existing users without PKI keys
+  const usersWithoutKeys = db.prepare('SELECT id, username FROM users WHERE publicKey IS NULL OR privateKeyEncrypted IS NULL').all();
+  if (usersWithoutKeys.length > 0) {
+    console.log(`🔐 Migrating ${usersWithoutKeys.length} users to have PKI keys...`);
+    for (const user of usersWithoutKeys) {
+      const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: { type: 'spki', format: 'pem' },
+        privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+      });
+      db.prepare('UPDATE users SET publicKey = ?, privateKeyEncrypted = ? WHERE id = ?')
+        .run(publicKey, privateKey, user.id);
+      console.log(`  🔑 Generated keys for user: ${user.username}`);
+    }
+  }
+
+  // ============================================================================
+  // ML Alerts table
+  // ============================================================================
   db.exec(`
     CREATE TABLE IF NOT EXISTS ml_alerts (
       id TEXT PRIMARY KEY,
@@ -146,7 +357,124 @@ function initializeDatabase() {
     )
   `);
 
-  console.log('✅ Database tables ready');
+  // ============================================================================
+  // Audit Logs table - Immutable action logging
+  // ============================================================================
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id TEXT PRIMARY KEY,
+      timestamp TEXT NOT NULL,
+      userId TEXT,
+      username TEXT,
+      role TEXT,
+      action TEXT NOT NULL,
+      resource TEXT,
+      resourceId TEXT,
+      details TEXT,
+      ipAddress TEXT,
+      result TEXT NOT NULL CHECK(result IN ('success', 'failure')),
+      errorMessage TEXT
+    )
+  `);
+
+  console.log('✅ Database tables ready (with migrations)');
+}
+
+
+// ============================================================================
+// URN Generator Utility
+// ============================================================================
+
+function generateChemicalURN(manufacturerCode, chemicalType = 'PREC') {
+  const year = new Date().getFullYear();
+  const batchNum = Date.now().toString().slice(-6);
+  return `URN:NCB:${chemicalType}:${year}:${manufacturerCode}:${batchNum}`;
+}
+
+function generateBatchId() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `BATCH-${timestamp}-${random}`;
+}
+
+// ============================================================================
+// Cryptographic Signing Utilities (PKI)
+// ============================================================================
+
+function signData(data, privateKeyPem) {
+  try {
+    const sign = crypto.createSign('RSA-SHA256');
+    sign.update(JSON.stringify(data));
+    sign.end();
+    return sign.sign(privateKeyPem, 'base64');
+  } catch (error) {
+    console.error('Error signing data:', error.message);
+    return null;
+  }
+}
+
+function verifySignature(data, signature, publicKeyPem) {
+  try {
+    const verify = crypto.createVerify('RSA-SHA256');
+    verify.update(JSON.stringify(data));
+    verify.end();
+    return verify.verify(publicKeyPem, signature, 'base64');
+  } catch (error) {
+    console.error('Error verifying signature:', error.message);
+    return false;
+  }
+}
+
+// ============================================================================
+// Audit Logging Utility
+// ============================================================================
+
+function logAudit(userId, username, role, action, resource, resourceId, result, details = null, errorMessage = null, ipAddress = null) {
+  try {
+    const logId = randomUUID();
+    db.prepare(`
+      INSERT INTO audit_logs (id, timestamp, userId, username, role, action, resource, resourceId, details, ipAddress, result, errorMessage)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      logId,
+      new Date().toISOString(),
+      userId,
+      username,
+      role,
+      action,
+      resource,
+      resourceId,
+      details ? JSON.stringify(details) : null,
+      ipAddress,
+      result,
+      errorMessage
+    );
+  } catch (error) {
+    console.error('Failed to write audit log:', error.message);
+  }
+}
+
+// ============================================================================
+// Role-Based Authorization Middleware
+// ============================================================================
+
+function requireRole(...allowedRoles) {
+  return (req, res, next) => {
+    if (!req.user) {
+      logAudit(null, null, null, req.method + ' ' + req.path, null, null, 'failure', null, 'No authentication');
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
+      logAudit(req.user.id, req.user.username, req.user.role, req.method + ' ' + req.path, null, null, 'failure', null, 'Insufficient role');
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: `This action requires one of these roles: ${allowedRoles.join(', ')}`
+      });
+    }
+
+    next();
+  };
 }
 
 // ============================================================================
@@ -366,33 +694,67 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
 // Endpoints - Manufacturer
 // ============================================================================
 
-// POST /shipments - Create new shipment
-app.post('/shipments', (req, res) => {
+// POST /shipments - Create new shipment (Manufacturer only)
+app.post('/shipments', authenticateToken, requireRole('manufacturer'), (req, res) => {
   try {
-    const { productId, origin, destination, initialWeight } = req.body;
+    const { productId, origin, destination, initialWeight, regulatoryClass, unit } = req.body;
 
     if (!productId || !origin || !destination || initialWeight === undefined) {
+      logAudit(req.user.id, req.user.username, req.user.role, 'CREATE_SHIPMENT', 'shipment', null, 'failure', req.body, 'Missing required fields');
       return res.status(400).json({
         error: 'Missing required fields: productId, origin, destination, initialWeight'
       });
     }
 
-    // Coerce and validate numeric weight to avoid storing garbage (e.g., strings)
+    // Coerce and validate numeric weight
     const initialWeightNum = Number(initialWeight);
     if (!Number.isFinite(initialWeightNum) || initialWeightNum <= 0) {
       return res.status(400).json({ error: 'initialWeight must be a positive number' });
     }
 
     const shipmentId = randomUUID();
-    const sensorDeviceId = `SENSOR_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
     const createdAt = new Date().toISOString();
 
-    db.prepare(`
-      INSERT INTO shipments (id, productId, origin, destination, initialWeight, currentWeight, sensorDeviceId, status, createdAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(shipmentId, productId, origin, destination, initialWeightNum, initialWeightNum, sensorDeviceId, 'Pending', createdAt);
+    // Generate Chemical Identity (URN)
+    const manufacturerCode = req.user.organizationURN?.split(':').pop() || 'MAN001';
+    const chemicalURN = generateChemicalURN(manufacturerCode);
+    const batchId = generateBatchId();
+    const manufacturerURN = req.user.organizationURN || 'URN:NCB:ORG:UNKNOWN';
+    const regClass = regulatoryClass || 'non-controlled';
+    const unitValue = unit || 'kg';
+    const sensorDeviceId = `SENSOR_${Date.now()}_${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
-    // If no active shipment, set this as active
+    // Create shipment with enhanced Chemical Identity
+    db.prepare(`
+      INSERT INTO shipments (id, productId, chemicalURN, batchId, manufacturerURN, regulatoryClass, origin, destination, initialWeight, currentWeight, unit, sensorDeviceId, status, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(shipmentId, productId, chemicalURN, batchId, manufacturerURN, regClass, origin, destination, initialWeightNum, initialWeightNum, unitValue, sensorDeviceId, 'CREATED', createdAt);
+
+    // Create MANUFACTURED event with actor binding and signature
+    const eventId = randomUUID();
+    const eventData = {
+      type: 'MANUFACTURED',
+      shipmentId,
+      chemicalURN,
+      batchId,
+      manufacturerURN,
+      weight: initialWeightNum,
+      timestamp: createdAt
+    };
+
+    // Sign the event with manufacturer's private key
+    const user = db.prepare('SELECT privateKeyEncrypted FROM users WHERE id = ?').get(req.user.id);
+    const signature = user?.privateKeyEncrypted ? signData(eventData, user.privateKeyEncrypted) : null;
+
+    db.prepare(`
+      INSERT INTO events (id, shipmentId, type, weight, actorId, actorRole, signature, timestamp)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(eventId, shipmentId, 'MANUFACTURED', initialWeightNum, req.user.id, req.user.role, signature, createdAt);
+
+    // Log audit
+    logAudit(req.user.id, req.user.username, req.user.role, 'CREATE_SHIPMENT', 'shipment', shipmentId, 'success', { chemicalURN, batchId, origin, destination });
+
+    // If no active shipment, set this as active for GPS simulation
     const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
     if (!sim.activeShipmentId) {
       db.prepare('UPDATE simulation SET activeShipmentId = ?, indexPos = 0 WHERE id = 1')
@@ -400,19 +762,37 @@ app.post('/shipments', (req, res) => {
 
       // Set shipment to In Transit
       db.prepare('UPDATE shipments SET status = ? WHERE id = ?')
-        .run('In Transit', shipmentId);
+        .run('IN_TRANSIT', shipmentId);
 
-      console.log(`🚛 Active shipment set: ${shipmentId}`);
+      // Create DISPATCHED event
+      const dispatchEventId = randomUUID();
+      const dispatchData = { type: 'DISPATCHED', shipmentId, chemicalURN, timestamp: createdAt };
+      const dispatchSig = user?.privateKeyEncrypted ? signData(dispatchData, user.privateKeyEncrypted) : null;
+
+      db.prepare(`
+        INSERT INTO events (id, shipmentId, type, actorId, actorRole, signature, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).run(dispatchEventId, shipmentId, 'DISPATCHED', req.user.id, req.user.role, dispatchSig, createdAt);
+
+      console.log(`🚛 Active shipment set: ${shipmentId} (${chemicalURN})`);
     }
 
     const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(shipmentId);
 
     res.status(201).json({
       message: 'Shipment created successfully',
-      shipment
+      shipment,
+      chemicalIdentity: {
+        chemicalURN,
+        batchId,
+        manufacturerURN,
+        regulatoryClass: regClass
+      },
+      signed: !!signature
     });
   } catch (error) {
     console.error('Error creating shipment:', error);
+    logAudit(req.user?.id, req.user?.username, req.user?.role, 'CREATE_SHIPMENT', 'shipment', null, 'failure', null, error.message);
     res.status(500).json({ error: 'Failed to create shipment' });
   }
 });
@@ -432,22 +812,237 @@ app.get('/shipments', (req, res) => {
   }
 });
 
-// GET /shipments/:id - Get specific shipment with events
+// GET /shipments/:id - Get specific shipment with events (searches by ID or productId)
 app.get('/shipments/:id', (req, res) => {
   try {
     const { id } = req.params;
 
-    const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+    // Try to find by UUID first, then by productId
+    let shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+
+    // If not found by UUID, try by productId (case-insensitive)
+    if (!shipment) {
+      shipment = db.prepare('SELECT * FROM shipments WHERE LOWER(productId) = LOWER(?)').get(id);
+    }
+
     if (!shipment) {
       return res.status(404).json({ error: 'Shipment not found' });
     }
 
-    const events = db.prepare('SELECT * FROM events WHERE shipmentId = ? ORDER BY timestamp DESC').all(id);
+    const events = db.prepare('SELECT * FROM events WHERE shipmentId = ? ORDER BY timestamp DESC').all(shipment.id);
 
     res.json({ shipment, events });
   } catch (error) {
     console.error('Error fetching shipment:', error);
     res.status(500).json({ error: 'Failed to fetch shipment' });
+  }
+});
+
+// POST /shipments/:id/transition - Change shipment state
+app.post('/shipments/:id/transition', authenticateToken, (req, res) => {
+  try {
+    const { id } = req.params;
+    const { newState, notes } = req.body;
+
+    if (!newState) {
+      return res.status(400).json({ error: 'Missing newState in request body' });
+    }
+
+    // Get current shipment
+    const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+
+    // Validate the transition
+    const validation = validateTransition(shipment.status, newState, req.user.role);
+    if (!validation.valid) {
+      logAudit(req.user.id, req.user.username, req.user.role, 'STATE_TRANSITION', 'shipment', id, 'failure',
+        { fromState: shipment.status, toState: newState }, validation.reason);
+      return res.status(403).json({ error: validation.reason });
+    }
+
+    // Update shipment status
+    const timestamp = new Date().toISOString();
+    db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ?')
+      .run(newState, timestamp, id);
+
+    // Create transition event with signature
+    const eventId = randomUUID();
+    const eventData = {
+      type: 'STATE_TRANSITION',
+      shipmentId: id,
+      fromState: shipment.status,
+      toState: newState,
+      notes: notes || null,
+      timestamp
+    };
+
+    // Sign the event
+    const user = db.prepare('SELECT privateKeyEncrypted FROM users WHERE id = ?').get(req.user.id);
+    const signature = user?.privateKeyEncrypted ? signData(eventData, user.privateKeyEncrypted) : null;
+
+    db.prepare(`
+      INSERT INTO events (id, shipmentId, type, weight, actorId, actorRole, signature, timestamp)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(eventId, id, `STATE_TRANSITION:${newState}`, shipment.currentWeight, req.user.id, req.user.role, signature, timestamp);
+
+    // Log audit
+    logAudit(req.user.id, req.user.username, req.user.role, 'STATE_TRANSITION', 'shipment', id, 'success',
+      { fromState: shipment.status, toState: newState, notes });
+
+    console.log(`📦 State Transition: ${shipment.status} → ${newState} by ${req.user.username}`);
+
+    res.json({
+      message: 'State transition successful',
+      shipment: {
+        id,
+        previousState: shipment.status,
+        currentState: newState,
+        transitionedBy: req.user.username,
+        transitionedAt: timestamp
+      },
+      signed: !!signature
+    });
+  } catch (error) {
+    console.error('Error transitioning shipment:', error);
+    res.status(500).json({ error: 'Failed to transition shipment' });
+  }
+});
+
+// POST /shipments/:id/checkpoint - Record a checkpoint scan event
+app.post('/shipments/:id/checkpoint', authenticateToken, requireRole('driver'), (req, res) => {
+  try {
+    const { id } = req.params;
+    const { latitude, longitude, weight, notes } = req.body;
+
+    // Try to find by UUID first, then by productId
+    let shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+    if (!shipment) {
+      shipment = db.prepare('SELECT * FROM shipments WHERE LOWER(productId) = LOWER(?)').get(id);
+    }
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+
+    // Check if shipment is in a valid state for checkpoint
+    const validStates = ['DISPATCHED', 'IN_TRANSIT', 'OFF_ROUTE'];
+    if (!validStates.includes(shipment.status)) {
+      return res.status(400).json({
+        error: `Cannot scan checkpoint for shipment in ${shipment.status} state. Must be DISPATCHED, IN_TRANSIT, or OFF_ROUTE.`
+      });
+    }
+
+    const timestamp = new Date().toISOString();
+
+    // Auto-transition from DISPATCHED to IN_TRANSIT on first checkpoint
+    let stateChanged = false;
+    if (shipment.status === 'DISPATCHED') {
+      db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ?')
+        .run('IN_TRANSIT', timestamp, id);
+      stateChanged = true;
+    }
+
+    // Check weight deviation if weight provided
+    const currentWeight = weight || shipment.currentWeight;
+    const weightAlert = checkWeightDeviation(shipment.initialWeight, currentWeight);
+
+    // Update current weight if provided
+    if (weight) {
+      db.prepare('UPDATE shipments SET currentWeight = ?, updatedAt = ? WHERE id = ?')
+        .run(weight, timestamp, id);
+    }
+
+    // Create checkpoint event
+    const eventId = randomUUID();
+    const eventData = {
+      type: 'CHECKPOINT_SCAN',
+      shipmentId: id,
+      latitude: latitude || 0,
+      longitude: longitude || 0,
+      weight: currentWeight,
+      notes: notes || null,
+      timestamp
+    };
+
+    // Sign the event
+    const user = db.prepare('SELECT privateKeyEncrypted FROM users WHERE id = ?').get(req.user.id);
+    const signature = user?.privateKeyEncrypted ? signData(eventData, user.privateKeyEncrypted) : null;
+
+    db.prepare(`
+      INSERT INTO events (id, shipmentId, type, latitude, longitude, weight, actorId, actorRole, signature, timestamp)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(eventId, id, 'CHECKPOINT_SCAN', latitude || 0, longitude || 0, currentWeight, req.user.id, req.user.role, signature, timestamp);
+
+    // Create weight deviation alert if detected
+    if (weightAlert) {
+      const alertMessage = `${weightAlert.level}: ${weightAlert.message} (${weightAlert.deviation}% loss)`;
+      db.prepare(`
+        INSERT INTO ml_alerts (id, device, temp, hum, weight, risk, timestamp, alerts)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(randomUUID(), shipment.sensorDeviceId || 'CHECKPOINT', 0, 0, currentWeight, weightAlert.level, timestamp, JSON.stringify([{ type: 'weight_deviation', detail: alertMessage }]));
+    }
+
+    // Log audit
+    logAudit(req.user.id, req.user.username, req.user.role, 'CHECKPOINT_SCAN', 'shipment', id, 'success',
+      { latitude, longitude, weight: currentWeight, stateChanged, weightAlert: weightAlert?.level || null });
+
+    console.log(`📍 Checkpoint Scan: ${shipment.productId} at [${latitude}, ${longitude}] by ${req.user.username}`);
+
+    res.json({
+      message: 'Checkpoint recorded successfully',
+      checkpoint: {
+        id: eventId,
+        shipmentId: id,
+        productId: shipment.productId,
+        location: { latitude: latitude || 0, longitude: longitude || 0 },
+        weight: currentWeight,
+        timestamp,
+        signed: !!signature
+      },
+      stateChanged: stateChanged ? { from: 'DISPATCHED', to: 'IN_TRANSIT' } : null,
+      weightAlert: weightAlert || null
+    });
+  } catch (error) {
+    console.error('Error recording checkpoint:', error);
+    res.status(500).json({ error: 'Failed to record checkpoint' });
+  }
+});
+
+// GET /shipments/:id/qr - Get QR code data for a shipment
+app.get('/shipments/:id/qr', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const shipment = db.prepare(`
+      SELECT id, productId, chemicalURN, batchId, manufacturerURN, regulatoryClass, origin, destination
+      FROM shipments WHERE id = ?
+    `).get(id);
+
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+
+    // Return QR data that can be encoded by frontend
+    const qrData = {
+      type: 'PRECURSOR_SHIPMENT',
+      version: '1.0',
+      shipmentId: shipment.id,
+      productId: shipment.productId,
+      urn: shipment.chemicalURN,
+      batchId: shipment.batchId,
+      manufacturer: shipment.manufacturerURN,
+      class: shipment.regulatoryClass,
+      route: `${shipment.origin} → ${shipment.destination}`
+    };
+
+    res.json({
+      qrData,
+      qrString: JSON.stringify(qrData)
+    });
+  } catch (error) {
+    console.error('Error getting QR data:', error);
+    res.status(500).json({ error: 'Failed to get QR data' });
   }
 });
 
@@ -633,6 +1228,236 @@ app.get('/api/ml-alerts', (req, res) => {
   } catch (error) {
     console.error('Error fetching ML alerts:', error);
     res.status(500).json({ error: 'Failed to fetch ML alerts' });
+  }
+});
+// ============================================================================
+// Audit Logs & Verification Endpoints
+// ============================================================================
+
+// GET /api/audit-logs - Get all audit logs (Regulator/Auditor only)
+app.get('/api/audit-logs', authenticateToken, requireRole('regulator', 'auditor'), (req, res) => {
+  try {
+    const { limit = 100, action, userId } = req.query;
+
+    let query = 'SELECT * FROM audit_logs';
+    const params = [];
+    const conditions = [];
+
+    if (action) {
+      conditions.push('action LIKE ?');
+      params.push(`%${action}%`);
+    }
+    if (userId) {
+      conditions.push('userId = ?');
+      params.push(userId);
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    query += ' ORDER BY timestamp DESC LIMIT ?';
+    params.push(Number(limit));
+
+    const logs = db.prepare(query).all(...params);
+    res.json({ logs, count: logs.length });
+  } catch (error) {
+    console.error('Error fetching audit logs:', error);
+    res.status(500).json({ error: 'Failed to fetch audit logs' });
+  }
+});
+
+// GET /api/events/:id/verify - Verify event signature
+app.get('/api/events/:id/verify', (req, res) => {
+  try {
+    const { id } = req.params;
+    const event = db.prepare('SELECT * FROM events WHERE id = ?').get(id);
+
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    if (!event.signature) {
+      return res.json({ verified: false, reason: 'Event has no signature' });
+    }
+
+    // Get actor's public key
+    const actor = db.prepare('SELECT publicKey FROM users WHERE id = ?').get(event.actorId);
+
+    if (!actor?.publicKey) {
+      return res.json({ verified: false, reason: 'Actor public key not found' });
+    }
+
+    // Reconstruct the signed data
+    const eventData = {
+      type: event.type,
+      shipmentId: event.shipmentId,
+      weight: event.weight,
+      timestamp: event.timestamp
+    };
+
+    const isValid = verifySignature(eventData, event.signature, actor.publicKey);
+
+    res.json({
+      verified: isValid,
+      event: {
+        id: event.id,
+        type: event.type,
+        actorId: event.actorId,
+        actorRole: event.actorRole,
+        timestamp: event.timestamp
+      }
+    });
+  } catch (error) {
+    console.error('Error verifying event:', error);
+    res.status(500).json({ error: 'Failed to verify event' });
+  }
+});
+
+// GET /api/blockchain/status - Get blockchain verification status
+app.get('/api/blockchain/status', (req, res) => {
+  try {
+    // Count events and check integrity
+    const eventCount = db.prepare('SELECT COUNT(*) as count FROM events').get().count;
+    const signedCount = db.prepare('SELECT COUNT(*) as count FROM events WHERE signature IS NOT NULL').get().count;
+    const shipmentCount = db.prepare('SELECT COUNT(*) as count FROM shipments').get().count;
+
+    res.json({
+      status: 'operational',
+      eventCount,
+      signedEvents: signedCount,
+      unsignedEvents: eventCount - signedCount,
+      signatureRate: eventCount > 0 ? ((signedCount / eventCount) * 100).toFixed(1) + '%' : '0%',
+      shipmentCount,
+      lastVerified: new Date().toISOString(),
+      integrityStatus: signedCount === eventCount ? 'FULL' : 'PARTIAL'
+    });
+  } catch (error) {
+    console.error('Error checking blockchain status:', error);
+    res.status(500).json({ error: 'Failed to check blockchain status' });
+  }
+});
+
+// GET /api/shipments/:id/chain - Get full event chain for a shipment
+app.get('/api/shipments/:id/chain', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+
+    const events = db.prepare(`
+      SELECT e.*, u.username as actorName, u.publicKey
+      FROM events e
+      LEFT JOIN users u ON e.actorId = u.id
+      WHERE e.shipmentId = ?
+      ORDER BY e.timestamp ASC
+    `).all(id);
+
+    // Verify each event's signature
+    const verifiedEvents = events.map(event => {
+      let verified = false;
+      if (event.signature && event.publicKey) {
+        const eventData = {
+          type: event.type,
+          shipmentId: event.shipmentId,
+          weight: event.weight,
+          timestamp: event.timestamp
+        };
+        verified = verifySignature(eventData, event.signature, event.publicKey);
+      }
+      return {
+        ...event,
+        signatureVerified: verified,
+        publicKey: undefined // Don't expose public key in response
+      };
+    });
+
+    res.json({
+      shipment: {
+        id: shipment.id,
+        chemicalURN: shipment.chemicalURN,
+        batchId: shipment.batchId,
+        manufacturerURN: shipment.manufacturerURN,
+        status: shipment.status
+      },
+      eventChain: verifiedEvents,
+      chainIntegrity: verifiedEvents.every(e => e.signature ? e.signatureVerified : true)
+    });
+  } catch (error) {
+    console.error('Error fetching event chain:', error);
+    res.status(500).json({ error: 'Failed to fetch event chain' });
+  }
+});
+
+// ============================================================================
+// PDF Compliance Reports (Regulator/Auditor only)
+// ============================================================================
+
+// GET /api/reports/shipment/:id - Generate PDF report for a specific shipment
+app.get('/api/reports/shipment/:id', authenticateToken, requireRole('regulator', 'auditor'), async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(id);
+    if (!shipment) {
+      return res.status(404).json({ error: 'Shipment not found' });
+    }
+
+    const events = db.prepare('SELECT * FROM events WHERE shipmentId = ? ORDER BY timestamp ASC').all(id);
+
+    const pdfBuffer = await generateShipmentReport(shipment, events);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="shipment-${shipment.productId}-${Date.now()}.pdf"`);
+    res.send(pdfBuffer);
+
+    logAudit(req.user.id, req.user.username, req.user.role, 'GENERATE_REPORT', 'shipment', id, 'success',
+      { reportType: 'shipment', productId: shipment.productId });
+  } catch (error) {
+    console.error('Error generating shipment report:', error);
+    res.status(500).json({ error: 'Failed to generate report' });
+  }
+});
+
+// GET /api/reports/daily/:date - Generate daily summary report (format: YYYY-MM-DD)
+app.get('/api/reports/daily/:date', authenticateToken, requireRole('regulator', 'auditor'), async (req, res) => {
+  try {
+    const { date } = req.params;
+
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return res.status(400).json({ error: 'Invalid date format. Use YYYY-MM-DD' });
+    }
+
+    const startDate = `${date}T00:00:00.000Z`;
+    const endDate = `${date}T23:59:59.999Z`;
+
+    const shipments = db.prepare(`
+      SELECT * FROM shipments 
+      WHERE createdAt >= ? AND createdAt <= ?
+      ORDER BY createdAt DESC
+    `).all(startDate, endDate);
+
+    const events = db.prepare(`
+      SELECT * FROM events 
+      WHERE timestamp >= ? AND timestamp <= ?
+      ORDER BY timestamp DESC
+    `).all(startDate, endDate);
+
+    const pdfBuffer = await generateDailySummaryReport(date, shipments, events);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="daily-summary-${date}.pdf"`);
+    res.send(pdfBuffer);
+
+    logAudit(req.user.id, req.user.username, req.user.role, 'GENERATE_REPORT', 'daily_summary', date, 'success',
+      { reportType: 'daily', shipmentCount: shipments.length, eventCount: events.length });
+  } catch (error) {
+    console.error('Error generating daily report:', error);
+    res.status(500).json({ error: 'Failed to generate report' });
   }
 });
 
