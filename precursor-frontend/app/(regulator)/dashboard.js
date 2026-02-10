@@ -1,23 +1,26 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Linking, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AlertBanner from '../../components/AlertBanner';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
-import { api, formatDate, formatStatus } from '../../config/api';
+import { api, API_BASE_URL, formatDate, formatStatus } from '../../config/api';
 import { useAuth } from '../../config/AuthContext';
 
 export default function RegulatorDashboard() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, getToken } = useAuth();
   const [shipments, setShipments] = useState([]);
   const [events, setEvents] = useState([]);
   const [mlAlerts, setMlAlerts] = useState([]);
+  const [blockchainStatus, setBlockchainStatus] = useState(null);
   const [stats, setStats] = useState({
     monitored: 0,
     activeAlerts: 0,
-    blockchainRecords: 0
+    blockchainRecords: 0,
+    signatureRate: '0%',
+    integrityStatus: 'UNKNOWN'
   });
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -44,19 +47,24 @@ export default function RegulatorDashboard() {
     try {
       if (showRefreshing) setRefreshing(true);
 
-      // Fetch shipments, events, and ML alerts in parallel
-      const [shipmentsData, eventsData, mlAlertsData] = await Promise.all([
+      // Fetch shipments, events, ML alerts, and blockchain status in parallel
+      const [shipmentsData, eventsData, mlAlertsData, blockchainData] = await Promise.all([
         api.getShipments(),
         api.getAllEvents(),
-        api.getMLAlerts()
+        api.getMLAlerts(),
+        fetch(`${API_BASE_URL}/api/blockchain/status`).then(r => r.json()).catch(() => null)
       ]);
 
-      // Transform shipments
+      // Transform shipments with enhanced chemical identity
       const transformedShipments = shipmentsData.shipments.map(ship => ({
         id: ship.id,
-        urn: ship.productId,
+        urn: ship.chemicalURN || ship.productId,
         name: ship.productId,
+        batchId: ship.batchId,
+        manufacturerURN: ship.manufacturerURN,
+        regulatoryClass: ship.regulatoryClass,
         quantity: Math.round(ship.currentWeight * 100),
+        unit: ship.unit || 'kg',
         status: formatStatus(ship.status),
         date: formatDate(ship.createdAt),
         origin: ship.origin,
@@ -67,6 +75,7 @@ export default function RegulatorDashboard() {
       setShipments(transformedShipments);
       setEvents(eventsData.events);
       setMlAlerts(mlAlertsData || []);
+      setBlockchainStatus(blockchainData);
 
       // Calculate statistics
       const monitored = shipmentsData.shipments.length;
@@ -80,7 +89,9 @@ export default function RegulatorDashboard() {
       setStats({
         monitored,
         activeAlerts,
-        blockchainRecords
+        blockchainRecords,
+        signatureRate: blockchainData?.signatureRate || '0%',
+        integrityStatus: blockchainData?.integrityStatus || 'UNKNOWN'
       });
 
       setLoading(false);
@@ -187,6 +198,82 @@ export default function RegulatorDashboard() {
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   };
 
+  // Download PDF report for a shipment
+  const downloadReport = async (shipmentId, productId) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        Alert.alert('Error', 'You must be logged in to download reports');
+        return;
+      }
+
+      // For web, open in new tab with authorization
+      const reportUrl = `${API_BASE_URL}/api/reports/shipment/${shipmentId}`;
+
+      // Use fetch with authorization header
+      const response = await fetch(reportUrl, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate report');
+      }
+
+      // Get blob and create download link
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `shipment-report-${productId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      Alert.alert('Success', `Report downloaded for ${productId}`);
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      Alert.alert('Error', 'Failed to download report. Please try again.');
+    }
+  };
+
+  // Download daily summary report
+  const downloadDailySummary = async () => {
+    try {
+      const token = getToken();
+      if (!token) {
+        Alert.alert('Error', 'You must be logged in to download reports');
+        return;
+      }
+
+      const today = new Date().toISOString().split('T')[0];
+      const reportUrl = `${API_BASE_URL}/api/reports/daily/${today}`;
+
+      const response = await fetch(reportUrl, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate report');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `daily-summary-${today}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      Alert.alert('Success', `Daily summary report downloaded for ${today}`);
+    } catch (error) {
+      console.error('Error downloading daily report:', error);
+      Alert.alert('Error', 'Failed to download daily report. Please try again.');
+    }
+  };
+
   // Show loading spinner
   if (loading) {
     return (
@@ -225,6 +312,32 @@ export default function RegulatorDashboard() {
           <StatsCard title="Total Events" stat={stats.blockchainRecords} />
         </View>
 
+        {/* Blockchain Integrity Panel */}
+        <View style={[
+          styles.blockchainPanel,
+          stats.integrityStatus === 'FULL' ? styles.blockchainFull : styles.blockchainPartial
+        ]}>
+          <View style={styles.blockchainHeader}>
+            <Text style={styles.blockchainTitle}>🔗 Blockchain Integrity</Text>
+            <Text style={[
+              styles.blockchainStatus,
+              stats.integrityStatus === 'FULL' ? styles.statusFull : styles.statusPartial
+            ]}>
+              {stats.integrityStatus === 'FULL' ? '✓ VERIFIED' : '⚠ PARTIAL'}
+            </Text>
+          </View>
+          <View style={styles.blockchainStats}>
+            <View style={styles.blockchainStat}>
+              <Text style={styles.blockchainStatValue}>{stats.signatureRate}</Text>
+              <Text style={styles.blockchainStatLabel}>Signed Events</Text>
+            </View>
+            <View style={styles.blockchainStat}>
+              <Text style={styles.blockchainStatValue}>{blockchainStatus?.signedEvents || 0}</Text>
+              <Text style={styles.blockchainStatLabel}>Digital Signatures</Text>
+            </View>
+          </View>
+        </View>
+
         {/* ML Alert Button */}
         <TouchableOpacity
           style={styles.mlAlertButton}
@@ -255,7 +368,13 @@ export default function RegulatorDashboard() {
 
 
         {/* All Shipments Section */}
-        <Text style={styles.section}>All Shipments ({shipments.length})</Text>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.section}>All Shipments ({shipments.length})</Text>
+          <TouchableOpacity style={styles.dailyReportBtn} onPress={downloadDailySummary}>
+            <Ionicons name="document-text" size={16} color="#fff" />
+            <Text style={styles.dailyReportText}>Daily Summary</Text>
+          </TouchableOpacity>
+        </View>
         {shipments.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No shipments to monitor</Text>
@@ -264,7 +383,18 @@ export default function RegulatorDashboard() {
         ) : (
           <View>
             {shipments.map((item) => (
-              <ShipmentCard key={item.id} shipment={item} />
+              <View key={item.id} style={styles.shipmentRow}>
+                <View style={styles.shipmentCardContainer}>
+                  <ShipmentCard shipment={item} />
+                </View>
+                <TouchableOpacity
+                  style={styles.downloadBtn}
+                  onPress={() => downloadReport(item.id, item.name)}
+                >
+                  <Ionicons name="download-outline" size={22} color="#D97706" />
+                  <Text style={styles.downloadBtnText}>PDF</Text>
+                </TouchableOpacity>
+              </View>
             ))}
           </View>
         )}
@@ -366,6 +496,63 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#DC2626'
   },
+  blockchainPanel: {
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 2
+  },
+  blockchainFull: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#10B981'
+  },
+  blockchainPartial: {
+    backgroundColor: '#FFFBEB',
+    borderColor: '#F59E0B'
+  },
+  blockchainHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12
+  },
+  blockchainTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827'
+  },
+  blockchainStatus: {
+    fontSize: 14,
+    fontWeight: '700',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6
+  },
+  statusFull: {
+    backgroundColor: '#10B981',
+    color: '#fff'
+  },
+  statusPartial: {
+    backgroundColor: '#F59E0B',
+    color: '#fff'
+  },
+  blockchainStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  blockchainStat: {
+    alignItems: 'center'
+  },
+  blockchainStatValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#111827'
+  },
+  blockchainStatLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2
+  },
   emptyContainer: {
     alignItems: 'center',
     paddingVertical: 30,
@@ -394,5 +581,49 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600'
+  },
+  // New styles for PDF download feature
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12
+  },
+  dailyReportBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#D97706',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    gap: 4
+  },
+  dailyReportText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600'
+  },
+  shipmentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8
+  },
+  shipmentCardContainer: {
+    flex: 1
+  },
+  downloadBtn: {
+    backgroundColor: '#FEF3C7',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 8,
+    minWidth: 50
+  },
+  downloadBtnText: {
+    color: '#D97706',
+    fontSize: 10,
+    fontWeight: '600',
+    marginTop: 2
   }
 });

@@ -2,13 +2,17 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { api } from '../../config/api';
+import { useAuth } from '../../config/AuthContext';
 
 export default function CreateShipmentScreen() {
+  const { getToken } = useAuth();
   const [formData, setFormData] = useState({
     productId: '',
     origin: '',
     destination: '',
-    initialWeight: ''
+    initialWeight: '',
+    regulatoryClass: 'non-controlled',
+    unit: 'kg'
   });
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +36,7 @@ export default function CreateShipmentScreen() {
       return false;
     }
     if (!formData.initialWeight || isNaN(parseFloat(formData.initialWeight))) {
-      Alert.alert('Validation Error', 'Please enter a valid weight (in kg)');
+      Alert.alert('Validation Error', 'Please enter a valid weight');
       return false;
     }
     if (parseFloat(formData.initialWeight) <= 0) {
@@ -48,21 +52,35 @@ export default function CreateShipmentScreen() {
 
     setLoading(true);
     try {
+      const token = getToken();
+      if (!token) {
+        Alert.alert('Authentication Error', 'You must be logged in to create shipments.');
+        setLoading(false);
+        return;
+      }
+
       const shipmentData = {
         productId: formData.productId.trim(),
         origin: formData.origin.trim(),
         destination: formData.destination.trim(),
-        initialWeight: parseFloat(formData.initialWeight)
+        initialWeight: parseFloat(formData.initialWeight),
+        regulatoryClass: formData.regulatoryClass,
+        unit: formData.unit
       };
 
-      const response = await api.createShipment(shipmentData);
+      const response = await api.createShipment(shipmentData, token);
 
+      // Show enhanced success message with chemical identity
+      const chemId = response.chemicalIdentity;
       Alert.alert(
-        'Success!',
-        `Shipment ${response.shipment.productId} created successfully!`,
+        '✅ Shipment Created!',
+        `Chemical URN: ${chemId?.chemicalURN || 'Generated'}\n` +
+        `Batch ID: ${chemId?.batchId || 'Generated'}\n` +
+        `Regulatory Class: ${chemId?.regulatoryClass || formData.regulatoryClass}\n` +
+        `Digitally Signed: ${response.signed ? '✓ Yes' : '✗ No'}`,
         [
           {
-            text: 'OK',
+            text: 'View Shipments',
             onPress: () => router.back()
           }
         ]
@@ -71,7 +89,7 @@ export default function CreateShipmentScreen() {
       console.error('Failed to create shipment:', error);
       Alert.alert(
         'Error',
-        'Failed to create shipment. Please check your connection and try again.',
+        error.message || 'Failed to create shipment. Please check your connection and try again.',
         [{ text: 'OK' }]
       );
     } finally {
@@ -86,7 +104,9 @@ export default function CreateShipmentScreen() {
       productId: `PHARMA-${timestamp}`,
       origin: 'Mumbai Warehouse',
       destination: 'Pune Hospital',
-      initialWeight: '25.5'
+      initialWeight: '25.5',
+      regulatoryClass: 'precursor',
+      unit: 'kg'
     });
   };
 
@@ -143,22 +163,73 @@ export default function CreateShipmentScreen() {
             />
           </View>
 
-          {/* Initial Weight */}
+          {/* Initial Weight with Unit */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Initial Weight (kg) *</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="e.g., 25.5"
-              value={formData.initialWeight}
-              onChangeText={(text) => updateField('initialWeight', text)}
-              keyboardType="decimal-pad"
-              editable={!loading}
-            />
+            <Text style={styles.label}>Initial Weight *</Text>
+            <View style={styles.weightRow}>
+              <TextInput
+                style={[styles.input, styles.weightInput]}
+                placeholder="e.g., 25.5"
+                value={formData.initialWeight}
+                onChangeText={(text) => updateField('initialWeight', text)}
+                keyboardType="decimal-pad"
+                editable={!loading}
+              />
+              <View style={styles.unitPicker}>
+                {['kg', 'g', 'L', 'mL'].map((unit) => (
+                  <TouchableOpacity
+                    key={unit}
+                    style={[
+                      styles.unitOption,
+                      formData.unit === unit && styles.unitOptionSelected
+                    ]}
+                    onPress={() => updateField('unit', unit)}
+                    disabled={loading}
+                  >
+                    <Text style={[
+                      styles.unitOptionText,
+                      formData.unit === unit && styles.unitOptionTextSelected
+                    ]}>{unit}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
+
+          {/* Regulatory Class */}
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Regulatory Classification *</Text>
+            <Text style={styles.helperText}>Required for NCB compliance</Text>
+            <View style={styles.regulatoryPicker}>
+              {[
+                { value: 'non-controlled', label: '📦 Non-Controlled', color: '#10B981' },
+                { value: 'controlled', label: '⚠️ Controlled', color: '#F59E0B' },
+                { value: 'precursor', label: '🔐 Precursor', color: '#EF4444' }
+              ].map((option) => (
+                <TouchableOpacity
+                  key={option.value}
+                  style={[
+                    styles.regOption,
+                    formData.regulatoryClass === option.value && {
+                      backgroundColor: option.color + '20',
+                      borderColor: option.color
+                    }
+                  ]}
+                  onPress={() => updateField('regulatoryClass', option.value)}
+                  disabled={loading}
+                >
+                  <Text style={[
+                    styles.regOptionText,
+                    formData.regulatoryClass === option.value && { color: option.color, fontWeight: 'bold' }
+                  ]}>{option.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
 
           {/* Info Box */}
           <View style={styles.infoBox}>
-            <Text style={styles.infoText}>ℹ️ The shipment will be automatically tracked with GPS simulation once created.</Text>
+            <Text style={styles.infoText}>ℹ️ A unique Chemical URN and Batch ID will be auto-generated. All events will be digitally signed.</Text>
           </View>
 
           {/* Buttons */}
@@ -230,6 +301,11 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginBottom: 8
   },
+  helperText: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 8
+  },
   input: {
     borderWidth: 1,
     borderColor: '#D1D5DB',
@@ -237,6 +313,55 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     backgroundColor: '#F9FAFB'
+  },
+  weightRow: {
+    flexDirection: 'row',
+    gap: 10
+  },
+  weightInput: {
+    flex: 1
+  },
+  unitPicker: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#D1D5DB'
+  },
+  unitOption: {
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    backgroundColor: '#F9FAFB'
+  },
+  unitOptionSelected: {
+    backgroundColor: '#2563EB'
+  },
+  unitOptionText: {
+    fontSize: 14,
+    color: '#374151'
+  },
+  unitOptionTextSelected: {
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  regulatoryPicker: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap'
+  },
+  regOption: {
+    flex: 1,
+    minWidth: 100,
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#D1D5DB',
+    alignItems: 'center',
+    backgroundColor: '#F9FAFB'
+  },
+  regOptionText: {
+    fontSize: 13,
+    color: '#374151'
   },
   infoBox: {
     backgroundColor: '#EFF6FF',
