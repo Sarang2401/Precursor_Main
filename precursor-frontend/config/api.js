@@ -17,11 +17,24 @@ console.log('API_BASE_URL:', API_BASE_URL);
 console.log('ML_API_BASE_URL:', ML_API_BASE_URL);
 
 const handleResponse = async (response) => {
+  console.log('[handleResponse] Status:', response.status, response.statusText);
+  console.log('[handleResponse] URL:', response.url);
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Network error' }));
+    console.log('[handleResponse] Error from backend:', error);
     throw new Error(error.error || `HTTP ${response.status}`);
   }
-  return response.json();
+
+  // Safely parse JSON – catch parse errors on success responses
+  try {
+    const data = await response.json();
+    return data;
+  } catch (jsonError) {
+    console.error('[handleResponse] Failed to parse JSON from successful response:', jsonError);
+    // Return a minimal success object instead of crashing
+    return { success: true };
+  }
 };
 
 // ============================================================================
@@ -41,16 +54,32 @@ export const api = {
 
   // Create new shipment (requires auth token)
   createShipment: async (shipmentData, token) => {
+    console.log('[createShipment] Data:', JSON.stringify(shipmentData));
+    console.log('[createShipment] Has token:', !!token);
+    console.log('[createShipment] Token preview:', token ? token.substring(0, 20) + '...' : 'null');
+
     const headers = { 'Content-Type': 'application/json' };
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    const response = await fetch(`${API_BASE_URL}/shipments`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(shipmentData)
-    });
-    return handleResponse(response);
+
+    const url = `${API_BASE_URL}/shipments`;
+    console.log('[createShipment] Calling:', url);
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(shipmentData)
+      });
+
+      console.log('[createShipment] Got response, status:', response.status);
+      return await handleResponse(response);
+    } catch (fetchError) {
+      console.error('[createShipment] Fetch failed:', fetchError.message);
+      console.error('[createShipment] Error type:', fetchError.constructor.name);
+      throw new Error('Failed to create shipment');
+    }
   },
 
   // Get all shipments

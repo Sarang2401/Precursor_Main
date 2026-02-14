@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Linking, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, BackHandler, FlatList, Linking, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
 import AlertBanner from '../../components/AlertBanner';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
@@ -40,6 +42,23 @@ export default function RegulatorDashboard() {
     // Auto-refresh every 10 seconds
     const interval = setInterval(loadData, 10000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle hardware back button press
+  useEffect(() => {
+    const backAction = () => {
+      // Logout and navigate to login instead of exiting app
+      logout();
+      router.replace('/login');
+      return true; // Prevent default behavior (exit app)
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   // Fetch all data from backend
@@ -207,30 +226,66 @@ export default function RegulatorDashboard() {
         return;
       }
 
-      // For web, open in new tab with authorization
       const reportUrl = `${API_BASE_URL}/api/reports/shipment/${shipmentId}`;
 
-      // Use fetch with authorization header
-      const response = await fetch(reportUrl, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      if (Platform.OS === 'web') {
+        // Web: Use blob download
+        const response = await fetch(reportUrl, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate report');
+        if (!response.ok) {
+          throw new Error('Failed to generate report');
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `shipment-report-${productId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        Alert.alert('Success', `Report downloaded for ${productId}`);
+      } else {
+        // Native (iOS/Android): Use FileSystem + Sharing
+        const filename = `shipment-report-${productId}.pdf`;
+        const fileUri = FileSystem.cacheDirectory + filename;
+
+        const downloadResult = await FileSystem.downloadAsync(reportUrl, fileUri, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (downloadResult.status !== 200) {
+          throw new Error('Failed to generate report');
+        }
+
+        // Show success message with file location and ask if user wants to share
+        Alert.alert(
+          'Download Successful',
+          `Report for ${productId} has been saved to:\n\n${fileUri}\n\nWould you like to share it?`,
+          [
+            {
+              text: 'Not Now',
+              style: 'cancel'
+            },
+            {
+              text: 'Share',
+              onPress: async () => {
+                if (await Sharing.isAvailableAsync()) {
+                  await Sharing.shareAsync(downloadResult.uri, {
+                    mimeType: 'application/pdf',
+                    dialogTitle: `Shipment Report - ${productId}`,
+                    UTI: 'com.adobe.pdf'
+                  });
+                }
+              }
+            }
+          ]
+        );
       }
-
-      // Get blob and create download link
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `shipment-report-${productId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-
-      Alert.alert('Success', `Report downloaded for ${productId}`);
     } catch (error) {
       console.error('Error downloading report:', error);
       Alert.alert('Error', 'Failed to download report. Please try again.');
@@ -249,25 +304,64 @@ export default function RegulatorDashboard() {
       const today = new Date().toISOString().split('T')[0];
       const reportUrl = `${API_BASE_URL}/api/reports/daily/${today}`;
 
-      const response = await fetch(reportUrl, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      if (Platform.OS === 'web') {
+        // Web: Use blob download
+        const response = await fetch(reportUrl, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate report');
+        if (!response.ok) {
+          throw new Error('Failed to generate report');
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `daily-summary-${today}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        Alert.alert('Success', `Daily summary report downloaded for ${today}`);
+      } else {
+        // Native (iOS/Android): Use FileSystem + Sharing
+        const filename = `daily-summary-${today}.pdf`;
+        const fileUri = FileSystem.cacheDirectory + filename;
+
+        const downloadResult = await FileSystem.downloadAsync(reportUrl, fileUri, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (downloadResult.status !== 200) {
+          throw new Error('Failed to generate report');
+        }
+
+        // Show success message with file location and ask if user wants to share
+        Alert.alert(
+          'Download Successful',
+          `Daily summary for ${today} has been saved to:\n\n${fileUri}\n\nWould you like to share it?`,
+          [
+            {
+              text: 'Not Now',
+              style: 'cancel'
+            },
+            {
+              text: 'Share',
+              onPress: async () => {
+                if (await Sharing.isAvailableAsync()) {
+                  await Sharing.shareAsync(downloadResult.uri, {
+                    mimeType: 'application/pdf',
+                    dialogTitle: `Daily Summary - ${today}`,
+                    UTI: 'com.adobe.pdf'
+                  });
+                }
+              }
+            }
+          ]
+        );
       }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `daily-summary-${today}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-
-      Alert.alert('Success', `Daily summary report downloaded for ${today}`);
     } catch (error) {
       console.error('Error downloading daily report:', error);
       Alert.alert('Error', 'Failed to download daily report. Please try again.');

@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { api } from '../../config/api';
+import { api, API_BASE_URL } from '../../config/api';
 import { useAuth } from '../../config/AuthContext';
 
 export default function CreateShipmentScreen() {
@@ -51,6 +51,17 @@ export default function CreateShipmentScreen() {
     if (!validateForm()) return;
 
     setLoading(true);
+
+    // Define shipmentData outside try block so it's accessible in catch
+    const shipmentData = {
+      productId: formData.productId.trim(),
+      origin: formData.origin.trim(),
+      destination: formData.destination.trim(),
+      initialWeight: parseFloat(formData.initialWeight),
+      regulatoryClass: formData.regulatoryClass,
+      unit: formData.unit
+    };
+
     try {
       const token = getToken();
       if (!token) {
@@ -58,15 +69,6 @@ export default function CreateShipmentScreen() {
         setLoading(false);
         return;
       }
-
-      const shipmentData = {
-        productId: formData.productId.trim(),
-        origin: formData.origin.trim(),
-        destination: formData.destination.trim(),
-        initialWeight: parseFloat(formData.initialWeight),
-        regulatoryClass: formData.regulatoryClass,
-        unit: formData.unit
-      };
 
       const response = await api.createShipment(shipmentData, token);
 
@@ -87,9 +89,15 @@ export default function CreateShipmentScreen() {
       );
     } catch (error) {
       console.error('Failed to create shipment:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        shipmentData: shipmentData
+      });
+
       Alert.alert(
-        'Error',
-        error.message || 'Failed to create shipment. Please check your connection and try again.',
+        'Error Creating Shipment',
+        `Error: ${error.message}\n\nPlease check:\n1. Backend is running at ${API_BASE_URL}\n2. You are logged in as manufacturer\n3. All required fields are filled`,
         [{ text: 'OK' }]
       );
     } finally {

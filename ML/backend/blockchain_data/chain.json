@@ -2662,5 +2662,1985 @@
     "previous_hash": "00413d9ccae09dad11733c5502caca0492130b429d4bf5ad4a98f345221968bd",
     "nonce": 18,
     "hash": "0021bc2b44e7c2c6335109a51ce314b748125f19373c30d294f8e54bc78ddad2"
+  },
+  {
+    "index": 114,
+    "timestamp": "2026-01-30T17:35:19.251112+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.97,
+        "hum": 49.74,
+        "weight": 99.94
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0021bc2b44e7c2c6335109a51ce314b748125f19373c30d294f8e54bc78ddad2",
+    "nonce": 135,
+    "hash": "00d945373dfdda64d371048b1145e20743484cf28289ab64b0aaa2ebeedbc826"
+  },
+  {
+    "index": 115,
+    "timestamp": "2026-01-30T17:35:38.932238+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.68,
+        "hum": 49.56,
+        "weight": 96.45
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d945373dfdda64d371048b1145e20743484cf28289ab64b0aaa2ebeedbc826",
+    "nonce": 309,
+    "hash": "00b626636d68bc19d12bb84c69e67d85cd146d465e5d649572dab4b53e186e0d"
+  },
+  {
+    "index": 116,
+    "timestamp": "2026-01-30T17:35:58.574751+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.42,
+        "hum": 51.83,
+        "weight": 92.11
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00b626636d68bc19d12bb84c69e67d85cd146d465e5d649572dab4b53e186e0d",
+    "nonce": 739,
+    "hash": "003daf0a256dd58d6264ed61c8f743787884f312edcbd6ef9b3c5114fb2db541"
+  },
+  {
+    "index": 117,
+    "timestamp": "2026-01-30T17:36:18.236203+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.94,
+        "hum": 49.2,
+        "weight": 90.58
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "003daf0a256dd58d6264ed61c8f743787884f312edcbd6ef9b3c5114fb2db541",
+    "nonce": 1,
+    "hash": "0091771a020d82391ed2888b1e6c51164b896bcc65cdaf47d0f4edf767aa4f42"
+  },
+  {
+    "index": 118,
+    "timestamp": "2026-01-30T17:36:37.927843+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.4,
+        "hum": 45.98,
+        "weight": 98.01
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0091771a020d82391ed2888b1e6c51164b896bcc65cdaf47d0f4edf767aa4f42",
+    "nonce": 85,
+    "hash": "0041ad5c22e1ad74d3b288542d51caca49799a3fc71fae4fe5bf1901ad36233d"
+  },
+  {
+    "index": 119,
+    "timestamp": "2026-01-30T17:42:19.191763+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.77,
+        "hum": 45.56,
+        "weight": 95.45
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0041ad5c22e1ad74d3b288542d51caca49799a3fc71fae4fe5bf1901ad36233d",
+    "nonce": 952,
+    "hash": "00dffc8cf937cccbea700ca9faf335a7b556177818d3cc3c5f0b44bb1800b94c"
+  },
+  {
+    "index": 120,
+    "timestamp": "2026-01-30T18:08:43.883955+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.94,
+        "hum": 50.7,
+        "weight": 93.51
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00dffc8cf937cccbea700ca9faf335a7b556177818d3cc3c5f0b44bb1800b94c",
+    "nonce": 156,
+    "hash": "00eee1007e9554be7bf2ca675027ca4b591415d23ff43c552ee04c11967fa757"
+  },
+  {
+    "index": 121,
+    "timestamp": "2026-01-30T18:09:03.704600+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 25.0,
+        "hum": 47.49,
+        "weight": 97.37
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00eee1007e9554be7bf2ca675027ca4b591415d23ff43c552ee04c11967fa757",
+    "nonce": 102,
+    "hash": "00397b54e900560175eccb93295bf38b383e1769c1e1df997621fcc608521189"
+  },
+  {
+    "index": 122,
+    "timestamp": "2026-01-30T18:09:23.363886+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 27.3,
+        "hum": 49.28,
+        "weight": 90.08
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00397b54e900560175eccb93295bf38b383e1769c1e1df997621fcc608521189",
+    "nonce": 125,
+    "hash": "00694905e7c30bfff8d237c238770a1b9739ea9f6910824907e25fa78921e2e9"
+  },
+  {
+    "index": 123,
+    "timestamp": "2026-01-30T18:09:43.329671+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.01,
+        "hum": 52.32,
+        "weight": 93.29
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00694905e7c30bfff8d237c238770a1b9739ea9f6910824907e25fa78921e2e9",
+    "nonce": 311,
+    "hash": "00740c5e612dfb6cde01b28b2ab776b14593eec003136d2d7bc904c4a55b9a25"
+  },
+  {
+    "index": 124,
+    "timestamp": "2026-01-30T18:10:03.232244+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.76,
+        "hum": 50.53,
+        "weight": 99.14
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00740c5e612dfb6cde01b28b2ab776b14593eec003136d2d7bc904c4a55b9a25",
+    "nonce": 152,
+    "hash": "0002861f3a7646ec8e6e7537943ab0df835d481b8e8b67802ec9a559949e33e2"
+  },
+  {
+    "index": 125,
+    "timestamp": "2026-01-30T18:10:23.303566+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.88,
+        "hum": 54.49,
+        "weight": 97.12
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0002861f3a7646ec8e6e7537943ab0df835d481b8e8b67802ec9a559949e33e2",
+    "nonce": 95,
+    "hash": "0081162f253ac689b4aebcb9441fcb0d007f8fe55d4ac00003e9304941a081fa"
+  },
+  {
+    "index": 126,
+    "timestamp": "2026-01-30T18:10:43.165220+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.28,
+        "hum": 45.19,
+        "weight": 90.22
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0081162f253ac689b4aebcb9441fcb0d007f8fe55d4ac00003e9304941a081fa",
+    "nonce": 135,
+    "hash": "00986a9e849976bb0db110dfe26f3ab5d0bcc700930157ada7da32774efc1c60"
+  },
+  {
+    "index": 127,
+    "timestamp": "2026-01-30T18:11:03.362793+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.21,
+        "hum": 49.88,
+        "weight": 98.41
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00986a9e849976bb0db110dfe26f3ab5d0bcc700930157ada7da32774efc1c60",
+    "nonce": 93,
+    "hash": "0094bcde0707869fdd0b38fd6202bf75f11d2db4c97e2c6eb6fda9b0d7831bf2"
+  },
+  {
+    "index": 128,
+    "timestamp": "2026-01-30T18:11:23.308045+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.59,
+        "hum": 47.02,
+        "weight": 92.38
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0094bcde0707869fdd0b38fd6202bf75f11d2db4c97e2c6eb6fda9b0d7831bf2",
+    "nonce": 93,
+    "hash": "001b177c9f08a78589b350c596479ce6511e4eb7530addddff62af322ad83ec2"
+  },
+  {
+    "index": 129,
+    "timestamp": "2026-01-30T18:11:43.382326+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.14,
+        "hum": 46.96,
+        "weight": 96.74
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001b177c9f08a78589b350c596479ce6511e4eb7530addddff62af322ad83ec2",
+    "nonce": 245,
+    "hash": "001d130a0563db61804dadb09870635c36bc1ee0270010b406dae58095f9699b"
+  },
+  {
+    "index": 130,
+    "timestamp": "2026-01-30T18:12:03.347815+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.63,
+        "hum": 45.29,
+        "weight": 96.54
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "001d130a0563db61804dadb09870635c36bc1ee0270010b406dae58095f9699b",
+    "nonce": 56,
+    "hash": "002954efb1c82d852845d39e33031eed9a060dfb0fad984d357e4adaa3d1f7b9"
+  },
+  {
+    "index": 131,
+    "timestamp": "2026-01-30T18:12:23.319693+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.19,
+        "hum": 50.21,
+        "weight": 91.93
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "002954efb1c82d852845d39e33031eed9a060dfb0fad984d357e4adaa3d1f7b9",
+    "nonce": 9,
+    "hash": "00ea1ff0b8f6fdc778e78ede993cd12d987ace14adb489f2d0852e5eba97a191"
+  },
+  {
+    "index": 132,
+    "timestamp": "2026-01-30T18:12:43.152663+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 27.14,
+        "hum": 50.1,
+        "weight": 96.98
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00ea1ff0b8f6fdc778e78ede993cd12d987ace14adb489f2d0852e5eba97a191",
+    "nonce": 77,
+    "hash": "00b937bdfe918a36c29cf039895938d9bc63aeed28492b156e1ae9fadf3daf96"
+  },
+  {
+    "index": 133,
+    "timestamp": "2026-01-30T18:13:03.148274+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 27.79,
+        "hum": 47.26,
+        "weight": 95.45
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00b937bdfe918a36c29cf039895938d9bc63aeed28492b156e1ae9fadf3daf96",
+    "nonce": 38,
+    "hash": "000cf3b8c9008afee1562e276ee6804d7af9714d64ba912f37baf0e243bdee04"
+  },
+  {
+    "index": 134,
+    "timestamp": "2026-01-30T18:13:23.116499+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.85,
+        "hum": 52.59,
+        "weight": 91.91
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000cf3b8c9008afee1562e276ee6804d7af9714d64ba912f37baf0e243bdee04",
+    "nonce": 87,
+    "hash": "005ccda3cc0be8be8654aceeeeaff2ad15327c9a51b03ad3e2acdbd4f7b82c27"
+  },
+  {
+    "index": 135,
+    "timestamp": "2026-01-30T18:13:43.084582+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.04,
+        "hum": 50.8,
+        "weight": 97.54
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "005ccda3cc0be8be8654aceeeeaff2ad15327c9a51b03ad3e2acdbd4f7b82c27",
+    "nonce": 244,
+    "hash": "00d44655c2c5f5d6e4f8867f611637054b15f775549bbc67278035c6f6b6ca93"
+  },
+  {
+    "index": 136,
+    "timestamp": "2026-01-30T18:14:02.970351+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.77,
+        "hum": 54.29,
+        "weight": 91.59
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d44655c2c5f5d6e4f8867f611637054b15f775549bbc67278035c6f6b6ca93",
+    "nonce": 282,
+    "hash": "0024b6a715a0ba31e56f3f2f3179cc55b8bfc1bdfef3f874c43367e346875465"
+  },
+  {
+    "index": 137,
+    "timestamp": "2026-01-30T18:14:23.022270+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.7,
+        "hum": 49.66,
+        "weight": 97.41
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0024b6a715a0ba31e56f3f2f3179cc55b8bfc1bdfef3f874c43367e346875465",
+    "nonce": 79,
+    "hash": "0009e0ea01170564287cd77e04310db8391dbfbce29ab496c54f0b6022e702a4"
+  },
+  {
+    "index": 138,
+    "timestamp": "2026-01-30T18:14:42.820100+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.76,
+        "hum": 52.28,
+        "weight": 92.07
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0009e0ea01170564287cd77e04310db8391dbfbce29ab496c54f0b6022e702a4",
+    "nonce": 287,
+    "hash": "00d29967e95938ac005ab182ee1c8b858d189ac3683552bd637c3ce5a91a3b0e"
+  },
+  {
+    "index": 139,
+    "timestamp": "2026-01-30T18:15:02.752136+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.82,
+        "hum": 50.23,
+        "weight": 99.41
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d29967e95938ac005ab182ee1c8b858d189ac3683552bd637c3ce5a91a3b0e",
+    "nonce": 224,
+    "hash": "0092f551d0e78603822eb385dad6592e8c57f7f3b7fa8dac2fd569bbd0d95af3"
+  },
+  {
+    "index": 140,
+    "timestamp": "2026-01-30T18:15:22.618351+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.57,
+        "hum": 54.58,
+        "weight": 98.55
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0092f551d0e78603822eb385dad6592e8c57f7f3b7fa8dac2fd569bbd0d95af3",
+    "nonce": 163,
+    "hash": "007fa0202b88b5767a97f08e88d8f647aa63c1e882def151d8a2c9fce8b42d35"
+  },
+  {
+    "index": 141,
+    "timestamp": "2026-01-30T18:15:42.549405+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.97,
+        "hum": 49.17,
+        "weight": 96.97
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "007fa0202b88b5767a97f08e88d8f647aa63c1e882def151d8a2c9fce8b42d35",
+    "nonce": 209,
+    "hash": "00a0f2ded52777fccd6c32e6f1210b695465fe5ef43ba4f9c014fc19e7bd7a2d"
+  },
+  {
+    "index": 142,
+    "timestamp": "2026-01-30T18:16:02.452075+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.92,
+        "hum": 51.91,
+        "weight": 98.55
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a0f2ded52777fccd6c32e6f1210b695465fe5ef43ba4f9c014fc19e7bd7a2d",
+    "nonce": 58,
+    "hash": "00cb0aa2c1edd13c8c3c298e4a648afa7348f8c941ac752443585ed9da5cdd10"
+  },
+  {
+    "index": 143,
+    "timestamp": "2026-01-30T18:16:27.393601+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 25.39,
+        "hum": 50.35,
+        "weight": 95.12
+      },
+      "ml_result": {
+        "if_score": -0.10541015731760695,
+        "if_anomaly": true,
+        "lstm_error": 0.16638652980327606,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00cb0aa2c1edd13c8c3c298e4a648afa7348f8c941ac752443585ed9da5cdd10",
+    "nonce": 194,
+    "hash": "009f9c84b5c481ab63a9bcc1bfc202063a9f959328dc528159fc8d75b42e56be"
+  },
+  {
+    "index": 144,
+    "timestamp": "2026-01-30T18:16:47.540184+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.17,
+        "hum": 51.01,
+        "weight": 94.06
+      },
+      "ml_result": {
+        "if_score": -0.06088311169455063,
+        "if_anomaly": true,
+        "lstm_error": 0.16659587621688843,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "009f9c84b5c481ab63a9bcc1bfc202063a9f959328dc528159fc8d75b42e56be",
+    "nonce": 104,
+    "hash": "0046299a91dc4b9d846769fcc5e0dc15107a1e0e2e68354cc1f6e6b5cf0dc347"
+  },
+  {
+    "index": 145,
+    "timestamp": "2026-01-30T18:17:07.651378+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.81,
+        "hum": 45.02,
+        "weight": 93.28
+      },
+      "ml_result": {
+        "if_score": -0.14825321581149276,
+        "if_anomaly": true,
+        "lstm_error": 0.16814371943473816,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0046299a91dc4b9d846769fcc5e0dc15107a1e0e2e68354cc1f6e6b5cf0dc347",
+    "nonce": 427,
+    "hash": "0036287f3cd777ee36e8a460e157c1e4b5b7ae9da623f7f5a17549d031ae6121"
+  },
+  {
+    "index": 146,
+    "timestamp": "2026-01-30T18:17:27.956519+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.06,
+        "hum": 51.86,
+        "weight": 96.27
+      },
+      "ml_result": {
+        "if_score": -0.10028759258543096,
+        "if_anomaly": true,
+        "lstm_error": 0.16461291909217834,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0036287f3cd777ee36e8a460e157c1e4b5b7ae9da623f7f5a17549d031ae6121",
+    "nonce": 207,
+    "hash": "006db7081f767e32f53e50b6be745e235ee71410d02e945d76c08330d838c9ea"
+  },
+  {
+    "index": 147,
+    "timestamp": "2026-01-30T18:17:47.944975+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.47,
+        "hum": 51.93,
+        "weight": 96.76
+      },
+      "ml_result": {
+        "if_score": -0.0965079306458031,
+        "if_anomaly": true,
+        "lstm_error": 0.16439560055732727,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "006db7081f767e32f53e50b6be745e235ee71410d02e945d76c08330d838c9ea",
+    "nonce": 115,
+    "hash": "0000137852206b82f12a89635e3e9b38e1f1ea0852557578d85884767a70e6a8"
+  },
+  {
+    "index": 148,
+    "timestamp": "2026-01-30T18:18:08.112874+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.17,
+        "hum": 52.67,
+        "weight": 99.98
+      },
+      "ml_result": {
+        "if_score": -0.11995961051078263,
+        "if_anomaly": true,
+        "lstm_error": 0.1616860032081604,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0000137852206b82f12a89635e3e9b38e1f1ea0852557578d85884767a70e6a8",
+    "nonce": 502,
+    "hash": "002aed76ef3686d518461704ef39830b07ff9ab7d71dece09c0b02bf9e1a98a5"
+  },
+  {
+    "index": 149,
+    "timestamp": "2026-01-30T18:18:28.281873+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.72,
+        "hum": 51.59,
+        "weight": 96.81
+      },
+      "ml_result": {
+        "if_score": -0.08954055635013047,
+        "if_anomaly": true,
+        "lstm_error": 0.1551823914051056,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "002aed76ef3686d518461704ef39830b07ff9ab7d71dece09c0b02bf9e1a98a5",
+    "nonce": 577,
+    "hash": "00a9cab1563c3af2a4fd758f1452f0bb9e2a61593b2412e4392a1cab8d1c39d3"
+  },
+  {
+    "index": 150,
+    "timestamp": "2026-01-31T10:18:07.994561+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.72,
+        "hum": 53.43,
+        "weight": 92.02
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00a9cab1563c3af2a4fd758f1452f0bb9e2a61593b2412e4392a1cab8d1c39d3",
+    "nonce": 251,
+    "hash": "00b0602e46de37c1c9c632a3475d968d625415a8ec3250059376c696b68515f4"
+  },
+  {
+    "index": 151,
+    "timestamp": "2026-01-31T10:18:28.680068+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.41,
+        "hum": 46.48,
+        "weight": 95.81
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00b0602e46de37c1c9c632a3475d968d625415a8ec3250059376c696b68515f4",
+    "nonce": 207,
+    "hash": "004cd1d08761461d3fe24addfda0fdb7fed233c2d8402cdf29369579c2860802"
+  },
+  {
+    "index": 152,
+    "timestamp": "2026-01-31T10:18:31.825833+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.41,
+        "hum": 46.48,
+        "weight": 95.81
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "004cd1d08761461d3fe24addfda0fdb7fed233c2d8402cdf29369579c2860802",
+    "nonce": 137,
+    "hash": "00f191b68094273dcc5aa9d8400a175681cd1891c75056904e4ba1a1c804e912"
+  },
+  {
+    "index": 153,
+    "timestamp": "2026-01-31T10:18:49.015298+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.99,
+        "hum": 49.86,
+        "weight": 98.37
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00f191b68094273dcc5aa9d8400a175681cd1891c75056904e4ba1a1c804e912",
+    "nonce": 324,
+    "hash": "00789586c6146a271a9793977bd8054247104c9f3f6b3eb3bf3031f5e719c482"
+  },
+  {
+    "index": 154,
+    "timestamp": "2026-01-31T10:19:09.352582+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.29,
+        "hum": 45.5,
+        "weight": 99.13
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00789586c6146a271a9793977bd8054247104c9f3f6b3eb3bf3031f5e719c482",
+    "nonce": 601,
+    "hash": "00d5e822443f64faf79f34045c44932519f4b181ef31f938c1340ebb815689b2"
+  },
+  {
+    "index": 155,
+    "timestamp": "2026-01-31T10:19:29.692930+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.96,
+        "hum": 53.33,
+        "weight": 94.54
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00d5e822443f64faf79f34045c44932519f4b181ef31f938c1340ebb815689b2",
+    "nonce": 146,
+    "hash": "00baaf1c59deac4eb31bccc89504676217823c34c30f0719f53a2034b2f71cf2"
+  },
+  {
+    "index": 156,
+    "timestamp": "2026-01-31T10:19:36.224955+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.96,
+        "hum": 53.33,
+        "weight": 94.54
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00baaf1c59deac4eb31bccc89504676217823c34c30f0719f53a2034b2f71cf2",
+    "nonce": 157,
+    "hash": "005bab4947c48a7f00a20a4e790685becb0246a2db471da0ed3249f05f7ba4ff"
+  },
+  {
+    "index": 157,
+    "timestamp": "2026-01-31T10:19:49.987914+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.55,
+        "hum": 47.42,
+        "weight": 90.56
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "005bab4947c48a7f00a20a4e790685becb0246a2db471da0ed3249f05f7ba4ff",
+    "nonce": 48,
+    "hash": "0016de76837fdd2ed3a8bd561f23a4b65295be406d336481983c82ffd82417fc"
+  },
+  {
+    "index": 158,
+    "timestamp": "2026-01-31T10:20:10.823987+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.35,
+        "hum": 48.19,
+        "weight": 95.51
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0016de76837fdd2ed3a8bd561f23a4b65295be406d336481983c82ffd82417fc",
+    "nonce": 527,
+    "hash": "0066e40403d2f2f5e56571aab21c8f82f2af17e2380f34f42c3f99974f3761eb"
+  },
+  {
+    "index": 159,
+    "timestamp": "2026-01-31T10:20:31.462781+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.77,
+        "hum": 46.36,
+        "weight": 99.21
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0066e40403d2f2f5e56571aab21c8f82f2af17e2380f34f42c3f99974f3761eb",
+    "nonce": 143,
+    "hash": "00e0a628a69a3029dff08bdf148b97d9a97ed8dc1ebc6763ee334e7b3df154c1"
+  },
+  {
+    "index": 160,
+    "timestamp": "2026-01-31T10:20:40.703623+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.77,
+        "hum": 46.36,
+        "weight": 99.21
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00e0a628a69a3029dff08bdf148b97d9a97ed8dc1ebc6763ee334e7b3df154c1",
+    "nonce": 339,
+    "hash": "00902aa560d807ac5e41f44c7bcabf47c1caab2d07d3085e28c586f7e35154f2"
+  },
+  {
+    "index": 161,
+    "timestamp": "2026-01-31T10:20:51.811193+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 25.84,
+        "hum": 54.05,
+        "weight": 99.99
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00902aa560d807ac5e41f44c7bcabf47c1caab2d07d3085e28c586f7e35154f2",
+    "nonce": 648,
+    "hash": "0020d740f776c532902c426bd6d07ecbf4b880c5408454c97bbd9469f3b43c12"
+  },
+  {
+    "index": 162,
+    "timestamp": "2026-01-31T10:21:12.316314+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 27.95,
+        "hum": 53.79,
+        "weight": 91.89
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0020d740f776c532902c426bd6d07ecbf4b880c5408454c97bbd9469f3b43c12",
+    "nonce": 108,
+    "hash": "009a7fe46cee5d7b6e2c9ab8114baf7e60c61f4c050218fd3a2e03ad038afb19"
+  },
+  {
+    "index": 163,
+    "timestamp": "2026-01-31T10:21:32.905550+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.38,
+        "hum": 53.35,
+        "weight": 99.41
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "009a7fe46cee5d7b6e2c9ab8114baf7e60c61f4c050218fd3a2e03ad038afb19",
+    "nonce": 37,
+    "hash": "000135b3864b2f9571c24eaadebe8c9c3b165ec4cb09fc1285695f0cb5e1abed"
+  },
+  {
+    "index": 164,
+    "timestamp": "2026-01-31T10:21:45.171603+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.38,
+        "hum": 53.35,
+        "weight": 99.41
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000135b3864b2f9571c24eaadebe8c9c3b165ec4cb09fc1285695f0cb5e1abed",
+    "nonce": 210,
+    "hash": "0060893dda1289cdcb12e432c4d53cd4927926407ab1e70b01711f3234c013ad"
+  },
+  {
+    "index": 165,
+    "timestamp": "2026-01-31T10:21:53.721459+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.88,
+        "hum": 50.18,
+        "weight": 95.54
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0060893dda1289cdcb12e432c4d53cd4927926407ab1e70b01711f3234c013ad",
+    "nonce": 112,
+    "hash": "00bd6623034c5f269768895ea73889e782e41ce77483a5d6a7583513dfd56f29"
+  },
+  {
+    "index": 166,
+    "timestamp": "2026-01-31T10:22:13.941484+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.53,
+        "hum": 46.85,
+        "weight": 93.28
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00bd6623034c5f269768895ea73889e782e41ce77483a5d6a7583513dfd56f29",
+    "nonce": 28,
+    "hash": "000ae8ff993f856ef5d2b27b4e2fc60cb9a9bb3f8e5c425af26bc9a7ab63760e"
+  },
+  {
+    "index": 167,
+    "timestamp": "2026-01-31T10:22:34.498416+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.5,
+        "hum": 46.78,
+        "weight": 99.65
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000ae8ff993f856ef5d2b27b4e2fc60cb9a9bb3f8e5c425af26bc9a7ab63760e",
+    "nonce": 18,
+    "hash": "000a0704e55730daf4d230c7633958dc8256ffcf903aa658acf74dffb7ab7c1a"
+  },
+  {
+    "index": 168,
+    "timestamp": "2026-01-31T10:22:49.613263+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.5,
+        "hum": 46.78,
+        "weight": 99.65
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000a0704e55730daf4d230c7633958dc8256ffcf903aa658acf74dffb7ab7c1a",
+    "nonce": 224,
+    "hash": "009387730a46b9ce83a91fbac1ec242771c5e03e72ae83d3f4682e2ca3c42a10"
+  },
+  {
+    "index": 169,
+    "timestamp": "2026-01-31T10:22:54.981291+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.58,
+        "hum": 45.74,
+        "weight": 99.94
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "009387730a46b9ce83a91fbac1ec242771c5e03e72ae83d3f4682e2ca3c42a10",
+    "nonce": 137,
+    "hash": "008cd5b779eda409eb3265d71ca696f6c4bc2d9bf16955ae38b91ad4feb73006"
+  },
+  {
+    "index": 170,
+    "timestamp": "2026-01-31T10:23:15.686727+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 25.83,
+        "hum": 49.2,
+        "weight": 95.97
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "008cd5b779eda409eb3265d71ca696f6c4bc2d9bf16955ae38b91ad4feb73006",
+    "nonce": 346,
+    "hash": "0011b1240dc3691464c783e7698aca48832d1dd82addd5e0b0869e186d87411b"
+  },
+  {
+    "index": 171,
+    "timestamp": "2026-01-31T10:23:36.593979+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.25,
+        "hum": 46.0,
+        "weight": 91.99
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0011b1240dc3691464c783e7698aca48832d1dd82addd5e0b0869e186d87411b",
+    "nonce": 324,
+    "hash": "0093a5da982011ef6303dcb29ca26a29e6ae79a10fd7bd8b903a092e6d79f846"
+  },
+  {
+    "index": 172,
+    "timestamp": "2026-01-31T10:23:54.510291+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.33,
+        "hum": 48.0,
+        "weight": 90.43
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0093a5da982011ef6303dcb29ca26a29e6ae79a10fd7bd8b903a092e6d79f846",
+    "nonce": 214,
+    "hash": "007e6c32a8a30055af8328b0c8ef82f7ab5da7da89d9e4c172697d9482701989"
+  },
+  {
+    "index": 173,
+    "timestamp": "2026-01-31T10:23:57.427853+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.33,
+        "hum": 48.0,
+        "weight": 90.43
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "007e6c32a8a30055af8328b0c8ef82f7ab5da7da89d9e4c172697d9482701989",
+    "nonce": 25,
+    "hash": "00dcabd6fd15347dba736cf5716754cf2546d706da5021f00df1b2684a90e095"
+  },
+  {
+    "index": 174,
+    "timestamp": "2026-01-31T10:24:18.044426+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.12,
+        "hum": 49.6,
+        "weight": 99.89
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00dcabd6fd15347dba736cf5716754cf2546d706da5021f00df1b2684a90e095",
+    "nonce": 570,
+    "hash": "000cc5a07eda1581519e94d25cfce0be7447fd982752f1e9981506f3375e086a"
+  },
+  {
+    "index": 175,
+    "timestamp": "2026-01-31T10:24:38.348621+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.7,
+        "hum": 53.96,
+        "weight": 95.04
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "000cc5a07eda1581519e94d25cfce0be7447fd982752f1e9981506f3375e086a",
+    "nonce": 92,
+    "hash": "0051811ace74d78856a8f23450de16860035a4eee96455d2d548ea17b6b4ef1f"
+  },
+  {
+    "index": 176,
+    "timestamp": "2026-01-31T10:24:59.199486+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.67,
+        "hum": 45.76,
+        "weight": 93.84
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0051811ace74d78856a8f23450de16860035a4eee96455d2d548ea17b6b4ef1f",
+    "nonce": 66,
+    "hash": "00f235a22ecf3d43992237630023575399f457986bcd1621e09a0ff926268ee3"
+  },
+  {
+    "index": 177,
+    "timestamp": "2026-01-31T10:24:59.274385+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.67,
+        "hum": 45.76,
+        "weight": 93.84
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00f235a22ecf3d43992237630023575399f457986bcd1621e09a0ff926268ee3",
+    "nonce": 6,
+    "hash": "002f2fef9d8f3da278ad17a9148fb79555f3ef554e6d00d10550bcf520b02cad"
+  },
+  {
+    "index": 178,
+    "timestamp": "2026-01-31T10:25:19.471530+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 27.0,
+        "hum": 54.48,
+        "weight": 91.07
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "002f2fef9d8f3da278ad17a9148fb79555f3ef554e6d00d10550bcf520b02cad",
+    "nonce": 771,
+    "hash": "00a5bc2dba9d0116955f196f0d968433f2fb50ba1411a0fda5a2dd30add8c33a"
+  },
+  {
+    "index": 179,
+    "timestamp": "2026-01-31T10:25:41.146122+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 23.98,
+        "hum": 49.22,
+        "weight": 94.6
+      },
+      "ml_result": {
+        "if_score": -0.12469690529393518,
+        "if_anomaly": true,
+        "lstm_error": 0.19647078216075897,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00a5bc2dba9d0116955f196f0d968433f2fb50ba1411a0fda5a2dd30add8c33a",
+    "nonce": 127,
+    "hash": "0067834a511ed527aa166594132d0fc56083dbda63fb12ea64631323fcb29d77"
+  },
+  {
+    "index": 180,
+    "timestamp": "2026-01-31T10:26:02.154177+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.73,
+        "hum": 54.91,
+        "weight": 91.59
+      },
+      "ml_result": {
+        "if_score": -0.10882117081023923,
+        "if_anomaly": true,
+        "lstm_error": 0.20003774762153625,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0067834a511ed527aa166594132d0fc56083dbda63fb12ea64631323fcb29d77",
+    "nonce": 908,
+    "hash": "0025ac5b0c77597687781faa12fe856b139861d0b27b1f29aa33895c7210b9c1"
+  },
+  {
+    "index": 181,
+    "timestamp": "2026-01-31T10:26:03.767750+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.73,
+        "hum": 54.91,
+        "weight": 91.59
+      },
+      "ml_result": {
+        "if_score": -0.10838178780609187,
+        "if_anomaly": true,
+        "lstm_error": 0.2074936479330063,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0025ac5b0c77597687781faa12fe856b139861d0b27b1f29aa33895c7210b9c1",
+    "nonce": 279,
+    "hash": "00ccd054d14bc6c0c2eb5212602c62ea651dd80ef657e19be0f8112c715f3d30"
+  },
+  {
+    "index": 182,
+    "timestamp": "2026-01-31T10:26:22.693521+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.46,
+        "hum": 54.43,
+        "weight": 91.43
+      },
+      "ml_result": {
+        "if_score": -0.10664563169861241,
+        "if_anomaly": true,
+        "lstm_error": 0.21215957403182983,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00ccd054d14bc6c0c2eb5212602c62ea651dd80ef657e19be0f8112c715f3d30",
+    "nonce": 75,
+    "hash": "000fe09c92ba01c39556f884bbd66d2d14ce767781aee90825217273260d42b4"
+  },
+  {
+    "index": 183,
+    "timestamp": "2026-01-31T10:26:43.349889+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 20.42,
+        "hum": 48.39,
+        "weight": 97.78
+      },
+      "ml_result": {
+        "if_score": -0.08345399903334594,
+        "if_anomaly": true,
+        "lstm_error": 0.20761431753635406,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "000fe09c92ba01c39556f884bbd66d2d14ce767781aee90825217273260d42b4",
+    "nonce": 83,
+    "hash": "00358bb57525249afe8999125294940aa876860c9f3646f858125ea2f24100ae"
+  },
+  {
+    "index": 184,
+    "timestamp": "2026-01-31T10:27:03.735113+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.22,
+        "hum": 54.19,
+        "weight": 91.19
+      },
+      "ml_result": {
+        "if_score": -0.05996111435526985,
+        "if_anomaly": true,
+        "lstm_error": 0.20134404301643372,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00358bb57525249afe8999125294940aa876860c9f3646f858125ea2f24100ae",
+    "nonce": 475,
+    "hash": "0026f7c43fef145f3943f7aee533574b66cd4fd1d6be180ed68eb08b9d98c8fb"
+  },
+  {
+    "index": 185,
+    "timestamp": "2026-01-31T10:27:08.021120+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 21.22,
+        "hum": 54.19,
+        "weight": 91.19
+      },
+      "ml_result": {
+        "if_score": -0.059337137150070496,
+        "if_anomaly": true,
+        "lstm_error": 0.19897644221782684,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0026f7c43fef145f3943f7aee533574b66cd4fd1d6be180ed68eb08b9d98c8fb",
+    "nonce": 120,
+    "hash": "00894856c24adc799eecf3939bef83e4725c441c728fd4702f63eac929c5779e"
+  },
+  {
+    "index": 186,
+    "timestamp": "2026-01-31T10:27:24.297571+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 22.47,
+        "hum": 48.37,
+        "weight": 91.16
+      },
+      "ml_result": {
+        "if_score": -0.03528709118072748,
+        "if_anomaly": true,
+        "lstm_error": 0.19180159270763397,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00894856c24adc799eecf3939bef83e4725c441c728fd4702f63eac929c5779e",
+    "nonce": 584,
+    "hash": "003a5128b9ff34e06cc0bba20e0dc3e405e3aac73b7b640ae2624a6edab7cdac"
+  },
+  {
+    "index": 187,
+    "timestamp": "2026-01-31T10:27:44.733257+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 24.6,
+        "hum": 45.53,
+        "weight": 94.35
+      },
+      "ml_result": {
+        "if_score": -0.09318473794738191,
+        "if_anomaly": true,
+        "lstm_error": 0.19633910059928894,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "003a5128b9ff34e06cc0bba20e0dc3e405e3aac73b7b640ae2624a6edab7cdac",
+    "nonce": 269,
+    "hash": "00149402bc65a229f649e9fbe893a3098f6a90dc7572c2428e55e70cc2057737"
+  },
+  {
+    "index": 188,
+    "timestamp": "2026-01-31T10:28:05.335214+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.07379679407663053,
+        "if_anomaly": true,
+        "lstm_error": 0.20484377443790436,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00149402bc65a229f649e9fbe893a3098f6a90dc7572c2428e55e70cc2057737",
+    "nonce": 113,
+    "hash": "0017f93ee62d87f47597c16974e2520293ea9ab5ff569cd8706ed1f2104d57b1"
+  },
+  {
+    "index": 189,
+    "timestamp": "2026-01-31T10:28:12.834138+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.07193356382128935,
+        "if_anomaly": true,
+        "lstm_error": 0.21276439726352692,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0017f93ee62d87f47597c16974e2520293ea9ab5ff569cd8706ed1f2104d57b1",
+    "nonce": 100,
+    "hash": "00b5e3363b44e4833761166caf20a12a7bffbe62096dc2fe732ff2d74d7aa376"
+  },
+  {
+    "index": 190,
+    "timestamp": "2026-01-31T10:29:17.671363+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.09996895028662367,
+        "if_anomaly": true,
+        "lstm_error": 0.21888573467731476,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00b5e3363b44e4833761166caf20a12a7bffbe62096dc2fe732ff2d74d7aa376",
+    "nonce": 16,
+    "hash": "00742b32b16aac82afc05f1a3c3b38dc3fe949f36656c279d234d373b97271a2"
+  },
+  {
+    "index": 191,
+    "timestamp": "2026-01-31T10:30:22.410734+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.11847338559599208,
+        "if_anomaly": true,
+        "lstm_error": 0.2190333902835846,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00742b32b16aac82afc05f1a3c3b38dc3fe949f36656c279d234d373b97271a2",
+    "nonce": 216,
+    "hash": "007c964639217a36dd1bbdd07c5c11463576dc7a96020e4503f2d5fad28ddd67"
+  },
+  {
+    "index": 192,
+    "timestamp": "2026-01-31T10:31:27.568914+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.09574928969392982,
+        "if_anomaly": true,
+        "lstm_error": 0.21371933817863464,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "007c964639217a36dd1bbdd07c5c11463576dc7a96020e4503f2d5fad28ddd67",
+    "nonce": 15,
+    "hash": "00e3e65102813ea19e988ad22db90ee4d92364808acd2570c10c88885b225174"
+  },
+  {
+    "index": 193,
+    "timestamp": "2026-01-31T10:32:32.095505+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.09529661061473926,
+        "if_anomaly": true,
+        "lstm_error": 0.2120480090379715,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "00e3e65102813ea19e988ad22db90ee4d92364808acd2570c10c88885b225174",
+    "nonce": 90,
+    "hash": "0019d18a5caf7ef66844f45fd4fd4352f3764c7e938ab135fe13f36c3bceda97"
+  },
+  {
+    "index": 194,
+    "timestamp": "2026-01-31T10:33:36.811818+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 26.58,
+        "hum": 46.17,
+        "weight": 99.2
+      },
+      "ml_result": {
+        "if_score": -0.12283046393142627,
+        "if_anomaly": true,
+        "lstm_error": 0.21037657558918,
+        "risk": "HIGH",
+        "alerts": [],
+        "categories": []
+      }
+    },
+    "previous_hash": "0019d18a5caf7ef66844f45fd4fd4352f3764c7e938ab135fe13f36c3bceda97",
+    "nonce": 303,
+    "hash": "00906296d03e4129bd1bb1762a4c5ce90d755b2023ab7768860953204b636232"
+  },
+  {
+    "index": 195,
+    "timestamp": "2026-01-31T10:34:43.395171+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 38.21,
+        "hum": 87.21,
+        "weight": 0.0
+      },
+      "ml_result": {
+        "if_score": -0.12445112455378515,
+        "if_anomaly": true,
+        "lstm_error": 0.2868903875350952,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 38.21
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0.0
+          }
+        ],
+        "categories": [
+          "environment_anomaly",
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00906296d03e4129bd1bb1762a4c5ce90d755b2023ab7768860953204b636232",
+    "nonce": 602,
+    "hash": "003f72534fe7777d2de2812578bf4ddc505f8d07c41de80dcd5d9679ed61397e"
+  },
+  {
+    "index": 196,
+    "timestamp": "2026-01-31T10:35:50.258669+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 38.21,
+        "hum": 87.21,
+        "weight": 0.0
+      },
+      "ml_result": {
+        "if_score": -0.13685488888142128,
+        "if_anomaly": true,
+        "lstm_error": 0.35913458466529846,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 38.21
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0.0
+          }
+        ],
+        "categories": [
+          "environment_anomaly",
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "003f72534fe7777d2de2812578bf4ddc505f8d07c41de80dcd5d9679ed61397e",
+    "nonce": 190,
+    "hash": "00e2553e730a853b8228983ffc1a70f25a0c764e1c9acc1ca498195f4677bdac"
+  },
+  {
+    "index": 197,
+    "timestamp": "2026-01-31T10:36:57.061110+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 38.21,
+        "hum": 87.21,
+        "weight": 0.0
+      },
+      "ml_result": {
+        "if_score": -0.15154893879882503,
+        "if_anomaly": true,
+        "lstm_error": 0.4234292209148407,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 38.21
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0.0
+          }
+        ],
+        "categories": [
+          "environment_anomaly",
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00e2553e730a853b8228983ffc1a70f25a0c764e1c9acc1ca498195f4677bdac",
+    "nonce": 791,
+    "hash": "00c5e254a1e787f0e586f73a228d81ec4f3aaf8c7e8e1c0631d963d1397f11ac"
+  },
+  {
+    "index": 198,
+    "timestamp": "2026-01-31T10:38:03.807884+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 38.21,
+        "hum": 87.21,
+        "weight": 0.0
+      },
+      "ml_result": {
+        "if_score": -0.1601123998302194,
+        "if_anomaly": true,
+        "lstm_error": 0.48109856247901917,
+        "risk": "HIGH",
+        "alerts": [
+          {
+            "type": "environment_anomaly",
+            "detail": "temp_out_of_range",
+            "value": 38.21
+          },
+          {
+            "type": "sensor_failure",
+            "detail": "load_cell_zero",
+            "value": 0.0
+          }
+        ],
+        "categories": [
+          "environment_anomaly",
+          "sensor_failure"
+        ]
+      }
+    },
+    "previous_hash": "00c5e254a1e787f0e586f73a228d81ec4f3aaf8c7e8e1c0631d963d1397f11ac",
+    "nonce": 236,
+    "hash": "000c9d1d661bb0aa840464985c4860493001ea810a3c515961308c8938229c59"
   }
 ]

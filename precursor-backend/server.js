@@ -193,6 +193,10 @@ function initializeDatabase() {
     db.exec(`ALTER TABLE shipments ADD COLUMN updatedAt TEXT`);
     console.log('  ➕ Added updatedAt to shipments');
   }
+  if (!shipmentCols.includes('sensorDeviceId')) {
+    db.exec(`ALTER TABLE shipments ADD COLUMN sensorDeviceId TEXT`);
+    console.log('  ➕ Added sensorDeviceId to shipments');
+  }
 
   // ============================================================================
   // Events table - Enhanced with actor binding and signatures
@@ -495,6 +499,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
+
 // ============================================================================
 // GPS Simulation Logic
 // ============================================================================
@@ -754,28 +759,7 @@ app.post('/shipments', authenticateToken, requireRole('manufacturer'), (req, res
     // Log audit
     logAudit(req.user.id, req.user.username, req.user.role, 'CREATE_SHIPMENT', 'shipment', shipmentId, 'success', { chemicalURN, batchId, origin, destination });
 
-    // If no active shipment, set this as active for GPS simulation
-    const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
-    if (!sim.activeShipmentId) {
-      db.prepare('UPDATE simulation SET activeShipmentId = ?, indexPos = 0 WHERE id = 1')
-        .run(shipmentId);
-
-      // Set shipment to In Transit
-      db.prepare('UPDATE shipments SET status = ? WHERE id = ?')
-        .run('IN_TRANSIT', shipmentId);
-
-      // Create DISPATCHED event
-      const dispatchEventId = randomUUID();
-      const dispatchData = { type: 'DISPATCHED', shipmentId, chemicalURN, timestamp: createdAt };
-      const dispatchSig = user?.privateKeyEncrypted ? signData(dispatchData, user.privateKeyEncrypted) : null;
-
-      db.prepare(`
-        INSERT INTO events (id, shipmentId, type, actorId, actorRole, signature, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `).run(dispatchEventId, shipmentId, 'DISPATCHED', req.user.id, req.user.role, dispatchSig, createdAt);
-
-      console.log(`🚛 Active shipment set: ${shipmentId} (${chemicalURN})`);
-    }
+    console.log(`📦 Shipment created: ${shipmentId} (${chemicalURN}) - status: CREATED`);
 
     const shipment = db.prepare('SELECT * FROM shipments WHERE id = ?').get(shipmentId);
 
@@ -791,9 +775,10 @@ app.post('/shipments', authenticateToken, requireRole('manufacturer'), (req, res
       signed: !!signature
     });
   } catch (error) {
-    console.error('Error creating shipment:', error);
+    console.error('Error creating shipment:', error.message);
+    console.error('Error stack:', error.stack);
     logAudit(req.user?.id, req.user?.username, req.user?.role, 'CREATE_SHIPMENT', 'shipment', null, 'failure', null, error.message);
-    res.status(500).json({ error: 'Failed to create shipment' });
+    res.status(500).json({ error: 'Failed to create shipment', details: error.message });
   }
 });
 
@@ -892,6 +877,16 @@ app.post('/shipments/:id/transition', authenticateToken, (req, res) => {
       { fromState: shipment.status, toState: newState, notes });
 
     console.log(`📦 State Transition: ${shipment.status} → ${newState} by ${req.user.username}`);
+
+    // If dispatching, activate GPS simulation for this shipment
+    if (newState === 'DISPATCHED') {
+      const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
+      if (!sim.activeShipmentId) {
+        db.prepare('UPDATE simulation SET activeShipmentId = ?, indexPos = 0 WHERE id = 1')
+          .run(id);
+        console.log(`🚛 GPS simulation activated for shipment: ${id}`);
+      }
+    }
 
     res.json({
       message: 'State transition successful',

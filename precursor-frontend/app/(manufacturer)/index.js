@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, RefreshControl } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, RefreshControl, BackHandler } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
@@ -25,6 +25,23 @@ export default function ManufacturerDashboard() {
     loadShipments();
     const interval = setInterval(loadShipments, 30000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle hardware back button press
+  useEffect(() => {
+    const backAction = () => {
+      // Logout and navigate to login instead of exiting app
+      logout();
+      router.replace('/login');
+      return true; // Prevent default behavior (exit app)
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   const loadShipments = async (showRefreshing = false) => {

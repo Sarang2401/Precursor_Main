@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { api, formatStatus } from "../../config/api";
 import { useAuth } from "../../config/AuthContext";
 
@@ -20,6 +20,23 @@ export default function DriverDashboardScreen() {
     loadData();
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Handle hardware back button press
+  useEffect(() => {
+    const backAction = () => {
+      // Logout and navigate to login instead of exiting app
+      logout();
+      router.replace('/login');
+      return true; // Prevent default behavior (exit app)
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   const loadData = async () => {

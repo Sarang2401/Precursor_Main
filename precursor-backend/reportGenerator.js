@@ -1,4 +1,6 @@
-import PDFDocument from 'pdfkit';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const PDFDocument = require('pdfkit');
 
 // ============================================================================
 // PDF Report Generator for NCB Compliance Reports
