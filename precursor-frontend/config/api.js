@@ -1,6 +1,21 @@
 import Constants from 'expo-constants';
 
-// Dynamically get the host IP from Expo's dev server
+/**
+ * API Configuration for Development and Production
+ * 
+ * DEVELOPMENT (Expo Go / Local):
+ * - Uses dynamic IP from Expo dev server OR localhost for web
+ * 
+ * PRODUCTION (APK / Deployed):
+ * - Set EXPO_PUBLIC_API_URL and EXPO_PUBLIC_ML_API_URL in app.json or .env
+ * - Example: "https://precursor-api.onrender.com" and "https://precursor-ml.onrender.com"
+ */
+
+// Check if production URLs are provided (for APK builds)
+const PRODUCTION_API_URL = Constants.expoConfig?.extra?.apiUrl || process.env.EXPO_PUBLIC_API_URL;
+const PRODUCTION_ML_API_URL = Constants.expoConfig?.extra?.mlApiUrl || process.env.EXPO_PUBLIC_ML_API_URL;
+
+// Dynamically get the host IP from Expo's dev server (for development)
 const getHostIP = () => {
   const debuggerHost = Constants.expoConfig?.hostUri || Constants.manifest?.debuggerHost;
   if (debuggerHost) {
@@ -9,12 +24,15 @@ const getHostIP = () => {
   return 'localhost'; // Fallback for web
 };
 
+// Use production URLs if available, otherwise use development URLs
 const HOST_IP = getHostIP();
-export const API_BASE_URL = `http://${HOST_IP}:3000`;
-export const ML_API_BASE_URL = `http://${HOST_IP}:5000`;
+export const API_BASE_URL = PRODUCTION_API_URL || `http://${HOST_IP}:3000`;
+export const ML_API_BASE_URL = PRODUCTION_ML_API_URL || `http://${HOST_IP}:5000`;
 
-console.log('API_BASE_URL:', API_BASE_URL);
-console.log('ML_API_BASE_URL:', ML_API_BASE_URL);
+console.log('🌐 API Configuration:');
+console.log('  API_BASE_URL:', API_BASE_URL);
+console.log('  ML_API_BASE_URL:', ML_API_BASE_URL);
+console.log('  Mode:', PRODUCTION_API_URL ? 'PRODUCTION' : 'DEVELOPMENT');
 
 const handleResponse = async (response) => {
   console.log('[handleResponse] Status:', response.status, response.statusText);
@@ -121,6 +139,22 @@ export const api = {
   // Manually trigger GPS step
   triggerGPSStep: async () => {
     const response = await fetch(`${API_BASE_URL}/simulate/step`, {
+      method: 'POST'
+    });
+    return handleResponse(response);
+  },
+
+  // Simulate GPS route deviation (for demo)
+  simulateDeviation: async () => {
+    const response = await fetch(`${API_BASE_URL}/simulate/deviate`, {
+      method: 'POST'
+    });
+    return handleResponse(response);
+  },
+
+  // Return GPS to authorized route
+  returnToRoute: async () => {
+    const response = await fetch(`${API_BASE_URL}/simulate/return-route`, {
       method: 'POST'
     });
     return handleResponse(response);

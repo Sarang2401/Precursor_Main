@@ -16,7 +16,7 @@ import { generateShipmentReport, generateDailySummaryReport } from './reportGene
 // ============================================================================
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Render will provide PORT env var
 const SIMULATION_INTERVAL = 5000; // 5 seconds
 const OFF_ROUTE_THRESHOLD = 0.3; // km
 const JWT_SECRET = process.env.JWT_SECRET || 'precursor_jwt_secret_key_2026'; // Change in production!
@@ -573,7 +573,13 @@ function simulateGPSStep() {
 // Middleware
 // ============================================================================
 
-app.use(cors());
+// CORS configuration - Allow all origins for APK and deployed frontend
+// Security is maintained through JWT authentication
+app.use(cors({
+  origin: '*', // Allow all origins (APK needs this)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Request logging
@@ -1146,6 +1152,76 @@ app.post('/simulate/step', (req, res) => {
   } catch (error) {
     console.error('Error executing simulation step:', error);
     res.status(500).json({ error: 'Failed to execute simulation step' });
+  }
+});
+
+// POST /simulate/deviate - Simulate GPS route deviation (for demo)
+app.post('/simulate/deviate', (req, res) => {
+  try {
+    // Move GPS to an off-route location (outside the authorized corridor)
+    const offRouteLat = 18.4800; // Hadapsar area (far from the authorized Pune route)
+    const offRouteLon = 73.9400;
+
+    db.prepare('UPDATE simulation SET lat = ?, lon = ?, offRoute = 1 WHERE id = 1')
+      .run(offRouteLat, offRouteLon);
+
+    // Log the deviation event
+    const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
+    if (sim.activeShipmentId) {
+      const eventId = randomUUID();
+      const timestamp = new Date().toISOString();
+      db.prepare(`
+        INSERT INTO events (id, shipmentId, type, latitude, longitude, weight, actorId, actorRole, timestamp)
+        VALUES (?, ?, 'GPS_DEVIATION', ?, ?, 0, 'system', 'system', ?)
+      `).run(eventId, sim.activeShipmentId, offRouteLat, offRouteLon, timestamp);
+
+      // Update shipment status to OFF_ROUTE
+      db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ? AND status = ?')
+        .run('OFF_ROUTE', timestamp, sim.activeShipmentId, 'IN_TRANSIT');
+
+      console.log(`🚨 GPS Deviation Simulated: [${offRouteLat}, ${offRouteLon}] - OFF ROUTE!`);
+    }
+
+    res.json({
+      message: 'GPS deviation simulated - shipment is now OFF ROUTE',
+      lat: offRouteLat,
+      lon: offRouteLon,
+      offRoute: true
+    });
+  } catch (error) {
+    console.error('Error simulating deviation:', error);
+    res.status(500).json({ error: 'Failed to simulate deviation' });
+  }
+});
+
+// POST /simulate/return-route - Return GPS to authorized route
+app.post('/simulate/return-route', (req, res) => {
+  try {
+    // Return to the first point on the authorized route
+    const routePoint = AUTHORIZED_ROUTE[0];
+
+    db.prepare('UPDATE simulation SET lat = ?, lon = ?, offRoute = 0, indexPos = 0 WHERE id = 1')
+      .run(routePoint.lat, routePoint.lon);
+
+    // Update shipment status back to IN_TRANSIT
+    const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
+    if (sim.activeShipmentId) {
+      const timestamp = new Date().toISOString();
+      db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ? AND status = ?')
+        .run('IN_TRANSIT', timestamp, sim.activeShipmentId, 'OFF_ROUTE');
+
+      console.log(`✅ GPS returned to route: [${routePoint.lat}, ${routePoint.lon}]`);
+    }
+
+    res.json({
+      message: 'GPS returned to authorized route',
+      lat: routePoint.lat,
+      lon: routePoint.lon,
+      offRoute: false
+    });
+  } catch (error) {
+    console.error('Error returning to route:', error);
+    res.status(500).json({ error: 'Failed to return to route' });
   }
 });
 

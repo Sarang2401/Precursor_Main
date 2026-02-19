@@ -45,6 +45,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "apiUrl": "",
+      "mlApiUrl": "",
+      "eas": {
+        "projectId": ""
+      }
     }
   }
 }
