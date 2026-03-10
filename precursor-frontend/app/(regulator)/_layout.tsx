@@ -23,9 +23,7 @@ export default function RegulatorLayout() {
         name="dashboard"
         options={{
           title: "Regulator Dashboard",
-          headerLeft: () => (
-            <Ionicons name="shield-checkmark" size={24} color="#D97706" style={{ marginRight: 10 }} />
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen

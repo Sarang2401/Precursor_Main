@@ -81,9 +81,23 @@ const WEIGHT_DEVIATION_THRESHOLDS = {
   THEFT: 0.15      // 15% loss
 };
 
+// Normalize legacy/alternate status strings to canonical state keys
+const STATUS_ALIASES = {
+  'In Transit': 'IN_TRANSIT',
+  'in transit': 'IN_TRANSIT',
+  'Off Route': 'OFF_ROUTE',
+  'Dispatched': 'DISPATCHED',
+  'Delivered': 'DELIVERED',
+  'Consumed': 'CONSUMED',
+  'Seized': 'SEIZED',
+  'Created': 'CREATED'
+};
+
 // Validate state transition
 function validateTransition(currentState, newState, userRole) {
-  const validNextStates = VALID_TRANSITIONS[currentState];
+  // Normalize to canonical state (handles mixed-case legacy values)
+  const normalizedState = STATUS_ALIASES[currentState] || currentState;
+  const validNextStates = VALID_TRANSITIONS[normalizedState];
   if (!validNextStates) {
     return { valid: false, reason: `Unknown current state: ${currentState}` };
   }
@@ -534,13 +548,14 @@ function simulateGPSStep() {
     WHERE id = 1
   `).run(newLat, newLon, isOffRoute, nextIndex);
 
-  // Update shipment status
-  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'In Transit';
+  // Update shipment status — only if not already in a terminal/completed state
+  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'IN_TRANSIT';
   db.prepare(`
     UPDATE shipments 
     SET status = ?, currentWeight = currentWeight - 0.01
-    WHERE id = ?
+    WHERE id = ? AND status NOT IN ('DELIVERED', 'CONSUMED', 'SEIZED')
   `).run(newStatus, sim.activeShipmentId);
+
 
   // Log GPS event
   const eventId = randomUUID();

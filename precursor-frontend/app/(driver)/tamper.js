@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { API_BASE_URL } from '../../config/api';
 
 export default function TamperScreen() {
@@ -127,7 +127,8 @@ export default function TamperScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1976D2'
+    backgroundColor: '#1976D2',
+    paddingTop: StatusBar.currentHeight || 0,
   },
   header: {
     flexDirection: 'row',

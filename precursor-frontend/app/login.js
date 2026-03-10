@@ -43,11 +43,29 @@ export default function LoginScreen() {
             regulator: { username: 'regulator', password: 'reg123' },
         };
 
-        setUsername(credentials[role].username);
-        setPassword(credentials[role].password);
+        const { username: u, password: p } = credentials[role];
 
-        // Auto-login after a brief delay
-        setTimeout(() => handleLogin(), 300);
+        // Fill fields so the user sees what was used
+        setUsername(u);
+        setPassword(p);
+
+        // Login directly with the credentials — don't rely on state update timing
+        setLoading(true);
+        const result = await login(u, p);
+        setLoading(false);
+
+        if (result.success) {
+            const { role: userRole } = result.user;
+            if (userRole === 'manufacturer') {
+                router.replace('/(manufacturer)');
+            } else if (userRole === 'driver') {
+                router.replace('/(driver)/dashboard');
+            } else if (userRole === 'regulator') {
+                router.replace('/(regulator)/dashboard');
+            }
+        } else {
+            Alert.alert('Login Failed', result.error || 'Invalid credentials');
+        }
     };
 
     return (
