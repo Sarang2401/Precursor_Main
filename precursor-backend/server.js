@@ -3,6 +3,7 @@
 // Node.js + Express + SQLite + GPS Simulation
 // ============================================================================
 
+import 'dotenv/config'; // Load .env variables (ThingSpeak credentials etc.)
 import Database from 'better-sqlite3';
 import cors from 'cors';
 import crypto, { randomUUID } from 'crypto';
@@ -1597,6 +1598,34 @@ function startServer(retryCount = 0) {
     }
   });
 }
+
+// GET /api/sensors/live - Fetch latest ThingSpeak sensor readings (temp, humidity, weight)
+app.get('/api/sensors/live', async (req, res) => {
+  const channelId = process.env.THINGSPEAK_CHANNEL_ID;
+  const apiKey = process.env.THINGSPEAK_READ_API_KEY;
+
+  if (!channelId || !apiKey) {
+    return res.json({ available: false, reason: 'ThingSpeak not configured' });
+  }
+
+  try {
+    const url = `https://api.thingspeak.com/channels/${channelId}/feeds/last.json?api_key=${apiKey}`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error(`ThingSpeak returned ${response.status}`);
+    const data = await response.json();
+
+    res.json({
+      available: true,
+      temperature: data.field1 ? parseFloat(data.field1) : null,
+      humidity: data.field2 ? parseFloat(data.field2) : null,
+      weight: data.field3 ? parseFloat(data.field3) : null,
+      updatedAt: data.created_at || null
+    });
+  } catch (err) {
+    console.error('ThingSpeak fetch error:', err.message);
+    res.json({ available: false, reason: err.message });
+  }
+});
 
 // Start the server
 startServer();

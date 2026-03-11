@@ -336,7 +336,7 @@ export default function QRScanner({ onScan, onCancel }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F9FAFB', padding: 20 },
+  container: { flex: 1, backgroundColor: '#F9FAFB', padding: 20, paddingBottom: 40 },
   header: { marginBottom: 20, alignItems: 'center' },
   title: { fontSize: 24, fontWeight: 'bold', color: '#111827', marginBottom: 8 },
   subtitle: { fontSize: 14, color: '#6B7280' },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   quickButtonText: { color: '#fff', fontSize: 15, fontWeight: '600' },
 
   // Cancel button
-  cancelButton: { backgroundColor: '#EF4444', padding: 16, borderRadius: 8, alignItems: 'center' },
+  cancelButton: { backgroundColor: '#EF4444', padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 32, marginTop: 8 },
   cancelButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 
   // Shipment verification card

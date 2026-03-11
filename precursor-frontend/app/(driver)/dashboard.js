@@ -1,6 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { api, formatStatus } from "../../config/api";
 import { useAuth } from "../../config/AuthContext";
@@ -8,10 +8,12 @@ import { useAuth } from "../../config/AuthContext";
 export default function DriverDashboardScreen() {
   const { logout } = useAuth();
   const isFocused = useIsFocused();
+  const fetchingRef = useRef(false); // guard against overlapping fetches
   const [activeShipment, setActiveShipment] = useState(null);
   const [gpsState, setGpsState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [allShipments, setAllShipments] = useState([]);
+  const [sensorData, setSensorData] = useState(null); // ThingSpeak live readings
 
   const handleLogout = async () => {
     await logout();
@@ -19,10 +21,12 @@ export default function DriverDashboardScreen() {
   };
 
   useEffect(() => {
+    // Only poll when this screen is actually visible — pauses when child screens are open
+    if (!isFocused) return;
     loadData();
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isFocused]);
 
   // Handle hardware back button — only when THIS screen is focused
   useEffect(() => {
@@ -42,6 +46,8 @@ export default function DriverDashboardScreen() {
   }, [isFocused]);
 
   const loadData = async () => {
+    if (fetchingRef.current) return; // skip if previous fetch still running
+    fetchingRef.current = true;
     try {
       const shipmentsData = await api.getShipments();
       const shipments = shipmentsData?.shipments || [];
@@ -61,12 +67,19 @@ export default function DriverDashboardScreen() {
         : null;
       setActiveShipment(gpsActive || activeOnes[0] || null);
 
+      // Fetch ThingSpeak live sensor readings (silent fail — no crash if unavailable)
+      try {
+        const sensors = await api.getLiveSensors();
+        if (sensors?.available) setSensorData(sensors);
+      } catch (_) { /* ThingSpeak unavailable — keep last reading */ }
 
       setLoading(false);
     } catch (error) {
       console.error('Failed to load data:', error);
-      Alert.alert('Connection Error', 'Could not connect to backend.');
-      setLoading(false);
+      // Silent fail on polling errors — avoids blocking Alert dialogs
+      if (loading) setLoading(false);
+    } finally {
+      fetchingRef.current = false;
     }
   };
 
@@ -122,6 +135,42 @@ export default function DriverDashboardScreen() {
                 ? 'No shipments available. Ask manufacturer to create one.'
                 : 'All shipments have been delivered or are pending assignment.'}
             </Text>
+          </View>
+        )}
+
+        {/* Live Sensor Readings from ThingSpeak */}
+        {sensorData && sensorData.available && (
+          <View style={styles.sensorCard}>
+            <Text style={styles.sensorTitle}>🌡️ Live Sensor Readings</Text>
+            <Text style={styles.sensorSub}>From ThingSpeak Channel</Text>
+            <View style={styles.sensorRow}>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>🌡️</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.temperature != null ? sensorData.temperature.toFixed(1) + '°C' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Temperature</Text>
+              </View>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>💧</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.humidity != null ? sensorData.humidity.toFixed(1) + '%' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Humidity</Text>
+              </View>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>⚖️</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.weight != null ? sensorData.weight.toFixed(2) + ' kg' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Weight</Text>
+              </View>
+            </View>
+            {sensorData.updatedAt && (
+              <Text style={styles.sensorTimestamp}>
+                Last updated: {new Date(sensorData.updatedAt).toLocaleTimeString()}
+              </Text>
+            )}
           </View>
         )}
 
@@ -370,5 +419,22 @@ const styles = StyleSheet.create({
     color: '#065F46',
     fontSize: 12,
     fontWeight: '700',
-  }
+  },
+  sensorCard: {
+    width: '100%',
+    backgroundColor: '#EFF6FF',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+  },
+  sensorTitle: { fontSize: 15, fontWeight: 'bold', color: '#1D4ED8', marginBottom: 2 },
+  sensorSub: { fontSize: 11, color: '#6B7280', marginBottom: 12 },
+  sensorRow: { flexDirection: 'row', justifyContent: 'space-around' },
+  sensorItem: { alignItems: 'center', flex: 1 },
+  sensorIcon: { fontSize: 22, marginBottom: 4 },
+  sensorValue: { fontSize: 16, fontWeight: 'bold', color: '#1E40AF' },
+  sensorLabel: { fontSize: 11, color: '#6B7280', marginTop: 2 },
+  sensorTimestamp: { fontSize: 10, color: '#9CA3AF', textAlign: 'right', marginTop: 10 },
 });
