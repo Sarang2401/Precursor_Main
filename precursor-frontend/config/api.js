@@ -116,6 +116,12 @@ export const api = {
     return handleResponse(response);
   },
 
+  // Get live ThingSpeak sensor data (field1=temp, field2=humidity, field3=weight)
+  getLiveSensors: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/sensors/live`);
+    return handleResponse(response);
+  },
+
   // Record checkpoint scan
   recordCheckpointScan: async (shipmentId, scanData) => {
     const response = await fetch(`${API_BASE_URL}/shipments/${shipmentId}/scan`, {

@@ -1,17 +1,20 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { api } from '../../config/api';
+import { api, API_BASE_URL } from '../../config/api';
+import { useAuth } from '../../config/AuthContext';
 
 export default function ShipmentControlScreen() {
   const { shipmentId } = useLocalSearchParams();
+  const { getToken } = useAuth();
   const [shipment, setShipment] = useState(null);
   const [gpsState, setGpsState] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [delivering, setDelivering] = useState(false);
 
   useEffect(() => {
     loadData();
-    
+
     // Auto-refresh every 5 seconds
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
@@ -28,7 +31,7 @@ export default function ShipmentControlScreen() {
       if (shipmentData.shipment) {
         setShipment(shipmentData.shipment);
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load shipment:', error);
@@ -59,6 +62,44 @@ export default function ShipmentControlScreen() {
     router.push(`/(driver)/tamper?shipmentId=${shipmentId}`);
   };
 
+  const handleMarkDelivered = () => {
+    Alert.alert(
+      '\u2705 Mark as Delivered',
+      `Confirm delivery of "${shipment.productId}" to ${shipment.destination}?\n\nThis action cannot be undone.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Confirm Delivery',
+          onPress: async () => {
+            try {
+              setDelivering(true);
+              const token = getToken();
+              const response = await fetch(`${API_BASE_URL}/shipments/${shipmentId}/transition`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ newState: 'DELIVERED' })
+              });
+              const data = await response.json();
+              if (response.ok) {
+                Alert.alert('\uD83C\uDF89 Delivered!', `${shipment.productId} marked as delivered to ${shipment.destination}.`);
+                loadData();
+              } else {
+                Alert.alert('Error', data.error || 'Could not mark as delivered');
+              }
+            } catch (err) {
+              Alert.alert('Error', 'Network error. Please try again.');
+            } finally {
+              setDelivering(false);
+            }
+          }
+        }
+      ]
+    );
+  };
+
   if (loading) {
     return (
       <View style={styles.centerContainer}>
@@ -81,14 +122,6 @@ export default function ShipmentControlScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>⚙️ Shipment Control</Text>
-      </View>
-
       {/* Shipment Info Card */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Shipment Information</Text>
@@ -148,6 +181,35 @@ export default function ShipmentControlScreen() {
       <View style={styles.actionsSection}>
         <Text style={styles.sectionTitle}>Control Actions</Text>
 
+        {/* Mark as Delivered — shown only for active shipments */}
+        {(() => {
+          const s = (shipment.status || '').toUpperCase().replace(/\s/g, '_');
+          return s === 'IN_TRANSIT' || s === 'OFF_ROUTE' || s === 'DISPATCHED';
+        })() && (
+            <TouchableOpacity
+              style={[styles.actionButton, { backgroundColor: delivering ? '#6B7280' : '#10B981' }]}
+              onPress={handleMarkDelivered}
+              disabled={delivering}
+            >
+              <Text style={styles.actionIcon}>{delivering ? '⏳' : '🏁'}</Text>
+              <View style={styles.actionTextContainer}>
+                <Text style={styles.actionTitle}>{delivering ? 'Processing...' : 'Mark as Delivered'}</Text>
+                <Text style={styles.actionSubtitle}>Confirm shipment reached destination</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+
+        {/* Delivered status banner */}
+        {(shipment.status || '').toUpperCase() === 'DELIVERED' && (
+          <View style={[styles.actionButton, { backgroundColor: '#D1FAE5', elevation: 0 }]}>
+            <Text style={styles.actionIcon}>✅</Text>
+            <View style={styles.actionTextContainer}>
+              <Text style={[styles.actionTitle, { color: '#065F46' }]}>Order Delivered</Text>
+              <Text style={[styles.actionSubtitle, { color: '#065F46' }]}>This shipment has been completed</Text>
+            </View>
+          </View>
+        )}
+
         <TouchableOpacity
           style={[styles.actionButton, { backgroundColor: '#43A047' }]}
           onPress={handleScanCheckpoint}
@@ -196,7 +258,7 @@ export default function ShipmentControlScreen() {
       {/* Info Box */}
       <View style={styles.infoBox}>
         <Text style={styles.infoText}>
-          ℹ️ All actions are logged to the blockchain for audit trail. 
+          ℹ️ All actions are logged to the blockchain for audit trail.
           GPS updates automatically every 5 seconds.
         </Text>
       </View>

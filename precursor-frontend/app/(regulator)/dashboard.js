@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, BackHandler, FlatList, Linking, Platform, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, BackHandler, FlatList, Linking, Platform, RefreshControl, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import AlertBanner from '../../components/AlertBanner';
@@ -13,6 +14,7 @@ import { useAuth } from '../../config/AuthContext';
 export default function RegulatorDashboard() {
   const router = useRouter();
   const { logout, getToken } = useAuth();
+  const isFocused = useIsFocused();
   const [shipments, setShipments] = useState([]);
   const [events, setEvents] = useState([]);
   const [mlAlerts, setMlAlerts] = useState([]);
@@ -44,9 +46,10 @@ export default function RegulatorDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle hardware back button press
+  // Handle hardware back button — only when THIS screen is focused
   useEffect(() => {
     const backAction = () => {
+      if (!isFocused) return false; // Let Stack handle it (e.g. alerts screen is open)
       // Logout and navigate to login instead of exiting app
       logout();
       router.replace('/login');
@@ -59,7 +62,7 @@ export default function RegulatorDashboard() {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   // Fetch all data from backend
   const loadData = async (showRefreshing = false) => {
@@ -501,7 +504,8 @@ export default function RegulatorDashboard() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#D97706'
+    backgroundColor: '#D97706',
+    paddingTop: StatusBar.currentHeight || 0,
   },
   headerBar: {
     flexDirection: 'row',

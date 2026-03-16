@@ -3,6 +3,7 @@
 // Node.js + Express + SQLite + GPS Simulation
 // ============================================================================
 
+import 'dotenv/config'; // Load .env variables (ThingSpeak credentials etc.)
 import Database from 'better-sqlite3';
 import cors from 'cors';
 import crypto, { randomUUID } from 'crypto';
@@ -81,9 +82,23 @@ const WEIGHT_DEVIATION_THRESHOLDS = {
   THEFT: 0.15      // 15% loss
 };
 
+// Normalize legacy/alternate status strings to canonical state keys
+const STATUS_ALIASES = {
+  'In Transit': 'IN_TRANSIT',
+  'in transit': 'IN_TRANSIT',
+  'Off Route': 'OFF_ROUTE',
+  'Dispatched': 'DISPATCHED',
+  'Delivered': 'DELIVERED',
+  'Consumed': 'CONSUMED',
+  'Seized': 'SEIZED',
+  'Created': 'CREATED'
+};
+
 // Validate state transition
 function validateTransition(currentState, newState, userRole) {
-  const validNextStates = VALID_TRANSITIONS[currentState];
+  // Normalize to canonical state (handles mixed-case legacy values)
+  const normalizedState = STATUS_ALIASES[currentState] || currentState;
+  const validNextStates = VALID_TRANSITIONS[normalizedState];
   if (!validNextStates) {
     return { valid: false, reason: `Unknown current state: ${currentState}` };
   }
@@ -534,13 +549,14 @@ function simulateGPSStep() {
     WHERE id = 1
   `).run(newLat, newLon, isOffRoute, nextIndex);
 
-  // Update shipment status
-  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'In Transit';
+  // Update shipment status — only if not already in a terminal/completed state
+  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'IN_TRANSIT';
   db.prepare(`
     UPDATE shipments 
     SET status = ?, currentWeight = currentWeight - 0.01
-    WHERE id = ?
+    WHERE id = ? AND status NOT IN ('DELIVERED', 'CONSUMED', 'SEIZED')
   `).run(newStatus, sim.activeShipmentId);
+
 
   // Log GPS event
   const eventId = randomUUID();
@@ -1582,6 +1598,34 @@ function startServer(retryCount = 0) {
     }
   });
 }
+
+// GET /api/sensors/live - Fetch latest ThingSpeak sensor readings (temp, humidity, weight)
+app.get('/api/sensors/live', async (req, res) => {
+  const channelId = process.env.THINGSPEAK_CHANNEL_ID;
+  const apiKey = process.env.THINGSPEAK_READ_API_KEY;
+
+  if (!channelId || !apiKey) {
+    return res.json({ available: false, reason: 'ThingSpeak not configured' });
+  }
+
+  try {
+    const url = `https://api.thingspeak.com/channels/${channelId}/feeds/last.json?api_key=${apiKey}`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error(`ThingSpeak returned ${response.status}`);
+    const data = await response.json();
+
+    res.json({
+      available: true,
+      temperature: data.field1 ? parseFloat(data.field1) : null,
+      humidity: data.field2 ? parseFloat(data.field2) : null,
+      weight: data.field3 ? parseFloat(data.field3) : null,
+      updatedAt: data.created_at || null
+    });
+  } catch (err) {
+    console.error('ThingSpeak fetch error:', err.message);
+    res.json({ available: false, reason: err.message });
+  }
+});
 
 // Start the server
 startServer();

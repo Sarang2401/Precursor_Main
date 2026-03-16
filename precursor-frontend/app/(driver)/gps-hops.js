@@ -12,7 +12,7 @@ export default function GPSHopsScreen() {
 
   useEffect(() => {
     loadData();
-    
+
     // Auto-refresh every 5 seconds
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
@@ -34,7 +34,7 @@ export default function GPSHopsScreen() {
           .slice(0, 20); // Show last 20 GPS updates
         setEvents(gpsEvents);
       }
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Failed to load GPS data:', error);
@@ -54,14 +54,6 @@ export default function GPSHopsScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>🛰️ GPS Tracker</Text>
-      </View>
-
       {/* Current Position Card */}
       {gpsState && (
         <View style={styles.card}>
