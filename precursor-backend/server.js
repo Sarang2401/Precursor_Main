@@ -3,6 +3,7 @@
 // Node.js + Express + SQLite + GPS Simulation
 // ============================================================================
 
+import 'dotenv/config'; // Load .env variables (ThingSpeak credentials etc.)
 import Database from 'better-sqlite3';
 import cors from 'cors';
 import crypto, { randomUUID } from 'crypto';
@@ -16,7 +17,7 @@ import { generateShipmentReport, generateDailySummaryReport } from './reportGene
 // ============================================================================
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Render will provide PORT env var
 const SIMULATION_INTERVAL = 5000; // 5 seconds
 const OFF_ROUTE_THRESHOLD = 0.3; // km
 const JWT_SECRET = process.env.JWT_SECRET || 'precursor_jwt_secret_key_2026'; // Change in production!
@@ -81,9 +82,23 @@ const WEIGHT_DEVIATION_THRESHOLDS = {
   THEFT: 0.15      // 15% loss
 };
 
+// Normalize legacy/alternate status strings to canonical state keys
+const STATUS_ALIASES = {
+  'In Transit': 'IN_TRANSIT',
+  'in transit': 'IN_TRANSIT',
+  'Off Route': 'OFF_ROUTE',
+  'Dispatched': 'DISPATCHED',
+  'Delivered': 'DELIVERED',
+  'Consumed': 'CONSUMED',
+  'Seized': 'SEIZED',
+  'Created': 'CREATED'
+};
+
 // Validate state transition
 function validateTransition(currentState, newState, userRole) {
-  const validNextStates = VALID_TRANSITIONS[currentState];
+  // Normalize to canonical state (handles mixed-case legacy values)
+  const normalizedState = STATUS_ALIASES[currentState] || currentState;
+  const validNextStates = VALID_TRANSITIONS[normalizedState];
   if (!validNextStates) {
     return { valid: false, reason: `Unknown current state: ${currentState}` };
   }
@@ -534,13 +549,14 @@ function simulateGPSStep() {
     WHERE id = 1
   `).run(newLat, newLon, isOffRoute, nextIndex);
 
-  // Update shipment status
-  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'In Transit';
+  // Update shipment status — only if not already in a terminal/completed state
+  const newStatus = isOffRoute ? 'OFF_ROUTE' : 'IN_TRANSIT';
   db.prepare(`
     UPDATE shipments 
     SET status = ?, currentWeight = currentWeight - 0.01
-    WHERE id = ?
+    WHERE id = ? AND status NOT IN ('DELIVERED', 'CONSUMED', 'SEIZED')
   `).run(newStatus, sim.activeShipmentId);
+
 
   // Log GPS event
   const eventId = randomUUID();
@@ -573,7 +589,13 @@ function simulateGPSStep() {
 // Middleware
 // ============================================================================
 
-app.use(cors());
+// CORS configuration - Allow all origins for APK and deployed frontend
+// Security is maintained through JWT authentication
+app.use(cors({
+  origin: '*', // Allow all origins (APK needs this)
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Request logging
@@ -1149,6 +1171,76 @@ app.post('/simulate/step', (req, res) => {
   }
 });
 
+// POST /simulate/deviate - Simulate GPS route deviation (for demo)
+app.post('/simulate/deviate', (req, res) => {
+  try {
+    // Move GPS to an off-route location (outside the authorized corridor)
+    const offRouteLat = 18.4800; // Hadapsar area (far from the authorized Pune route)
+    const offRouteLon = 73.9400;
+
+    db.prepare('UPDATE simulation SET lat = ?, lon = ?, offRoute = 1 WHERE id = 1')
+      .run(offRouteLat, offRouteLon);
+
+    // Log the deviation event
+    const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
+    if (sim.activeShipmentId) {
+      const eventId = randomUUID();
+      const timestamp = new Date().toISOString();
+      db.prepare(`
+        INSERT INTO events (id, shipmentId, type, latitude, longitude, weight, actorId, actorRole, timestamp)
+        VALUES (?, ?, 'GPS_DEVIATION', ?, ?, 0, 'system', 'system', ?)
+      `).run(eventId, sim.activeShipmentId, offRouteLat, offRouteLon, timestamp);
+
+      // Update shipment status to OFF_ROUTE
+      db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ? AND status = ?')
+        .run('OFF_ROUTE', timestamp, sim.activeShipmentId, 'IN_TRANSIT');
+
+      console.log(`🚨 GPS Deviation Simulated: [${offRouteLat}, ${offRouteLon}] - OFF ROUTE!`);
+    }
+
+    res.json({
+      message: 'GPS deviation simulated - shipment is now OFF ROUTE',
+      lat: offRouteLat,
+      lon: offRouteLon,
+      offRoute: true
+    });
+  } catch (error) {
+    console.error('Error simulating deviation:', error);
+    res.status(500).json({ error: 'Failed to simulate deviation' });
+  }
+});
+
+// POST /simulate/return-route - Return GPS to authorized route
+app.post('/simulate/return-route', (req, res) => {
+  try {
+    // Return to the first point on the authorized route
+    const routePoint = AUTHORIZED_ROUTE[0];
+
+    db.prepare('UPDATE simulation SET lat = ?, lon = ?, offRoute = 0, indexPos = 0 WHERE id = 1')
+      .run(routePoint.lat, routePoint.lon);
+
+    // Update shipment status back to IN_TRANSIT
+    const sim = db.prepare('SELECT activeShipmentId FROM simulation WHERE id = 1').get();
+    if (sim.activeShipmentId) {
+      const timestamp = new Date().toISOString();
+      db.prepare('UPDATE shipments SET status = ?, updatedAt = ? WHERE id = ? AND status = ?')
+        .run('IN_TRANSIT', timestamp, sim.activeShipmentId, 'OFF_ROUTE');
+
+      console.log(`✅ GPS returned to route: [${routePoint.lat}, ${routePoint.lon}]`);
+    }
+
+    res.json({
+      message: 'GPS returned to authorized route',
+      lat: routePoint.lat,
+      lon: routePoint.lon,
+      offRoute: false
+    });
+  } catch (error) {
+    console.error('Error returning to route:', error);
+    res.status(500).json({ error: 'Failed to return to route' });
+  }
+});
+
 // GET /events - Get all events (for regulator)
 app.get('/events', (req, res) => {
   try {
@@ -1506,6 +1598,98 @@ function startServer(retryCount = 0) {
     }
   });
 }
+
+// ============================================================================
+// ML Alerts Endpoints (called by ML backend + Regulator dashboard)
+// ============================================================================
+
+// POST /api/ml-alerts - Receive ML alert from Python ML backend (no auth - internal service)
+app.post('/api/ml-alerts', (req, res) => {
+  try {
+    const { alert_id, device, timestamp, temp, hum, weight, lat, lon, alerts, categories, risk, status } = req.body;
+
+    if (!alert_id || !device || !risk) {
+      return res.status(400).json({ error: 'Missing required fields: alert_id, device, risk' });
+    }
+
+    // Normalise 'device' - accept string or object { id: '...' }
+    const deviceStr = typeof device === 'object' ? (device.id || JSON.stringify(device)) : String(device);
+
+    const id = randomUUID();
+    const createdAt = new Date().toISOString();
+    const ts = timestamp ? (isNaN(Number(timestamp)) ? Date.parse(timestamp) / 1000 : Number(timestamp)) : Date.now() / 1000;
+
+    db.prepare(`
+      INSERT OR IGNORE INTO ml_alerts
+        (id, alert_id, device, timestamp, temp, hum, weight, lat, lon, alerts, categories, risk, status, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      id, alert_id, deviceStr, ts,
+      temp ?? null, hum ?? null, weight ?? null, lat ?? null, lon ?? null,
+      typeof alerts === 'string' ? alerts : JSON.stringify(alerts || []),
+      typeof categories === 'string' ? categories : JSON.stringify(categories || []),
+      risk, status || 'UNCONFIRMED', createdAt
+    );
+
+    console.log(`🚨 ML Alert received: ${alert_id} | risk=${risk} | device=${deviceStr}`);
+    res.json({ success: true, id });
+  } catch (error) {
+    console.error('Error saving ML alert:', error.message);
+    res.status(500).json({ error: 'Failed to save ML alert' });
+  }
+});
+
+// GET /api/ml-alerts - Return ML alerts for Regulator dashboard
+app.get('/api/ml-alerts', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 100;
+    const rows = db.prepare(`
+      SELECT * FROM ml_alerts
+      ORDER BY timestamp DESC
+      LIMIT ?
+    `).all(limit);
+
+    // Parse JSON fields back to arrays for the frontend
+    const alerts = rows.map(row => ({
+      ...row,
+      alerts: (() => { try { return JSON.parse(row.alerts); } catch { return []; } })(),
+      categories: (() => { try { return JSON.parse(row.categories); } catch { return []; } })(),
+    }));
+
+    res.json(alerts);
+  } catch (error) {
+    console.error('Error fetching ML alerts:', error.message);
+    res.status(500).json({ error: 'Failed to fetch ML alerts' });
+  }
+});
+
+// GET /api/sensors/live - Fetch latest ThingSpeak sensor readings (temp, humidity, weight)
+app.get('/api/sensors/live', async (req, res) => {
+  const channelId = process.env.THINGSPEAK_CHANNEL_ID;
+  const apiKey = process.env.THINGSPEAK_READ_API_KEY;
+
+  if (!channelId || !apiKey) {
+    return res.json({ available: false, reason: 'ThingSpeak not configured' });
+  }
+
+  try {
+    const url = `https://api.thingspeak.com/channels/${channelId}/feeds/last.json?api_key=${apiKey}`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error(`ThingSpeak returned ${response.status}`);
+    const data = await response.json();
+
+    res.json({
+      available: true,
+      temperature: data.field1 ? parseFloat(data.field1) : null,
+      humidity: data.field2 ? parseFloat(data.field2) : null,
+      weight: data.field3 ? parseFloat(data.field3) : null,
+      updatedAt: data.created_at || null
+    });
+  } catch (err) {
+    console.error('ThingSpeak fetch error:', err.message);
+    res.json({ available: false, reason: err.message });
+  }
+});
 
 // Start the server
 startServer();

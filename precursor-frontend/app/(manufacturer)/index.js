@@ -1,7 +1,8 @@
 import { router } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, RefreshControl, BackHandler } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, RefreshControl, BackHandler, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
 import ShipmentCard from '../../components/ShipmentCard';
 import StatsCard from '../../components/StatsCard';
 import { QRCodeModal } from '../../components/ShipmentQRCode';
@@ -10,6 +11,7 @@ import { useAuth } from '../../config/AuthContext';
 
 export default function ManufacturerDashboard() {
   const { user, logout, getToken } = useAuth();
+  const isFocused = useIsFocused();
   const [shipments, setShipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -27,13 +29,13 @@ export default function ManufacturerDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  // Handle hardware back button press
+  // Handle hardware back button — only when THIS screen is focused
   useEffect(() => {
     const backAction = () => {
-      // Logout and navigate to login instead of exiting app
+      if (!isFocused) return false; // Let Stack handle it for child screens (modals)
       logout();
       router.replace('/login');
-      return true; // Prevent default behavior (exit app)
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -42,7 +44,7 @@ export default function ManufacturerDashboard() {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   const loadShipments = async (showRefreshing = false) => {
     try {
@@ -229,7 +231,7 @@ export default function ManufacturerDashboard() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 15, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 15, paddingTop: (StatusBar.currentHeight || 0) + 15, backgroundColor: '#fff' },
   centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff' },
   loadingText: { marginTop: 12, fontSize: 14, color: '#6B7280' },
   header: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#2563EB', borderRadius: 16, padding: 8, marginBottom: 15 },

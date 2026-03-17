@@ -23,9 +23,7 @@ export default function DriverLayout() {
         name="dashboard"
         options={{
           title: "Driver Dashboard",
-          headerLeft: () => (
-            <Ionicons name="car" size={24} color="#2563EB" style={{ marginRight: 10 }} />
-          ),
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -45,7 +43,7 @@ export default function DriverLayout() {
       />
       <Stack.Screen
         name="tamper"
-        options={{ title: "Tamper Detection" }}
+        options={{ title: "Tamper Detection", headerShown: false }}
       />
     </Stack>
   );

@@ -1,15 +1,19 @@
+import { useIsFocused } from '@react-navigation/native';
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Alert, BackHandler, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { api, formatStatus } from "../../config/api";
 import { useAuth } from "../../config/AuthContext";
 
 export default function DriverDashboardScreen() {
   const { logout } = useAuth();
+  const isFocused = useIsFocused();
+  const fetchingRef = useRef(false); // guard against overlapping fetches
   const [activeShipment, setActiveShipment] = useState(null);
   const [gpsState, setGpsState] = useState(null);
   const [loading, setLoading] = useState(true);
   const [allShipments, setAllShipments] = useState([]);
+  const [sensorData, setSensorData] = useState(null); // ThingSpeak live readings
 
   const handleLogout = async () => {
     await logout();
@@ -17,18 +21,20 @@ export default function DriverDashboardScreen() {
   };
 
   useEffect(() => {
+    // Only poll when this screen is actually visible — pauses when child screens are open
+    if (!isFocused) return;
     loadData();
     const interval = setInterval(loadData, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isFocused]);
 
-  // Handle hardware back button press
+  // Handle hardware back button — only when THIS screen is focused
   useEffect(() => {
     const backAction = () => {
-      // Logout and navigate to login instead of exiting app
+      if (!isFocused) return false; // Let Stack handle it for child screens
       logout();
       router.replace('/login');
-      return true; // Prevent default behavior (exit app)
+      return true;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -37,9 +43,11 @@ export default function DriverDashboardScreen() {
     );
 
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   const loadData = async () => {
+    if (fetchingRef.current) return; // skip if previous fetch still running
+    fetchingRef.current = true;
     try {
       const shipmentsData = await api.getShipments();
       const shipments = shipmentsData?.shipments || [];
@@ -48,16 +56,30 @@ export default function DriverDashboardScreen() {
       const gpsData = await api.getGPSState();
       setGpsState(gpsData);
 
-      if (gpsData?.activeShipmentId) {
-        const active = shipments.find(s => s.id === gpsData.activeShipmentId);
-        setActiveShipment(active);
-      }
+      // Determine active shipment by status (not GPS pointer, which stays fixed after delivery)
+      const activeOnes = shipments.filter(s => {
+        const st = (s.status || '').toUpperCase().replace(/\s/g, '_');
+        return ['IN_TRANSIT', 'OFF_ROUTE', 'DISPATCHED'].includes(st);
+      });
+      // Prefer the GPS-simulated one if it's still active, otherwise first active one
+      const gpsActive = gpsData?.activeShipmentId
+        ? activeOnes.find(s => s.id === gpsData.activeShipmentId)
+        : null;
+      setActiveShipment(gpsActive || activeOnes[0] || null);
+
+      // Fetch ThingSpeak live sensor readings (silent fail — no crash if unavailable)
+      try {
+        const sensors = await api.getLiveSensors();
+        if (sensors?.available) setSensorData(sensors);
+      } catch (_) { /* ThingSpeak unavailable — keep last reading */ }
 
       setLoading(false);
     } catch (error) {
       console.error('Failed to load data:', error);
-      Alert.alert('Connection Error', 'Could not connect to backend.');
-      setLoading(false);
+      // Silent fail on polling errors — avoids blocking Alert dialogs
+      if (loading) setLoading(false);
+    } finally {
+      fetchingRef.current = false;
     }
   };
 
@@ -82,8 +104,6 @@ export default function DriverDashboardScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>🚚 Driver Dashboard</Text>
-
         {/* Active Shipment Card */}
         {activeShipment ? (
           <View style={styles.card}>
@@ -115,6 +135,42 @@ export default function DriverDashboardScreen() {
                 ? 'No shipments available. Ask manufacturer to create one.'
                 : 'All shipments have been delivered or are pending assignment.'}
             </Text>
+          </View>
+        )}
+
+        {/* Live Sensor Readings from ThingSpeak */}
+        {sensorData && sensorData.available && (
+          <View style={styles.sensorCard}>
+            <Text style={styles.sensorTitle}>🌡️ Live Sensor Readings</Text>
+            <Text style={styles.sensorSub}>From ThingSpeak Channel</Text>
+            <View style={styles.sensorRow}>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>🌡️</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.temperature != null ? sensorData.temperature.toFixed(1) + '°C' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Temperature</Text>
+              </View>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>💧</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.humidity != null ? sensorData.humidity.toFixed(1) + '%' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Humidity</Text>
+              </View>
+              <View style={styles.sensorItem}>
+                <Text style={styles.sensorIcon}>⚖️</Text>
+                <Text style={styles.sensorValue}>
+                  {sensorData.weight != null ? sensorData.weight.toFixed(2) + ' kg' : '--'}
+                </Text>
+                <Text style={styles.sensorLabel}>Weight</Text>
+              </View>
+            </View>
+            {sensorData.updatedAt && (
+              <Text style={styles.sensorTimestamp}>
+                Last updated: {new Date(sensorData.updatedAt).toLocaleTimeString()}
+              </Text>
+            )}
           </View>
         )}
 
@@ -162,37 +218,42 @@ export default function DriverDashboardScreen() {
           <Text style={styles.buttonText}>📍 View Live GPS Tracker</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: "#F57C00" }]}
-          onPress={() => {
-            if (activeShipment) {
-              router.push(`/(driver)/shipment-control?shipmentId=${activeShipment.id}`);
-            } else {
-              Alert.alert('No Active Shipment', 'No shipment to control.');
-            }
-          }}
-          disabled={!activeShipment}
-        >
-          <Text style={styles.buttonText}>⚙️ Shipment Controls</Text>
-        </TouchableOpacity>
-
         {/* All Shipments Section */}
         {allShipments.length > 0 && (
           <View style={styles.shipmentsSection}>
             <Text style={styles.sectionTitle}>All Shipments ({allShipments.length})</Text>
-            {allShipments.map((ship) => (
-              <View key={ship.id} style={styles.shipmentItem}>
-                <Text style={styles.shipmentText}>{ship.productId}</Text>
-                <Text style={[
-                  styles.shipmentStatus,
-                  { color: ship.status === 'OFF_ROUTE' ? '#EF4444' : '#10B981' }
-                ]}>
-                  {formatStatus(ship.status)}
-                </Text>
-              </View>
-            ))}
+            {allShipments.map((ship) => {
+              const s = (ship.status || '').toUpperCase().replace(/\s/g, '_');
+              const isActive = ['IN_TRANSIT', 'OFF_ROUTE', 'DISPATCHED'].includes(s);
+              const isDelivered = s === 'DELIVERED';
+              const statusColor = s === 'OFF_ROUTE' ? '#EF4444' : isDelivered ? '#6B7280' : '#10B981';
+              return (
+                <View key={ship.id} style={styles.shipmentItem}>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.shipmentText}>{ship.productId}</Text>
+                    <Text style={[styles.shipmentStatus, { color: statusColor }]}>
+                      {formatStatus(ship.status)}
+                    </Text>
+                  </View>
+                  {isActive && (
+                    <TouchableOpacity
+                      style={styles.controlBtn}
+                      onPress={() => router.push(`/(driver)/shipment-control?shipmentId=${ship.id}`)}
+                    >
+                      <Text style={styles.controlBtnText}>⚙️ Controls</Text>
+                    </TouchableOpacity>
+                  )}
+                  {isDelivered && (
+                    <View style={styles.deliveredBadge}>
+                      <Text style={styles.deliveredBadgeText}>✅ Done</Text>
+                    </View>
+                  )}
+                </View>
+              );
+            })}
           </View>
         )}
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -201,7 +262,8 @@ export default function DriverDashboardScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1976D2'
+    backgroundColor: '#1976D2',
+    paddingTop: StatusBar.currentHeight || 0,
   },
   headerBar: {
     flexDirection: 'row',
@@ -333,5 +395,46 @@ const styles = StyleSheet.create({
   shipmentStatus: {
     fontSize: 12,
     fontWeight: 'bold'
-  }
+  },
+  controlBtn: {
+    backgroundColor: '#F57C00',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  controlBtnText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  deliveredBadge: {
+    backgroundColor: '#D1FAE5',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  deliveredBadgeText: {
+    color: '#065F46',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  sensorCard: {
+    width: '100%',
+    backgroundColor: '#EFF6FF',
+    borderRadius: 12,
+    padding: 16,
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+  },
+  sensorTitle: { fontSize: 15, fontWeight: 'bold', color: '#1D4ED8', marginBottom: 2 },
+  sensorSub: { fontSize: 11, color: '#6B7280', marginBottom: 12 },
+  sensorRow: { flexDirection: 'row', justifyContent: 'space-around' },
+  sensorItem: { alignItems: 'center', flex: 1 },
+  sensorIcon: { fontSize: 22, marginBottom: 4 },
+  sensorValue: { fontSize: 16, fontWeight: 'bold', color: '#1E40AF' },
+  sensorLabel: { fontSize: 11, color: '#6B7280', marginTop: 2 },
+  sensorTimestamp: { fontSize: 10, color: '#9CA3AF', textAlign: 'right', marginTop: 10 },
 });
