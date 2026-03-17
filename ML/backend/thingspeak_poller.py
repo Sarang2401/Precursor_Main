@@ -16,7 +16,7 @@ import sys
 
 # Configuration
 ML_BACKEND_URL = "http://localhost:5000"
-POLL_INTERVAL = 60  # seconds (1 minute)
+POLL_INTERVAL = 10  # seconds (1 minute)
 THINGSPEAK_CHECK_URL = "https://api.thingspeak.com/channels/3159663/feeds/last.json?api_key=51GLEXJAD1X1T2SZ"
 
 # Global flag for graceful shutdown
