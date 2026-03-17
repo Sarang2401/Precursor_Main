@@ -106,6 +106,12 @@ export const api = {
     return handleResponse(response);
   },
 
+  // Get ML alerts for Regulator dashboard
+  getMLAlerts: async () => {
+    const response = await fetch(`${API_BASE_URL}/api/ml-alerts`);
+    return handleResponse(response);
+  },
+
   // ========================================================================
   // DRIVER ENDPOINTS
   // ========================================================================

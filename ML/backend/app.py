@@ -46,17 +46,17 @@ def forward_alert_to_backend(device_id: str, sensor_data: dict, ml_result: dict)
         # Prepare alert payload
         alert_payload = {
             "alert_id": f"ML_{device_id}_{int(time.time())}",
-            "device": device_id,
-            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "device": device_id,   # send plain string - server now accepts both string and object
+            "timestamp": time.time(),  # use unix timestamp (float) - server handles conversion
             "temp": sensor_data.get("temp"),
             "hum": sensor_data.get("hum"),
             "weight": sensor_data.get("weight"),
             "lat": sensor_data.get("lat"),
             "lon": sensor_data.get("lon"),
-            "alerts": json.dumps(ml_result.get("alerts", [])),
-            "categories": json.dumps(ml_result.get("categories", [])),
+            "alerts": ml_result.get("alerts", []),
+            "categories": ml_result.get("categories", []),
             "risk": ml_result.get("risk", "LOW"),
-            "status": "active"
+            "status": "UNCONFIRMED"
         }
         
         # Send to Node.js backend

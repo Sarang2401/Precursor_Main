@@ -1599,6 +1599,70 @@ function startServer(retryCount = 0) {
   });
 }
 
+// ============================================================================
+// ML Alerts Endpoints (called by ML backend + Regulator dashboard)
+// ============================================================================
+
+// POST /api/ml-alerts - Receive ML alert from Python ML backend (no auth - internal service)
+app.post('/api/ml-alerts', (req, res) => {
+  try {
+    const { alert_id, device, timestamp, temp, hum, weight, lat, lon, alerts, categories, risk, status } = req.body;
+
+    if (!alert_id || !device || !risk) {
+      return res.status(400).json({ error: 'Missing required fields: alert_id, device, risk' });
+    }
+
+    // Normalise 'device' - accept string or object { id: '...' }
+    const deviceStr = typeof device === 'object' ? (device.id || JSON.stringify(device)) : String(device);
+
+    const id = randomUUID();
+    const createdAt = new Date().toISOString();
+    const ts = timestamp ? (isNaN(Number(timestamp)) ? Date.parse(timestamp) / 1000 : Number(timestamp)) : Date.now() / 1000;
+
+    db.prepare(`
+      INSERT OR IGNORE INTO ml_alerts
+        (id, alert_id, device, timestamp, temp, hum, weight, lat, lon, alerts, categories, risk, status, createdAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      id, alert_id, deviceStr, ts,
+      temp ?? null, hum ?? null, weight ?? null, lat ?? null, lon ?? null,
+      typeof alerts === 'string' ? alerts : JSON.stringify(alerts || []),
+      typeof categories === 'string' ? categories : JSON.stringify(categories || []),
+      risk, status || 'UNCONFIRMED', createdAt
+    );
+
+    console.log(`🚨 ML Alert received: ${alert_id} | risk=${risk} | device=${deviceStr}`);
+    res.json({ success: true, id });
+  } catch (error) {
+    console.error('Error saving ML alert:', error.message);
+    res.status(500).json({ error: 'Failed to save ML alert' });
+  }
+});
+
+// GET /api/ml-alerts - Return ML alerts for Regulator dashboard
+app.get('/api/ml-alerts', (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 100;
+    const rows = db.prepare(`
+      SELECT * FROM ml_alerts
+      ORDER BY timestamp DESC
+      LIMIT ?
+    `).all(limit);
+
+    // Parse JSON fields back to arrays for the frontend
+    const alerts = rows.map(row => ({
+      ...row,
+      alerts: (() => { try { return JSON.parse(row.alerts); } catch { return []; } })(),
+      categories: (() => { try { return JSON.parse(row.categories); } catch { return []; } })(),
+    }));
+
+    res.json(alerts);
+  } catch (error) {
+    console.error('Error fetching ML alerts:', error.message);
+    res.status(500).json({ error: 'Failed to fetch ML alerts' });
+  }
+});
+
 // GET /api/sensors/live - Fetch latest ThingSpeak sensor readings (temp, humidity, weight)
 app.get('/api/sensors/live', async (req, res) => {
   const channelId = process.env.THINGSPEAK_CHANNEL_ID;
