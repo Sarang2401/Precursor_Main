@@ -99,8 +99,9 @@ def thingspeak_background_poller():
                 # Write to local alert file
                 write_alert(device_id, data, ml_result)
                 
-                # Forward to Node.js backend
-                forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml_result)
+                # Forward to Node.js backend ONLY if there are actual alerts
+                if ml_result.get("alerts"):
+                    forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml_result)
                 
                 # Record to blockchain
                 record_to_blockchain(device_id, data, ml_result)
@@ -133,8 +134,9 @@ def manual_sensor():
     ml = run_ml(device_id, data["temp"], data["hum"], data["weight"], lat=lat, lon=lon)
     write_alert(device_id, data, ml)
     
-    # Forward to Node.js backend
-    forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml)
+    # Forward to Node.js backend ONLY if there are actual alerts
+    if ml.get("alerts"):
+        forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml)
     
     # Record to blockchain (skip for simulations to avoid slow mining)
     if not skip_blockchain:
@@ -157,8 +159,9 @@ def thingspeak_sensor():
     ml = run_ml(device_id, data["temp"], data["hum"], data["weight"], lat=lat, lon=lon)
     write_alert(device_id, data, ml)
     
-    # Forward to Node.js backend
-    forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml)
+    # Forward to Node.js backend ONLY if there are actual alerts
+    if ml.get("alerts"):
+        forward_alert_to_backend(device_id, {**data, "lat": lat, "lon": lon}, ml)
     
     # Record to blockchain
     record_to_blockchain(device_id, data, ml)

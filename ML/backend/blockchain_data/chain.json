@@ -5376,5 +5376,49 @@
     "previous_hash": "0094112fbab2fba845df9a3aff792ff0b93e869d333d22d8399646da05b73a1f",
     "nonce": 146,
     "hash": "0071d34b09d64984c06d68bb122e6d75ca3b908f08f2fe05999484c5b762b0d8"
+  },
+  {
+    "index": 231,
+    "timestamp": "2026-03-18T06:02:39.357590+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 29.2,
+        "hum": 39.0,
+        "weight": -2.18
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "0071d34b09d64984c06d68bb122e6d75ca3b908f08f2fe05999484c5b762b0d8",
+    "nonce": 169,
+    "hash": "00e3b54a7652c4c80977eef2d821b92d8a78f51179f6f24ca778bc99e3f88b24"
+  },
+  {
+    "index": 232,
+    "timestamp": "2026-03-18T06:03:44.505648+00:00",
+    "data": {
+      "type": "sensor_reading",
+      "device_id": "thingspeak_device",
+      "sensor_data": {
+        "temp": 29.2,
+        "hum": 39.0,
+        "weight": -2.18
+      },
+      "ml_result": {
+        "risk": "LOW",
+        "alerts": [],
+        "categories": [],
+        "info": "warming_up"
+      }
+    },
+    "previous_hash": "00e3b54a7652c4c80977eef2d821b92d8a78f51179f6f24ca778bc99e3f88b24",
+    "nonce": 289,
+    "hash": "0005a8eabfbcfbd41c41c6cb776a29715bfaffea834d0d43c1162f5a7b7a9af1"
   }
 ]
