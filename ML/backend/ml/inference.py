@@ -134,12 +134,26 @@ def run_ml(device_id, temp, hum, weight, lat=None, lon=None):
             })
             gps_categories.append("route_deviation")
 
-    # If buffer not ready, return with GPS alerts only
+    # ============ Rule-Based Checks (immediate, no buffer needed) ============
+    rule_alerts = []
+    rule_categories = []
+
+    if temp > 33:
+        rule_alerts.append({"type": "environment_anomaly", "detail": "temp_out_of_range", "value": temp})
+        rule_categories.append("environment_anomaly")
+
+    if weight <= 0:
+        rule_alerts.append({"type": "sensor_failure", "detail": "load_cell_zero", "value": weight})
+        rule_categories.append("sensor_failure")
+
+    # If buffer not ready, return with GPS + rule-based alerts
     if len(buf["temp"]) < WINDOW_SIZE:
+        all_alerts = gps_alerts + rule_alerts
+        all_categories = list(set(gps_categories + rule_categories))
         return {
-            "risk": "HIGH" if gps_alerts else "LOW",
-            "alerts": gps_alerts,
-            "categories": gps_categories,
+            "risk": "HIGH" if all_alerts else "LOW",
+            "alerts": all_alerts,
+            "categories": all_categories,
             "info": "warming_up"
         }
 
@@ -178,7 +192,8 @@ def run_ml(device_id, temp, hum, weight, lat=None, lon=None):
     categories.extend(gps_categories)
 
     # ---------------- Ensemble ----------------
-    risk = "HIGH" if if_anomaly or lstm_error > LSTM_THRESHOLD else "LOW"
+    # Risk is HIGH if ML models detect anomaly OR any rule-based/GPS alerts fired
+    risk = "HIGH" if if_anomaly or lstm_error > LSTM_THRESHOLD or alerts else "LOW"
 
     return {
         "if_score": if_score,
