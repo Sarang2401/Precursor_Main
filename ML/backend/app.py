@@ -182,16 +182,19 @@ def health():
         "poll_interval": THINGSPEAK_POLL_INTERVAL
     })
 
+# ============================================================================
+# Start background poller at MODULE level (works with both gunicorn and python)
+# gunicorn imports this file as a module, so __name__ == "app", not "__main__"
+# ============================================================================
+if ENABLE_AUTO_POLLING:
+    poller_thread = threading.Thread(target=thingspeak_background_poller, daemon=True)
+    poller_thread.start()
+    print("✅ Background ThingSpeak poller thread started")
+else:
+    print("⚠️ Auto-polling disabled (set ENABLE_AUTO_POLLING=true to enable)")
+
 if __name__ == "__main__":
-    # Start background poller thread (if enabled)
-    if ENABLE_AUTO_POLLING:
-        poller_thread = threading.Thread(target=thingspeak_background_poller, daemon=True)
-        poller_thread.start()
-        print("✅ Background ThingSpeak poller thread started")
-    else:
-        print("⚠️ Auto-polling disabled (set ENABLE_AUTO_POLLING=true to enable)")
-    
-    # Start Flask app
+    # Start Flask dev server (only when running directly: python app.py)
     port = int(os.getenv('PORT', 5000))
     app.run(host='0.0.0.0', port=port, threaded=True)
 
